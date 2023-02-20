@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Operativni Sistemi - Uvod</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Operativni Sistemi - Uvod</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">Februar, 2023</p>
+</section>
+
+<section>
+<section id="administrativni-detalji" class="title-slide slide level1">
+<h1>Administrativni detalji</h1>
+<p>Kako se organizuje predmet</p>
+</section>
+<section id="o-predavaču" class="slide level2">
+<h2>O predavaču</h2>
+<ul>
+<li>Veljko Petrović</li>
+<li>pveljko@uns.ac.rs</li>
+<li>NTP 330</li>
+<li>Preliminarni termin konsultacija: Četvrtak 14:30, u kancelariji.</li>
+<li>Uvek je dobra ideja da se najavite za konsultacije.</li>
+<li>Možemo se dogovoriti i oko dodatnih termina za konsultacije u zavisnosti od mog i vašeg rasporeda i obaveza.</li>
+</ul>
+</section>
+<section id="asistenti" class="slide level2">
+<h2>Asistenti</h2>
+<ul>
+<li>Helena Anišić</li>
+<li>Dunja Gojković</li>
+<li>Jovana Jovanović</li>
+<li>Marko Nikolić</li>
+<li>Nikolina Pavković</li>
+<li>Radovan Turović</li>
+</ul>
+</section>
+<section id="materijali" class="slide level2">
+<h2>Materijali</h2>
+<ul>
+<li>Operativni Sistemi, Problemi i Struktura prof. Hajdukovića</li>
+<li>Sav materijal će biti dostpuan na ACS sajtu.</li>
+<li>Nemojte koristiti materijal prošlih generacija: svake godine bude promena.</li>
+<li>Glavni izvor za predmet je, predvidivo udžbenik.</li>
+<li>Takođe važni su ovi slajdovi koji često sadrže modernizacije, i adaptacije materijala kao i modernije primere.</li>
+</ul>
+</section>
+<section id="o-slajdovima" class="slide level2">
+<h2>O slajdovima</h2>
+<ul>
+<li>Slajdovi su dostupni i kao interaktivan sajt dostupan iz svakog pretraživača i kao PDF dostupan na ACS sajtu</li>
+<li>I sajt i PDF su generisani iz istog izvora i ekvivalentni su, sa tim da sajt može da sadrži i, npr. animacije.</li>
+<li>Slajdovi za svako predavanje će biti dostupni pred čas i nalaziće se na:
+<ul>
+<li><strong>Za interaktivnu verziju</strong> <a href="https://pveljko-ftn.github.io/predavanja-OS/01/slides.html">https://pveljko-ftn.github.io/predavanja-OS/01/slides.html</a> gde se 01 menja sa brojem predavanja.</li>
+<li><strong>Za PDF verziju</strong> <a href="http://www.acs.uns.ac.rs/sr/node/237/4408649">http://www.acs.uns.ac.rs/sr/node/237/4408649</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="o-predavanjima" class="slide level2">
+<h2>O predavanjima</h2>
+<ul>
+<li>Periodično se pušta papir.</li>
+<li>Prisustvo je obavezno, formalno, ali mnogo bitnije prisustvo je <em>korisno.</em></li>
+<li>Nikada nije pogrešno vreme da se postavi pitanje ili napravi komentar.</li>
+</ul>
+</section>
+<section id="o-vežbama" class="slide level2">
+<h2>O vežbama</h2>
+<ul>
+<li>Automatska evidencija pristupa</li>
+<li>Samostalna izrada zadataka</li>
+<li>Apsolutno se očekuje da se spremite za izradu zadataka pre svake vežbe</li>
+<li>Počinju od iduće nedelje.</li>
+<li>Morate imati spremno okruženje za rad.</li>
+<li>Više o tome šta je ’okruženje za rad’ kasnije danas.</li>
+</ul>
+</section>
+<section id="formiranje-ocene" class="slide level2">
+<h2>Formiranje ocene</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Broj bodova</th>
+<th>Ocena</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>51-60</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>61-70</td>
+<td>7</td>
+</tr>
+<tr class="odd">
+<td>71-80</td>
+<td>8</td>
+</tr>
+<tr class="even">
+<td>81-90</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td>91-100</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="odakle-bodovi" class="slide level2">
+<h2>Odakle bodovi?</h2>
+<ul>
+<li>Predispitne obaveze (do 70 bodova)</li>
+<li>Ispitne obaveze (do 30 bodova)</li>
+</ul>
+</section>
+<section id="predispitne-obaveze" class="slide level2">
+<h2>Predispitne obaveze</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 59%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Obaveza</th>
+<th>Opis</th>
+<th>Bodovi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Test T1234</td>
+<td>Konkurentno programiranje</td>
+<td>do 40</td>
+</tr>
+<tr class="even">
+<td>Složeni oblik vežbi SOV</td>
+<td>Konkurentno programiranje (konkurentni problem)</td>
+<td>do 30</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="predispitne-obaveze-1" class="slide level2">
+<h2>Predispitne obaveze</h2>
+<ul>
+<li>Oba testa se rade na vežbama</li>
+<li>Imate <em>samo jednu priliku</em> da ih uradite tokom nastave, ali imamo pravo, za sada, da ponovimo predispitne obaveze</li>
+<li>To ponavljanje će biti posle kraja semestra ali mora biti pre granice za davanje bodova: dakle biće tokom leta.</li>
+</ul>
+</section>
+<section id="kako-položiti" class="slide level2">
+<h2>Kako položiti?</h2>
+<ul>
+<li>Prolaznu ocenu možete imati samo ako važi svaki od sledećih uslova:</li>
+<li>T1234 + SOV ≥ 36</li>
+<li>Ispit ≥ 16</li>
+<li>T1234 + SOV + Ispit ≥ 51</li>
+</ul>
+</section>
+<section id="kako-pasti" class="slide level2">
+<h2>Kako pasti?</h2>
+<ul>
+<li>Ako imate manje od 36 bodova sa predispitnih obaveza onda su svi bodovi koje imate nevažeći i morate predmet slušati opet iduće godine. Nećete dobiti potpis.</li>
+<li>Nemojte dozvoliti da ovo budete vi, <strong>molim vas.</strong></li>
+<li>Stvarno, ali stvarno je bitno da steknete svojih 36 bodova. Nećete imati previše šansi da to učinite.</li>
+</ul>
+</section>
+<section id="ispit" class="slide level2">
+<h2>Ispit</h2>
+<ul>
+<li>Održava se u ispitnom roku</li>
+<li>Nosi najviše 30 bodova</li>
+<li>Namenjen je isključivo studentima koji na predispitnim obavezama imaju barem 36 bodova</li>
+<li>Integralni ispit obuhvata celo gradivo.</li>
+<li>Mora se prijaviti ispit.</li>
+<li>Radi se na papiru, ima četiri pitanja i traje 60 minuta.</li>
+</ul>
+</section>
+<section id="struktura-ispita" class="slide level2">
+<h2>Struktura ispita</h2>
+<ul>
+<li>Prvo pitanje nosi 6 bodova, odnosi se na celo gradivo i biće bazirano na principu zaokruživanja. Ovo pitanje će uvek biti bazirano na listi pitanja koja ću objaviti, ali neće odgovarati tačno nijednom pitanju, zato što ona nisu na zaokruživanje.</li>
+<li>Drugo pitanje nosi 10 bodova, odgovara se u okviru jednog do dva pasusa i mora biti sa liste pitanja koja ću objaviti.</li>
+<li>Treće i četvrto pitanje nose zajedno 14 bodova i to tipično, ali ne garantovano, po 7 bodova i potpuno su slobodne forme: odnose se na celokupno gradivo predmeta bilo sa predavanja, udžbenika, slajdova i zahtevaju da se mogu povezati različite činjenice naučene u okviru predmeta i da se o njima može rezonovati.</li>
+</ul>
+</section>
+<section id="šta-neće-nikada-biti-na-ispitu" class="slide level2">
+<h2>Šta neće nikada biti na ispitu</h2>
+<ul>
+<li>Na ispitu nikada neće biti bilo koje pitanje koje očekuje da se kod uči napamet.</li>
+<li>Ako se, nekim slučajem, u pitanju pomene klasa ili neki algoritam, onda se isključivo misli na namenu te klase odnosno algoritma, na to kako radi i zašto postoji ali nikada i nikako koje su metode, šta tačno nasleđuje ili bilo šta slično.</li>
+<li>Ovo garancija se odnosi na sva četiri pitanja i na sve rokove, zauvek.</li>
+</ul>
+</section>
+<section id="primer-kompletnog-ispita-sa-odgovorima" class="slide level2">
+<h2>Primer kompletnog ispita sa odgovorima</h2>
+<ul>
+<li><ol type="1">
+<li>Koja su validna stanja binarnog semafora?</li>
+</ol></li>
+</ul>
+<pre><code>a) **0**    b) **1**    c) 2    d) SLOBODAN
+e) ZAUZET   f)-1     g) 3</code></pre>
+</section>
+<section id="primer-kompletnog-ispita-sa-odgovorima-1" class="slide level2">
+<h2>Primer kompletnog ispita sa odgovorima</h2>
+<ul>
+<li><ol start="2" type="1">
+<li>Šta je mrtva petlja?</li>
+</ol></li>
+<li>Mrtva petlja nastaje kada više niti/procesa pristupaju deljenim resursima koji su međusobno zavisni i kojima se pristupa u režimu isključivosti. Ono što ovi uslovi omogućavaju jeste da se procesi/niti dovedu u situaciju gde za svaku nit/proces važi da čeka neku drugu nit/proces i grafik ovih zavisnosti formira zatvoren ciklus. To znači da niti/procesi nisu aktivne no, su u istanju čekanja i iz tog stanja nikako ne mogu izaći: odatle naziv ’mrtva petlja.’</li>
+</ul>
+</section>
+<section id="primer-kompletnog-ispita-sa-odgovorima-2" class="slide level2">
+<h2>Primer kompletnog ispita sa odgovorima</h2>
+<ul>
+<li><ol start="3" type="1">
+<li>Kakav format diska bi izabrali za particiju koja čuva video snimke sisitema za video-nadzor pod uslovom da želite maksimum iskorišćenja prostora. Obrazložiti vaš odgovor.</li>
+</ol></li>
+<li>Koristio bih nekakav fajl sistem koji koristi kontinualne datoteke. Ovo je dobra ideja zato što onda nikako ne bih imao blokove, pokazivače, ili bilo šta slično. Samo metapodatke u deskriptoru datoteke i dužinu datoteke praćenu sadržajem datoteke, redom. Ne bih morao da se brinem o produženju datoteke pošto se ovo ne bi dešavalo. Eksterna fragmentacija bi, takođe bila relativno mali problem, budući da bih imao fajlove predvidive dužine. Kada bih birao veličinu bloka za ovaj disk, birao bih veliki blok, budući da ne očekujem male datoteke uopšte.</li>
+</ul>
+</section>
+<section id="primer-kompletnog-ispita-sa-odgovorima-3" class="slide level2">
+<h2>Primer kompletnog ispita sa odgovorima</h2>
+<ul>
+<li><ol start="4" type="1">
+<li>Ako bi imali pristup direktno disku (blokovima) koliko bi vam minimalno trebalo pristupa disku da promenite vlasništvo nekom fajlu? Obrazložite vaš odgovor.</li>
+</ol></li>
+<li>Odgovor zavisi od fajl sistema, i okolnosti. Ako, kao na predavanjima, koristimo ext2fs, onda treba sigurno da pročitamo superblok (1 čitanje), a onda iz njega da dobijemo tabelu inoda (1 čitanje), pa onda u njoj da nađemo sadržaj root direktorijuma (1 čitanje), pa u root direktorijumu nađemo broj inode nekog, bilo kog fajla, pa onda nađemo sadržaj te inode (1 čitanje), a u toj inodi, odnosno deskriptoru fajla se čuva tabela pristupa. Tako da je odgovor oko, minimalno, 4 čitanja i jedno pisanje.</li>
+<li>(Napomena: Molim vas, vodite računa da je ovaj odgovor malo neprecizan i preskače barem jedno čitanje (za tačan odgovor, vidite pretavanje 08.4) ali da je ključna stvar za ovo specifično pitanje da je proces razmišljanja i rezonovanja korektan.)</li>
+</ul>
+</section>
+<section id="prepisivanje" class="slide level2">
+<h2>Prepisivanje</h2>
+<ul>
+<li>Ako se utvrdi da je neko prepisivao ili koristio bilo kakva nedozvoljena sredstva na proveri znanja bilo koje vrste:
+<ul>
+<li>Dobija se 0</li>
+<li>Gubi se mogućnost bilo kakvog popravljanja rezultata.</li>
+<li>U zavisnosti od okolnosti može se početi disciplinski postupak na fakultetu.</li>
+</ul></li>
+<li>Molim vas, molim vas nemojte. Oko svega možemo da se dogovorimo, sve može da se adaptira vašim potrebama naročito u ovim teškim vremenima, ali kada je prepisivanje u pitanju niko od vaših nastavnika na ovom predmetu nema smisao za humor.</li>
+</ul>
+</section>
+<section id="potpis" class="slide level2">
+<h2>Potpis</h2>
+<ul>
+<li>Potpis zahteva barem 36 bodova na predispitnim obavezama. Svako ko ima 36 bodova ili više na predispitnim ispitima, dobiće potpis.</li>
+<li>Nema drugih zahteva</li>
+</ul>
+</section></section>
+<section>
+<section id="tehničko-okruženje" class="title-slide slide level1">
+<h1>Tehničko okruženje</h1>
+<p>Kako biti spreman za vežbe i praćenje primera sa predavanja</p>
+</section>
+<section id="tehničko-okruženje-1" class="slide level2">
+<h2>Tehničko okruženje</h2>
+<ul>
+<li>Na ovom kursu se koristi Linux.</li>
+<li>Iako se primeri mogu kompajlirati na Windows-u ovo <em>nije preporučeno.</em></li>
+<li>Zašto? Naleteće te na suptilne nekompatibilnosti koje su takve da niste dovoljno dobri programeri da ih otklonite.</li>
+<li>Možda jeste dovoljno dobri programeri, u kom slučaju, svaka čast.</li>
+<li>Ovo nije prva generacija: svako ko je koristio Windows u ovom kursu je naleteo na problem.</li>
+<li>Od softvera se koristi GCC (kao kompajler), i opciono, CodeBlocks kao integrisano okruženje ili Visual Studio Code kao editor. Možete editovati kod ma kojim editorom: to neće uticati na vašu ocenu.</li>
+<li>Možete da instalirate Linux na vaš računar kao jedan od operativnih sistema i koristite to. Ali, ako vam je primaran OS Windows i ne želite da instalirate nešto novo, može i tako. Onda morate raditi u virtuelnoj mašini.</li>
+</ul>
+</section>
+<section id="virtuelna-mašina" class="slide level2">
+<h2>Virtuelna mašina</h2>
+<ul>
+<li>Trebaće vam VirtualBox https://www.virtualbox.org/ koji se instalira kao i svaka druga aplikacija. Dostupan je za svaki operativni sistem.</li>
+<li>Dalje, trebaće vam ISO linux distribucije. Ako želite verziju koja je ista onoj u većini FTN laboratorija, to bi trebalo da je Ubuntu 20.04 LTS.</li>
+<li>Proces instalacije je bezbolan i trebalo bi da ne stvara ozbiljne probleme.</li>
+<li>Molim vas uradite ovo što pre</li>
+</ul>
+</section></section>
+<section>
+<section id="uvod" class="title-slide slide level1">
+<h1>Uvod</h1>
+<p>Vrtoglava tura operativnog sistema</p>
+</section>
+<section id="zadatak-operativnog-sistema" class="slide level2">
+<h2>Zadatak operativnog sistema</h2>
+<ul>
+<li>Operativni sistem:
+<ul>
+<li>Objedinjuje raznorodne delove računara tako što upravlja procesorom, kontrolerima i RAM-om.</li>
+<li>Skriva od korisnika detalje funkcionisanja tako što pretvara računar od mašine koja rukuje bitima, bajtima i blokovima u mašinu koja rukuje datotekama i procesima.</li>
+</ul></li>
+</ul>
+</section>
+<section id="pojam-datoteke" class="slide level2">
+<h2>Pojam datoteke</h2>
+<ul>
+<li>Datoteka ima:
+<ul>
+<li>Sadržaj (korisničke podatke)</li>
+<li>Atribute (npr. veličina ili vreme kreiranja) – u deskriptoru datoteke</li>
+</ul></li>
+<li>Uloga datoteke:
+<ul>
+<li>Trajno čuvanje podataka.</li>
+<li>Pristup podacima je čitanje i pisanje (kojima predstoji otvaranje i nakon kojih sledi zatvaranje datoteke).</li>
+</ul></li>
+<li>Što datoteke zatvaramo?</li>
+</ul>
+</section>
+<section id="pojam-procesa" class="slide level2">
+<h2>Pojam procesa</h2>
+<ul>
+<li>Aktivnost procesa – angažovanje procesora na izvršavanju korisničkog programa.</li>
+<li>Slika procesa – adresni prostor procesa (naredbe, stek i podaci).</li>
+<li>Atributi – stanje, prioritet – čuvaju se u deskriptoru procesa.</li>
+</ul>
+</section>
+<section id="stanje-i-prioritet-procesa" class="slide level2">
+<h2>Stanje i prioritet procesa</h2>
+<ul>
+<li>Tipična stanja procesa su:
+<ul>
+<li>aktivan</li>
+<li>čeka</li>
+<li>spreman.</li>
+</ul></li>
+<li>Prioritet procesa određuje kada je proces aktivan:</li>
+<li>Skoro uvek je aktivan proces sa najvišim prioritetom.</li>
+<li>Ako postoji nekoliko procesa sa najvišim prioritetom, vrši se raspodela procesorskog vremena između njih uz pomoć dva mehanizma:
+<ul>
+<li>Raspoređivanje između sistemskih niti</li>
+<li>Kvantum/kvant</li>
+</ul></li>
+</ul>
+</section>
+<section id="sistemske-niti" class="slide level2">
+<h2>Sistemske niti</h2>
+<ul>
+<li>Moderni procesori tipično imaju sposobnost istinskog paralelnog izvršavanja, tj. mogu stvarno da rade stvari u paraleli</li>
+<li>Ako budete radili sa mikrokontrolerima, recimo, onda to obično nije dostupno</li>
+<li>Koliko jedan računar može da radi stvari u paraleli se zove broj <em>sistemskih niti.</em></li>
+<li>Vama je ovo možda poznato kao broj ‘jezgara’ ali jedan računar može imati više procesora sa više jezgara a jedno individualno jezgro može raditi više poslova.</li>
+</ul>
+</section>
+<section id="kvantumkvant" class="slide level2">
+<h2>Kvantum/kvant</h2>
+<ul>
+<li>Na mašinama koje nemaju više sistemskih niti ili na mašinama koje prekardaše svoj broj sistemskih niti (vrlo čest slučaj) ili na mašinama koje štede struju pa rade sa manje jezgara koristi se kvantum mehanizam</li>
+<li>Ovo znači se procesorsko vreme jedne sistemske niti deli između više programa gde se oni smenjuju, a svako dobija malecnu količinu vremena (poznatu kao kvant)</li>
+<li>Ko drži kvant se smenjuje tako brzo da ljudski operater neće primetiti da se operacije ne izvršavaju u paraleli.</li>
+<li>Isticanje kvantuma regulišu prekidi sata.</li>
+</ul>
+</section>
+<section id="stanje-i-prioritet-procesa-1" class="slide level2">
+<h2>Stanje i prioritet procesa</h2>
+<ul>
+<li>Aktivan proces prelazi u stanje “čeka” kada je nemoguć nastavak njegove aktivnosti (npr. UI radnja). Nakon tog čekanja prelazi u stanje “spreman”.</li>
+</ul>
+</section>
+<section id="stanje-i-prioritet-procesa-2" class="slide level2">
+<h2>Stanje i prioritet procesa</h2>
+<p><img data-src="img/2023-02-20-23-15-26.png" /></p>
+</section>
+<section id="stanje-i-prioritet-procesa-praktična-ilustracija" class="slide level2">
+<h2>Stanje i prioritet procesa, praktična ilustracija</h2>
+<p><img data-src="img/2023-02-20-23-18-17.png" /></p>
+</section>
+<section id="uloga-procesa" class="slide level2">
+<h2>Uloga procesa</h2>
+<ul>
+<li>Procesi omogućuju bolje iskorišćenje računara (procesora) i njegovu bržu reakciju na dešavanje spoljnih događaja (npr. unos teksta).</li>
+<li>Istovremeno postojanje više procesa omogućuje da se procesor preključi sa aktivnog procesa na spreman proces kada aktivan proces prelazi u stanje “čeka”.</li>
+<li>Dobar primer ovakvog ponašanja je čekanje hitnog procesa na spoljni događaj (npr. unošenje teksta sa tastature).</li>
+</ul>
+</section>
+<section id="pojam-niti" class="slide level2">
+<h2>Pojam niti</h2>
+<ul>
+<li>Redosled naredbi programa (procesa) naziva se trag (trace) procesa.</li>
+<li>Proces je sekvencijalan ako je njegov trag poznat u vreme programiranja za dati ulaz.</li>
+<li>Trag sekvencijalnog procesa naziva se nit (thread) koja povezuje izvršavane naredbe u redosledu njihovog izvršavanja.</li>
+</ul>
+</section>
+<section id="mana-sekvencijalnih-procesa" class="slide level2">
+<h2>Mana sekvencijalnih procesa</h2>
+<ul>
+<li>Mana sekvencijalnih procesa je da su neosetljivi na spoljne događaje (npr. editovanje teksta).</li>
+<li>Za editovanje su potrebne dve radnje (interakcija sa korisnikom i čuvanje unešenog teksta).</li>
+<li>Sekvencijalan editorski proces izvršava te dve radnje jednu za drugom:</li>
+</ul>
+</section>
+<section id="pseudokod-1" class="slide level2">
+<h2>Pseudokod 1</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  do_editor_command<span class="op">();</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="op">(</span>time_to_save_data<span class="op">())</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    save_data<span class="op">();</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pseudokod-nesekvencijalnog-editorskog-procesa" class="slide level2">
+<h2>Pseudokod nesekvencijalnog editorskog procesa</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>      do_editor_command_in_foreground<span class="op">();</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>     <span class="cf">if</span><span class="op">(</span>time_to_save_data<span class="op">())</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>     save_data_in_background<span class="op">();</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="nesekvencijalan-editorski-proces-odvojene-radnje" class="slide level2">
+<h2>Nesekvencijalan editorski proces (odvojene radnje)</h2>
+<ul>
+<li>Prioritetnija radnja je posvećena interakciji sa korisnikom, a manje prioritetna pozadinska radnja je posvećena čuvanju teksta.</li>
+<li>Pod pretpostavkom da je hitna radnja zaustavljena, jer nema komandi od korisnika, pozadinska radnja može da se odvija sve dok, na primer, spoljni događaj poput pritiska dirke na tastaturi ne najavi početak interakcije sa korisnikom.</li>
+</ul>
+</section>
+<section id="nesekvencijalan-editorski-proces-odvojene-radnje-1" class="slide level2">
+<h2>Nesekvencijalan editorski proces (odvojene radnje)</h2>
+<ul>
+<li>Tada se zaustavlja pozadinska radnja, radi nastavljanja hitne radnje.</li>
+<li>Kada se obavi korisnička komanda u okviru hitne radnje, a hitna radnja se zaustavi u očekivanju nove komande, nastavlja se pozadinska radnja.</li>
+<li>Zahvaljujući preplitanju hitne i pozadinske radnje, u toku editiranja nema perioda bez odziva.</li>
+<li>Podrazumeva se da opisanom nesekvencijalnom editorskom procesu odgovaraju dve niti.</li>
+</ul>
+</section>
+<section id="nesekvencijalan-editorski-proces-odvojene-radnje-2" class="slide level2">
+<h2>Nesekvencijalan editorski proces (odvojene radnje)</h2>
+<ul>
+<li>Da bi opisano rukovanje nitima bilo moguće, prioritet, stanje i stek se ne vezuju za proces, nego za njegove niti.</li>
+<li>Znači svaka nit procesa ima svoj prioritet, svoje stanje, svoj stek, pa i svoj deskriptor.</li>
+<li>Za niti istog procesa se podrazumeva da nisu potpuno nezavisne, odnosno da sarađuju razmenom podataka.</li>
+<li>Tako, u slučaju nesekvencijalnog editorskog procesa, manje prioritetna nit se brine o čuvanju teksta koga pripremi prioritetna nit.</li>
+</ul>
+</section>
+<section id="konkurentni-procesi" class="slide level2">
+<h2>Konkurentni procesi</h2>
+<ul>
+<li>Procesi sa više niti nazivaju se konkurentni procesi (konkurentni programi).</li>
+<li>U nekim okruženjima samo jedna od niti može biti “aktivna”, dok su ostale u stanju “spremna” ili “čeka”.</li>
+<li>U nekim (kao ono u kome mi pišemo) proizvoljan podskup niti može biti aktivan, ograničen samo mogućnostima računara.</li>
+<li>Preključivanje procesora sa jedne niti na drugu, uzrokuju redosled izvšavanja koji nije određen u vreme programiranja, što znači da je izvršavanje konkurentnih procesa u opštem slučaju stohastično zbog stohastične prirode dešavanja spoljnih događaja.</li>
+</ul>
+</section>
+<section id="proces-i-nit" class="slide level2">
+<h2>Proces i nit</h2>
+<ul>
+<li>Može da deluje zbunjujuće što imamo dva metoda za konkurentno programiranje</li>
+<li>Uprkos tome, proces i nit imaju odvojene funkcije iako su procesi, istorijski, korišćeni i da obezbede posao niti</li>
+</ul>
+</section>
+<section id="proces-i-nit-1" class="slide level2">
+<h2>Proces i nit</h2>
+<ul>
+<li>Nit služi da u okviru <em>jednog procesa</em> omogući konkurentnost</li>
+<li>Tu je konkurentnost takva da između niti nema nikakve separacije: svaka nit ima pristup svim podacima svake niti za maksimalne performanse.</li>
+<li>Zato svaka nit ima svoj stek i svoj deskriptor, ali nema svoju sliku: to deli sa matičnim procesom.</li>
+</ul>
+</section>
+<section id="proces-i-nit-2" class="slide level2">
+<h2>Proces i nit</h2>
+<ul>
+<li>Proces pruža konkurentnost i istorijski se ponekad koristio umesto niti, ali mu je glavna funkcija i osobina <em>separacija</em></li>
+<li>Jedan proces ne može da ‘zaviri’ u drugi, nikada i nikako.</li>
+<li>Odnosno, kada se to desi, to bude bezbednosna mana i veliki problem.</li>
+</ul>
+</section>
+<section id="proces-i-nit-3" class="slide level2">
+<h2>Proces i nit</h2>
+<ul>
+<li>Da li postoji razlog u modernom programu da se konkurentnost omogući kroz procese a ne kroz niti?</li>
+<li>Da! <em>Bezbednost.</em></li>
+<li>Chrome izvršava svaki tab u posebnom procesu i to znači da je potencijalno maliciozan JS kod u jednom tab-u izolovan, višestruko, od nekog drugog tab-a gde je, recimo, vaš e-banking.</li>
+</ul>
+</section>
+<section id="struktura-operativnog-sistema" class="slide level2">
+<h2>Struktura operativnog sistema</h2>
+<ul>
+<li>Zadatak operativnog sistema je da upravlja fizičkim i logičkim delovima računara u okviru svog jezgra (kernela).</li>
+<li>Fizičkim delovima upravljaju moduli za rukovanje:
+<ul>
+<li>Procesorom</li>
+<li>Kontrolerima</li>
+<li>Radnom memorijom</li>
+</ul></li>
+<li>Logičkim delovima upravljaju moduli za rukovanje:
+<ul>
+<li>Datotekama</li>
+<li>Procesima</li>
+</ul></li>
+</ul>
+</section>
+<section id="modul-za-rukovanje-procesorom" class="slide level2">
+<h2>Modul za rukovanje procesorom</h2>
+<ul>
+<li>Zadatak ovog modula je preključivanje jedne niti na drugu.</li>
+<li>Moguće je preključivanje na niti u istom procesu ili u različitim procesima.</li>
+<li>Preključivanje procesora između niti istog procesa je brže nego preključivanje niti u okviru različitih procesa zato što se niti istog procesa nalaze u istom adresnom prostoru.</li>
+<li>Ovaj modul uvodi operaciju preključivanja.</li>
+</ul>
+</section>
+<section id="modul-za-rukovanje-kontrolerima" class="slide level2">
+<h2>Modul za rukovanje kontrolerima</h2>
+<ul>
+<li>Zadatak ovog modula je upravljanje ulaznim i izlaznim uređajima koji su zakačeni za kontrolere.</li>
+<li>Modul se sastoji od niza komponenti nazvanih drajveri.</li>
+</ul>
+</section>
+<section id="drajveri" class="slide level2">
+<h2>Drajveri</h2>
+<ul>
+<li>Cilj drajvera jeste da uređaje predstavi u apstraktnom obliku sa jednoobraznim i pravilnim načinom korišćenja (primer drajvera diska).</li>
+<li>Drajveri uvode operacije ulaza i izlaza, u okviru kojih se rukuje preključivanjem (zaustavljanjem) niti koja je zatražila operaciju.</li>
+<li>Drajveri takođe rukuju i obradom prekida kao reakcijom na javljanje uređaja putem mehanizma prekida.</li>
+</ul>
+</section>
+<section id="modul-za-rukovanje-radnom-memorijom" class="slide level2">
+<h2>Modul za rukovanje radnom memorijom</h2>
+<ul>
+<li>Zadatak ovog modula je da vodi evidenciju o slobodnoj radnoj memoriji radi zauzimanja i oslobađanja.</li>
+<li>U slučaju da podržava virtuelnu memoriju, ovaj modul se brine i o prebacivanju sadržaja između radne i masovne memorije.</li>
+<li>Ovaj modul uvodi operacije zauzimanja i oslobađanja.</li>
+</ul>
+</section>
+<section id="modul-za-rukovanje-datotekama" class="slide level2">
+<h2>Modul za rukovanje datotekama</h2>
+<ul>
+<li>Zadatak modula za rukovanje datotekama je da omogući otvaranje i zatvaranje datoteka, kao i čitanje i pisanje njihovog sadržaja.</li>
+<li>Ovaj modul vodi evidenciju o blokovima (HDD/SSD) u kojima se nalaze sadržaji datoteka.</li>
+<li>Takođe ovaj modul vodi računa o prebacivanju sadržaja između radne i masovne memorije uz pomoću operacija čitanja (ulaza) i pisanja (izlaza), kao i bafera potrebnih za smeštanje sadržaja (modul za rukovanje memorijom).</li>
+<li>Pored ovog modul uvodi i operacije otvaranja i zatvaranja.</li>
+</ul>
+</section>
+<section id="modul-za-rukovanje-procesima" class="slide level2">
+<h2>Modul za rukovanje procesima</h2>
+<ul>
+<li>Zadatak ovog modula je da omogući stvaranje i uništavanje procesa, kao i stvaranje i uništavanje njihovih niti.</li>
+<li>Na ovaj način se uvodi višeprocesni i višenitni režim rada koji omogućava:
+<ul>
+<li>Bolje iskorišćenje procesora</li>
+<li>Podršku većeg broja korisnika</li>
+<li>Bržu reakciju na spoljne događaje</li>
+</ul></li>
+<li>Modul za rukovanje procesima poziva i operacije drugih modula (za upravljanje datotekama i memorijom).</li>
+<li>Modul za rukovanje procesima uvodi operacije stvaranja i uništavanja (procesa i niti).</li>
+</ul>
+</section>
+<section id="slojevit-operativni-sistem" class="slide level2">
+<h2>Slojevit operativni sistem</h2>
+<p><img data-src="img/2023-02-20-23-26-53.png" /></p>
+</section>
+<section id="slojeviti-operativni-sistem" class="slide level2">
+<h2>Slojeviti operativni sistem</h2>
+<ul>
+<li>Za razliku od slojevitog operativnog sistema u praksi se uglavnom sreću monolitni operativni sistemi, koji nemaju hijerarjhijsku strukturu jer saradnja nije ograničena kao kod slojevitog OS.</li>
+</ul>
+</section>
+<section id="sistemski-pozivi" class="slide level2">
+<h2>Sistemski pozivi</h2>
+<ul>
+<li>Svaki proces se nalazi u korisničkom sloju (gornjem sloju OS), i poseduje poseban adresni prostor koji se naziva korisnički prostor (user space).</li>
+<li>Operatvni sistem poseduje poseban adresni prostor koji se naziva sistemski prostor (kernel space).</li>
+<li>Zbog razdvojenosti ova dva prostora neophodno je uvođenje sistemskih poziva, radi poziva operacija OS.</li>
+</ul>
+</section>
+<section id="sistemski-pozivi-1" class="slide level2">
+<h2>Sistemski pozivi</h2>
+<ul>
+<li>Sistemski pozivi zahtevaju korišćenje ASM naredbi i sakrivaju se unutar sistemskih potprograma (sistemskih operacija).</li>
+<li>Svaki proces u sistemskom prostoru ima svoj sistemski stek.</li>
+<li>Sistemski potprogrami obrazuju sistemsku biblioteku.</li>
+</ul>
+</section>
+<section id="sistemski-pozivi-2" class="slide level2">
+<h2>Sistemski pozivi</h2>
+<ul>
+<li>Zahvaljujući sistemskim potprogramima, odnosno sistemskoj biblioteci, operativni sistem predstavlja deo korisničkog programa, iako za njega nije direktno linkovan.</li>
+<li>Istovremeno postojanje više procesa i nepredvidivost preključivanja, uzrokuje da je moguće da istovremeno postoji više procesa, koji su započeli, a nisu završili svoju aktivnost u okviru operativnog sistema, odnosno, čija aktivnost je zaustavljena unutar sistemskih operacija operativnog sistema.</li>
+</ul>
+</section>
+<section id="preplitanje-izvršavanja-tri-sistemske-operacije" class="slide level2">
+<h2>Preplitanje izvršavanja tri sistemske operacije</h2>
+<p><img data-src="img/2023-02-20-23-28-28.png" /></p>
+</section>
+<section id="praktična-ilustracija-sistemskih-poziva" class="slide level2">
+<h2>Praktična ilustracija sistemskih poziva</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/stat.h&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;fcntl.h&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">unsigned</span> <span class="dt">char</span> buff<span class="op">[</span><span class="dv">32</span><span class="op">];</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ssize_t</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> fd <span class="op">=</span> open<span class="op">(</span>&#39;open<span class="op">.</span>c&#39;<span class="op">,</span> O_RDONLY<span class="op">);</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span><span class="op">(</span>count <span class="op">=</span> read<span class="op">(</span>fd<span class="op">,</span> buff<span class="op">,</span> <span class="dv">31</span><span class="op">)){</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    buff<span class="op">[</span>count<span class="op">]</span> <span class="op">=</span> <span class="ch">&#39;\0&#39;</span><span class="op">;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;%s&quot;</span><span class="op">,</span> buff<span class="op">);</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  close<span class="op">(</span>fd<span class="op">);</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="interakcija-korisnika-i-os" class="slide level2">
+<h2>Interakcija korisnika i OS</h2>
+<ul>
+<li>Komande komandnog jezika omogućavaju korišćenje OS na interaktivnom nivou.</li>
+<li>Za interpretiranje i preuzimanje komandi komandnog jezika zadužen je poseban proces iz korisničkog sloja koji se zove interpreter komandnog jezika (shell).</li>
+<li>Interpreter komandnog jezika koristi OS na programskom nivou, jer u toku svog rada poziva sistemske operacije.</li>
+</ul>
+</section></section>
+<section>
+<section id="pitanja" class="title-slide slide level1">
+<h1>Pitanja</h1>
+<p>Šta smo naučili?</p>
+</section>
+<section id="pitanja-1" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Koje poslove obavlja operativni sistem?</li>
+<li>Šta obuhvata pojam datoteke?</li>
+<li>Šta se nalazi u deskriptoru datoteke?</li>
+<li>Šta omogućuju datoteke?</li>
+<li>Šta obavezno prethodi čitanju i pisanju datoteke?</li>
+<li>Šta sledi iza čitanja i pisanja datoteke?</li>
+</ul>
+</section>
+<section id="pitanja-2" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta obuhvata pojam procesa?</li>
+<li>Šta se nalazi u deskriptoru procesa?</li>
+<li>Koja stanja procesa postoje?</li>
+<li>Kada je proces aktivan?</li>
+<li>Šta je kvantum?</li>
+<li>Šta je sistemska nit?</li>
+<li>Šta se dešava nakon isticanja kvantuma?</li>
+<li>Po kom kriteriju se uvek bira aktivan proces?</li>
+</ul>
+</section>
+<section id="pitanja-3" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Koji prelazi su mogući između stanja procesa?</li>
+<li>Koji prelazi nisu mogući između stanja procesa?</li>
+<li>Šta omogućuju procesi?</li>
+<li>Šta karakteriše sekvencijalni proces?</li>
+<li>Šta karakteriše konkurentni proces?</li>
+<li>Šta ima svaka nit konkurentnog procesa?</li>
+<li>Koje su razlike između procesa i niti?</li>
+</ul>
+</section>
+<section id="pitanja-4" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Koju operaciju uvodi modul za rukovanje procesorom?</li>
+<li>Po čemu se razlikuju preključivanja između niti istog procesa i preključivanja između niti raznih procesa?</li>
+<li>Koje operacije uvodi modul za rukovanje kontrolerima?</li>
+<li>Šta je cilj drajvera?</li>
+<li>Koje operacije uvodi modul za rukovanje radnom memorijom?</li>
+<li>Koje operacije poziva modul za rukovanje radnom memorijom kada podržava virtuelnu memoriju?</li>
+</ul>
+</section>
+<section id="pitanja-5" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Koje operacije uvodi modul za rukovanje datotekama?</li>
+<li>Koje operacije poziva modul za rukovanje datotekama?</li>
+<li>Šta omogućuju multiprocesing i multithreading?</li>
+<li>Koje operacije uvodi modul za rukovanje procesima?</li>
+<li>Koje operacije poziva modul za rukovanje procesima?</li>
+<li>Koje module sadrži slojeviti operativni sistem?</li>
+</ul>
+</section>
+<section id="pitanja-6" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta omogućuju sistemski pozivi?</li>
+<li>Koje adresne prostore podržava operativni sistem?</li>
+<li>Šta karakteriše interpreter komandnog jezika?</li>
+<li>Koji nivoi korišćenja operativnog sistema postoje?</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: false,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
