@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Operativni Sistemi - Konkurentno programiranje 3</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Operativni Sistemi - Konkurentno programiranje 3</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">Mart, 2023</p>
+</section>
+
+<section>
+<section id="semafori" class="title-slide slide level1">
+<h1>Semafori</h1>
+
+</section>
+<section id="sinhronizacija-pomoću-semafora" class="slide level2">
+<h2>Sinhronizacija pomoću semafora</h2>
+<ul>
+<li>Sinhronizacija niti može da se zasnuje i na ideji saobraćajnog semafora koji reguliše ulazak vozova u stanicu sa jednim kolosekom.</li>
+<li>Kada se jedan voz nalazi na staničnom koloseku, pred semaforom se moraju zaustaviti svi vozovi koji treba da dođu na stanični kolosek.</li>
+<li>Po analogiji sa saobraćajnim semaforom prolaz niti kroz (softversku) kritičnu sekciju bi regulisao (softverski) semafor.</li>
+</ul>
+</section>
+<section id="sinhronizacija-pomoću-semafora-1" class="slide level2">
+<h2>Sinhronizacija pomoću semafora</h2>
+<ul>
+<li>Sinhronizacija niti, koju omogućuje semafor, se zasniva na zaustavljanju aktivnosti niti, kao i na omogućavanju nastavljanja njihove aktivnosti.</li>
+<li>Ulazak niti u kritičnu sekciju zavisi od stanja semafora.</li>
+<li>Kada stanje semafora dozvoli ulazak niti u kritičnu sekciju, pri ulasku se semafor prevodi u stanje koje onemogućuje ulazak druge niti u kritičnu sekciju.</li>
+<li>Ako se takva nit pojavi, njena aktivnost se zaustavlja pred kritičnom sekcijom.</li>
+<li>Pri izlasku niti iz kritične sekcije semafor se prevodi u stanje koje dozvoljava novi ulazak u kritičnu sekciju i ujedno omogućuje nastavak aktivnosti niti koja najduže čeka na ulaz u kritičnu sekciju (ako takva nit postoji).</li>
+</ul>
+</section>
+<section id="semafor-simuliran-sa-propusnicom" class="slide level2">
+<h2>Semafor simuliran sa propusnicom</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Semaphore <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    mutex mx<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> state<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    condition_variable queue<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    Semaphore<span class="op">(</span><span class="dt">int</span> value <span class="op">=</span> <span class="dv">1</span><span class="op">)</span> <span class="op">:</span> state<span class="op">(</span>value<span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> stop<span class="op">();</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> resume<span class="op">();</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="semafor-simuliran-sa-propusnicom-1" class="slide level2">
+<h2>Semafor simuliran sa propusnicom</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Semaphore<span class="op">::</span>stop<span class="op">(){</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span><span class="op">(</span>state <span class="op">&lt;</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        queue<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    state<span class="op">--;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Semaphore<span class="op">::</span>resume<span class="op">(){</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    state<span class="op">++;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    queue<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="semafor-u-c-biblioteci" class="slide level2">
+<h2>Semafor u C++ biblioteci</h2>
+<ul>
+<li>C++ biblioteka, od standarda iz 2020 podržava semafore</li>
+<li>Nalaze se u zaglavlju <code>&lt;semaphore&gt;</code></li>
+<li>Klasa je <code>counting_semaphore</code> i šablonska je gde je (jedini) parametar maksimalna numerička vrednost ugrađenog brojača</li>
+<li>stop i resume opcije se zovu acquire i release ali je centralna ideja ista</li>
+</ul>
+</section>
+<section id="vrste-i-upotreba-semafora" class="slide level2">
+<h2>Vrste i upotreba semafora</h2>
+<ul>
+<li>Semafor čije stanje ne može preći vrednost 1 se zove binarni semafor.</li>
+<li>Ako se njegovo stanje inicijalizuje na vrednost 1, tada su njegove operacije <code>stop()</code> i <code>resume()</code> slične operacijama <code>lock()</code> i <code>unlock()</code> klase mutex.</li>
+<li>Ako se njegovo stanje inicijalizuje na vrednost 0, tada su njegove operacije <code>stop()</code> i <code>resume()</code> slične operacijama <code>wait()</code> i <code>notify_one()</code> klase <code>condition_variable</code></li>
+<li>Operacije klase <code>condition_variable</code> su namenjene za ostvarenje uslovne sinhronizacije u okviru kritičnih sekcija u kojima je međusobna isključivost ostvarena pomoću operacija klase mutex.</li>
+</ul>
+</section>
+<section id="raspodeljeni-binarni-semafor" class="slide level2">
+<h2>Raspodeljeni binarni semafor</h2>
+<ul>
+<li>Međutim, upotreba operacija binarnog semafora (sa stanjem inicijalizovanim na vrednost 0) po uzoru na operacije klase <code>condition_variable</code> u okviru kritičnih sekcija u kojima je međusobna isključivost ostvarena pomoću operacija drugog binarnog semafora (sa stanjem inicijalizovanim na vrednost 1) izaziva mrtvu petlju.</li>
+<li>Zato se uvodi posebna vrsta binarnog semafora, nazvana raspodeljeni binarni semafor (split binary semaphore).</li>
+</ul>
+</section>
+<section id="raspodeljeni-binarni-semafor-1" class="slide level2">
+<h2>Raspodeljeni binarni semafor</h2>
+<ul>
+<li>Realizuje se uz pomoć više binarnih semafora za koje važi ograničenje da suma njihovih stanja ne može preći vrednost 1.</li>
+<li>Pomoću raspodeljenog binarnog semafora se ostvaruje uslovna sinhronizacija tako što se na ulazu u svaku kritičnu sekciju poziva operacija stop() jednog od njegovih binarnih semafora, a na izlazu iz nje operacija resume() tog ili nekog od preostalih binarnih semafora.</li>
+<li>Na taj način najviše jedna nit se može nalaziti najviše u jednoj od pomenutih kritičnih sekcija, jer su stanja svih semafora manja od vrednosti 1 za vreme njenog boravka u dotičnoj kritičnoj sekciji.</li>
+</ul>
+</section>
+<section id="mesage_box-sa-semaforima" class="slide level2">
+<h2>Mesage_box sa semaforima</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;sem.hh&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> MESSAGE<span class="op">&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Message_box <span class="op">{</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    MESSAGE content<span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    Semaphore empty<span class="op">;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    Semaphore full<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    Message_box<span class="op">()</span> <span class="op">:</span> full<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> send<span class="op">(</span><span class="at">const</span> MESSAGE<span class="op">*</span> message<span class="op">);</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    MESSAGE receive<span class="op">();</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="mesage_box-sa-semaforima-1" class="slide level2">
+<h2>Mesage_box sa semaforima</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> MESSAGE<span class="op">&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Message_box<span class="op">&lt;</span>MESSAGE<span class="op">&gt;::</span>send<span class="op">(</span><span class="at">const</span> MESSAGE<span class="op">*</span> message<span class="op">){</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    empty<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    content <span class="op">=</span> <span class="op">*</span>message<span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    full<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="mesage_box-sa-semaforima-2" class="slide level2">
+<h2>Mesage_box sa semaforima</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> MESSAGE<span class="op">&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>MESSAGE Message_box<span class="op">&lt;</span>MESSAGE<span class="op">&gt;::</span>receive<span class="op">(){</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    MESSAGE message<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    full<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    message <span class="op">=</span> content<span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    empty<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> message<span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="generalni-semafor-primer-sa-slobodnim-baferima" class="slide level2">
+<h2>Generalni semafor – primer sa slobodnim baferima</h2>
+<ul>
+<li>Semafor, čije stanje može sadržati vrednost veću od 1, se naziva generalni semafor (general semaphore).</li>
+<li>On omogućuje ostvarenje uslovne sinhronizacije prilikom rukovanja resursima.</li>
+<li>Pozitivno stanje generalnog semafora može predstavljati broj slobodnih primeraka nekog resursa.</li>
+<li>Zahvaljujući tome, zauzimanje primerka resursa se može opisati pomoću operacije stop(), a njegovo oslobađanje pomoću operacije resume() generalnog semafora.</li>
+</ul>
+</section>
+<section id="generalni-semafor-primer-sa-slobodnim-baferima-1" class="slide level2">
+<h2>Generalni semafor – primer sa slobodnim baferima</h2>
+<ul>
+<li>Ova klasa sadrži binarni semafor mex i generalni semafor list_member_count.</li>
+<li>Binarni semafor omogućuje međusobnu isključivost prilikom uvezivanja i izvezivanja slobodnog bafera.</li>
+<li>Generalni semafor omogućuje uslovnu sinhronizaciju, jer njegovo stanje pokazuje broj slobodnih bafera (ono je na početku inicijalizovano na 0).</li>
+</ul>
+</section>
+<section id="generalni-semafor-i-slobodni-baferi" class="slide level2">
+<h2>Generalni semafor i slobodni baferi</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;sem.hh&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> List_member <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> next<span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> buffer<span class="op">[</span><span class="dv">512</span><span class="op">];</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> List <span class="op">{</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> first<span class="op">;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    Semaphore list_member_count<span class="op">;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    Semaphore mex<span class="op">;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    List <span class="op">()</span> <span class="op">:</span> first<span class="op">(</span><span class="dv">0</span><span class="op">),</span> list_member_count<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">);</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> unlink<span class="op">();</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="generalni-semafor-i-slobodni-baferi-1" class="slide level2">
+<h2>Generalni semafor i slobodni baferi</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> List<span class="op">::</span>link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">){</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    member<span class="op">-&gt;</span>next<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    first<span class="op">=</span>member<span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    list_member_count<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="generalni-semafor-i-slobodni-baferi-2" class="slide level2">
+<h2>Generalni semafor i slobodni baferi</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>List_member<span class="op">*</span> List<span class="op">::</span>unlink<span class="op">(){</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> unlinked<span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    list_member_count<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    unlinked<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    first<span class="op">=</span>first<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> unlinked<span class="op">;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="rešenje-problema-pet-filozofa-pomoću-semafora" class="slide level2">
+<h2>Rešenje problema pet filozofa pomoću semafora</h2>
+<ul>
+<li>Rešenje problema pet filozofa pomoću semafora sprečava pojavu mrtve petlje, jer za parne filozofe zauzima prvo levu, a za neparne filozofe zauzima prvo desnu viljušku.</li>
+<li>Viljuške predstavljaju binarni semafori forks[5], koji omogućuju uslovnu sinhronizaciju prilikom zauzimanja viljuški.</li>
+<li>Međusobnu isključivost omogućuje binarni semafor mex.</li>
+<li>Stanja filozofa su promenjena, jer nije moguća mrtva petlja, pa nije bitno koju viljušku filozof čeka.</li>
+</ul>
+</section>
+<section id="pet-filozofa-i-semafori" class="slide level2">
+<h2>Pet filozofa i semafori</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;thread&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> chrono<span class="op">;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> this_thread<span class="op">;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;sem.hh&quot;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> mod5<span class="op">(</span><span class="dt">int</span> a<span class="op">){</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span>a <span class="op">&gt;</span> <span class="dv">4</span> <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> a<span class="op">);</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pet-filozofa-i-semafori-1" class="slide level2">
+<h2>Pet filozofa i semafori</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Philosopher_state <span class="op">{</span> THINKING <span class="op">=</span> <span class="ch">&#39;T&#39;</span><span class="op">,</span> HUNGRY <span class="op">=</span> <span class="ch">&#39;H&#39;</span><span class="op">,</span> EATING <span class="op">=</span> <span class="ch">&#39;E&#39;</span> <span class="op">};</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Philosopher_state philosopher_state<span class="op">[</span><span class="dv">5</span><span class="op">];</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Semaphore forks<span class="op">[</span><span class="dv">5</span><span class="op">];</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>Semaphore mex<span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> philosopher_identity<span class="op">(</span><span class="dv">0</span><span class="op">);</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds THINKING_PERIOD<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds EATING_PERIOD<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span></code></pre></div>
+</section>
+<section id="pet-filozofa-i-semafori-2" class="slide level2">
+<h2>Pet filozofa i semafori</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> show<span class="op">(){</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="ch">&#39;(&#39;</span> <span class="op">&lt;&lt;</span> <span class="op">(</span><span class="dt">char</span><span class="op">)(</span>j<span class="op">+</span><span class="ch">&#39;0&#39;</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39;:&#39;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>             <span class="op">&lt;&lt;</span> <span class="op">(</span><span class="dt">char</span><span class="op">)(</span>philosopher_state<span class="op">[</span>j<span class="op">])</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;) &quot;</span><span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pet-filozofa-i-semafori-3" class="slide level2">
+<h2>Pet filozofa i semafori</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_philosopher<span class="op">(){</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> pi <span class="op">=</span> philosopher_identity<span class="op">++;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    philosopher_state<span class="op">[</span>pi<span class="op">]</span> <span class="op">=</span> THINKING<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        sleep_for<span class="op">(</span>THINKING_PERIOD<span class="op">);</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        philosopher_state<span class="op">[</span>pi<span class="op">]</span> <span class="op">=</span> HUNGRY<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="pet-filozofa-i-semafori-4" class="slide level2">
+<h2>Pet filozofa i semafori</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>        forks<span class="op">[</span>pi<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span> <span class="op">?</span> pi <span class="op">:</span> mod5<span class="op">(</span>pi<span class="op">+</span><span class="dv">1</span><span class="op">)].</span>stop<span class="op">();</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>        forks<span class="op">[</span>pi<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span> <span class="op">?</span> mod5<span class="op">(</span>pi<span class="op">+</span><span class="dv">1</span><span class="op">)</span> <span class="op">:</span> pi<span class="op">].</span>stop<span class="op">();</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        philosopher_state<span class="op">[</span>pi<span class="op">]</span> <span class="op">=</span> EATING<span class="op">;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        sleep_for<span class="op">(</span>EATING_PERIOD<span class="op">);</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        philosopher_state<span class="op">[</span>pi<span class="op">]</span> <span class="op">=</span> THINKING<span class="op">;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        forks<span class="op">[</span>pi<span class="op">].</span>resume<span class="op">();</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        forks<span class="op">[</span>mod5<span class="op">(</span>pi<span class="op">+</span><span class="dv">1</span><span class="op">)].</span>resume<span class="op">();</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pet-filozofa-i-semafori-5" class="slide level2">
+<h2>Pet filozofa i semafori</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;DINING PHILOSOPHERS&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    thread philosopher0<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    thread philosopher1<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    thread philosopher2<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    thread philosopher3<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    thread philosopher4<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    philosopher0<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    philosopher1<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    philosopher2<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    philosopher3<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    philosopher4<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;thread&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> chrono<span class="op">;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> this_thread<span class="op">;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;sem.hh&quot;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> ACCOUNTS_NUMBER <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> INITIAL_AMOUNT <span class="op">=</span> <span class="dv">100</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-1" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Bank <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    Semaphore mex<span class="op">;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> accounts<span class="op">[</span>ACCOUNTS_NUMBER<span class="op">];</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> readers_number<span class="op">;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> writers_number<span class="op">;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> readers_delayed_number<span class="op">;</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> writers_delayed_number<span class="op">;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    Semaphore readers<span class="op">;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    Semaphore writers<span class="op">;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> show<span class="op">();</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> reader_begin<span class="op">();</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> reader_end<span class="op">();</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> writer_begin<span class="op">();</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> writer_end<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-2" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    Bank<span class="op">();</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> audit<span class="op">();</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> transaction<span class="op">(</span><span class="dt">unsigned</span> source<span class="op">,</span> <span class="dt">unsigned</span> destination<span class="op">);</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-3" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb18"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Bank<span class="op">::</span>Bank<span class="op">()</span> <span class="op">:</span> mex<span class="op">(</span><span class="dv">1</span><span class="op">),</span> readers<span class="op">(</span><span class="dv">0</span><span class="op">),</span> writers<span class="op">(</span><span class="dv">0</span><span class="op">){</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> ACCOUNTS_NUMBER<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        accounts<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> INITIAL_AMOUNT<span class="op">;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    readers_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    writers_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    readers_delayed_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    writers_delayed_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-4" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb19"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>show<span class="op">(){</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;RN: &quot;</span> <span class="op">&lt;&lt;</span> readers_number <span class="op">&lt;&lt;</span> <span class="st">&quot; RDN: &quot;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;&lt;</span> readers_delayed_number</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;&lt;</span> <span class="st">&quot; WN: &quot;</span> <span class="op">&lt;&lt;</span> writers_number <span class="op">&lt;&lt;</span> <span class="st">&quot; WDN: &quot;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;&lt;</span> writers_delayed_number <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-5" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb20"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>reader_begin<span class="op">(){</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">((</span>writers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        readers_delayed_number<span class="op">++;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        readers<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-6" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb21"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>    readers_number<span class="op">++;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>readers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        readers_delayed_number<span class="op">--;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        readers<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-7" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>reader_end<span class="op">(){</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    readers_number<span class="op">--;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">((</span>readers_number <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        writers_delayed_number<span class="op">--;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        writers<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-8" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>writer_begin<span class="op">(){</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">((</span>readers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span>writers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        writers_delayed_number<span class="op">++;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        writers<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    writers_number<span class="op">++;</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-9" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb24"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>writer_end<span class="op">(){</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    writers_number<span class="op">--;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        writers_delayed_number<span class="op">--;</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>        writers<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> </span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-10" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb25"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds READING_PERIOD<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>audit<span class="op">(){</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> sum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    reader_begin<span class="op">();</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    sleep_for<span class="op">(</span>READING_PERIOD<span class="op">);</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> ACCOUNTS_NUMBER<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        sum <span class="op">+=</span> accounts<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    reader_end<span class="op">();</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>sum <span class="op">!=</span> ACCOUNTS_NUMBER<span class="op">*</span>INITIAL_AMOUNT<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>stop<span class="op">();</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="st">&quot; audit error &quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>        mex<span class="op">.</span>resume<span class="op">();</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-11" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb26"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds WRITING_PERIOD<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>transaction<span class="op">(</span><span class="dt">unsigned</span> source<span class="op">,</span> <span class="dt">unsigned</span> destination<span class="op">){</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> amount<span class="op">;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    writer_begin<span class="op">();</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    sleep_for<span class="op">(</span>WRITING_PERIOD<span class="op">);</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    amount <span class="op">=</span> accounts<span class="op">[</span>source<span class="op">];</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    accounts<span class="op">[</span>source<span class="op">]</span> <span class="op">-=</span> amount<span class="op">;</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    accounts<span class="op">[</span>destination<span class="op">]</span> <span class="op">+=</span> amount<span class="op">;</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    writer_end<span class="op">();</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-12" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb27"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Bank bank<span class="op">;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_reader<span class="op">(){</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>audit<span class="op">();</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_writer0to1<span class="op">(){</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>transaction<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_writer1to0<span class="op">(){</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>transaction<span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="čitanje-i-pisanje-i-semafori-13" class="slide level2">
+<h2>Čitanje i pisanje i semafori</h2>
+<div class="sourceCode" id="cb28"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;READERS AND WRITERS&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    thread reader0<span class="op">(</span>thread_reader<span class="op">);</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    thread reader1<span class="op">(</span>thread_reader<span class="op">);</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    thread writer0<span class="op">(</span>thread_writer0to1<span class="op">);</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    thread reader2<span class="op">(</span>thread_reader<span class="op">);</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    thread writer1<span class="op">(</span>thread_writer1to0<span class="op">);</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    reader0<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    reader1<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    writer0<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    reader2<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    writer1<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section></section>
+<section>
+<section id="konkurentno-programiranje-bez-zaključavanja" class="title-slide slide level1">
+<h1>Konkurentno programiranje bez zaključavanja</h1>
+
+</section>
+<section id="atomici-i-programiranje-bez-zaključavanja" class="slide level2">
+<h2>Atomici i programiranje bez zaključavanja</h2>
+<ul>
+<li>Posle svog ovog truda da napravimo i propusnicu i semafor i sve ovo, zašto za ime sveta bi hteli da sada <em>odustanemo</em> od svega toga?</li>
+<li>Kao i obično kada je u pitanju c++ egzotika za ovim posežemo kada nam treba još performansi: svo zaključavanje (propusnice, semafori, sinhronizacija, inače) su <em>spore.</em></li>
+<li>Komparativno govoreći, za većinu tema ovo je više nego zadovoljavajuće</li>
+<li>Šta je alternativa?</li>
+</ul>
+</section>
+<section id="hardver-i-portabilnost" class="slide level2">
+<h2>Hardver i portabilnost</h2>
+<ul>
+<li>Setite se kada smo pričali o compare-and-swap i hardverskoj podršci?</li>
+<li>Ima još dosta takvih instrukcija koje omogućavaju da se rade operacije atomički</li>
+<li>Takođe imaju načini da se zatraži da instrukcije poštuju određene <em>memorijske modele.</em></li>
+<li>Ovo naravno zavisi jako od arhitekture na kojoj ovo koristite.</li>
+</ul>
+</section>
+<section id="memorijski-modeli" class="slide level2">
+<h2>Memorijski modeli</h2>
+<ul>
+<li>Normalno procesor i kompajler su u zaveri da se određenim instrukcijama menja redosled ne bi li se povećale performanse.</li>
+<li>Sve se vrti oko procesa koji se zove <strong>pipelining</strong></li>
+<li>Mi možemo zatražiti da se na to ponašanje nametnu ograničenja od limitiranih do toga da zatražimo ‘sekvencijalnu konzistentnost’ što znači da se izvršavanje dešava tačno kako mi kažemo.</li>
+</ul>
+</section>
+<section id="kako-koristiti-hardversku-podršku" class="slide level2">
+<h2>Kako koristiti hardversku podršku?</h2>
+<ul>
+<li>C++ pruža zaglavlje <code>&lt;atomic&gt;</code> koje sadrži tipove koji označavaju da su određeni primitivni tipovi (int, recimo) atomički</li>
+<li>To znači da se nad njima mogu pozivati isključivo <em>atomičke operacije</em></li>
+<li>Umesto da slobodno pristupamo memoriji moramo da je učitamo sa .load() (i tako dobijemo povratnu vrednost) ili da smeštamo vrednosti sa <code>.store()</code></li>
+<li>Iza kulisa, kompajler pretvara ove naše zahteve u kompleksne pozive instrukcija koje su same po sebi atomičke, a ako nema podršku, vara tako što koristi iste mutekse itd. koje bi i mi koristili.</li>
+</ul>
+</section>
+<section id="trivijalan-primer" class="slide level2">
+<h2>Trivijalan primer</h2>
+<p><img data-src="img/2023-03-14-01-43-36.png" /></p>
+</section>
+<section id="izlaz-kompajlera" class="slide level2">
+<h2>Izlaz kompajlera</h2>
+<p><img data-src="img/2023-03-14-01-44-22.png" /></p>
+</section>
+<section id="zar-to-nismo-negde-videli" class="slide level2">
+<h2>Zar to nismo negde videli?</h2>
+<ul>
+<li>Da li je ova instrukcija poznata?</li>
+<li>I to čak sa <em>lock</em> prefiksom, kao što smo pričali.</li>
+<li>Naravno u zavisnosti od toga za koji kompajler ovo radimo, ovo može da iza kulisa ima ili nema stvarne atomičke instrukcije</li>
+</ul>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb29"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;thread&gt;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;atomic&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cassert&gt;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-1" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb30"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> List_member <span class="op">{</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> next<span class="op">;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> buffer<span class="op">[</span><span class="dv">512</span><span class="op">];</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> List <span class="op">{</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    atomic<span class="op">&lt;</span>List_member<span class="op">*&gt;</span> first<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-2" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb31"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    List <span class="op">()</span> <span class="op">{</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>      first<span class="op">.</span>store<span class="op">(</span><span class="kw">nullptr</span><span class="op">);</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">};</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">);</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> unlink<span class="op">();</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-3" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb32"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> List<span class="op">::</span>link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">){</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  member<span class="op">-&gt;</span>next <span class="op">=</span> first<span class="op">.</span>load<span class="op">();</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span><span class="op">(!</span>first<span class="op">.</span>compare_exchange_weak<span class="op">(</span>member<span class="op">-&gt;</span>next<span class="op">,</span> member<span class="op">));</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-4" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb33"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>List_member<span class="op">*</span> List<span class="op">::</span>unlink<span class="op">(){</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> unlinked<span class="op">;</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    unlinked<span class="op">=</span>first<span class="op">.</span>load<span class="op">();</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> next <span class="op">=</span> <span class="kw">nullptr</span><span class="op">;</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span><span class="op">{</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span><span class="op">(</span>unlinked <span class="op">==</span> <span class="kw">nullptr</span><span class="op">)</span> <span class="cf">return</span> <span class="kw">nullptr</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-5" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb34"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>      next <span class="op">=</span> unlinked<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span><span class="cf">while</span><span class="op">(!</span>first<span class="op">.</span>compare_exchange_weak<span class="op">(</span>unlinked<span class="op">,</span> next<span class="op">));</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> unlinked<span class="op">;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>List<span class="op">*</span> baferi<span class="op">){</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> x <span class="op">=</span> <span class="kw">nullptr</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-6" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb35"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10000</span><span class="op">;</span> i<span class="op">++){</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>x <span class="op">==</span> <span class="kw">nullptr</span><span class="op">){</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> baferi<span class="op">-&gt;</span>unlink<span class="op">();</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span><span class="cf">else</span><span class="op">{</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>      baferi<span class="op">-&gt;</span>link<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> <span class="kw">nullptr</span><span class="op">;</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-7" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb36"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="op">(</span>x <span class="op">!=</span> <span class="kw">nullptr</span><span class="op">){</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    baferi<span class="op">-&gt;</span>link<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-8" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb37"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  List l<span class="op">;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b1 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b2 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b3 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b4 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b5 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-9" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb38"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b1<span class="op">);</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b2<span class="op">);</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b3<span class="op">);</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b4<span class="op">);</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b5<span class="op">);</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  thread t1<span class="op">(</span>f<span class="op">,</span> <span class="op">&amp;</span>l<span class="op">);</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  thread t2<span class="op">(</span>f<span class="op">,</span> <span class="op">&amp;</span>l<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-10" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb39"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>  t1<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  t2<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> p<span class="op">;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-11" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb40"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">==</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi ima sufficit bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b1<span class="op">;</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b2<span class="op">;</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b3<span class="op">;</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b4<span class="op">;</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b5<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="primer-upotrebe-rukovanje-baferima-12" class="slide level2">
+<h2>Primer upotrebe rukovanje baferima</h2>
+<div class="sourceCode" id="cb41"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pobeda" class="slide level2">
+<h2>Pobeda?</h2>
+<ul>
+<li>Deluje kao da je sve OK, zar ne?</li>
+<li>Nije.</li>
+<li>Probajte slobodno da napravite treću nit i videćete da se manifestuju problemi koje je teško opisati rečima</li>
+<li>Potpun haos, štetno preplitanje, užas.</li>
+<li>Što? ABA</li>
+</ul>
+</section>
+<section id="aba" class="slide level2">
+<h2>ABA</h2>
+<ul>
+<li>ABA je noćna mora koja vas može proganjati kada radite atomske operacije</li>
+<li>U pitanju je sekvenca promena koja ostavi onu promenljivu sa kojom atomski operišete u naizgled dobrom stanju koje maskira, u stvari, nekonzistentno stanje.</li>
+<li>Hajde da to razumemo u kontekstu baš ove naše klase.</li>
+</ul>
+</section>
+<section id="aba-1" class="slide level2">
+<h2>ABA</h2>
+<ol type="1">
+<li>Nit 1 počne unlink operaciju i vidi na vrhu A i B (‘vidimo’ dve stvari jer imamo i next)</li>
+<li>Nit 2 počne unlink operaciju i završi je vrativši A</li>
+<li>Nit 2 počne link operaciju i ubaci u listu neko D.</li>
+<li>Nit 2 počne link operaciju i ubaci u listu ono isto A koje je izvadila.</li>
+<li>Nit 1 vidi na vrhu A i zaključi da nije došlo do desinhronizacije i završi svoj unlink što znači da smo čvor D preskočili.</li>
+</ol>
+</section>
+<section id="aba-2" class="slide level2">
+<h2>ABA</h2>
+<ul>
+<li>Naravno ABA može da uradi i druge probleme</li>
+<li>U stvari, može da uradi praktično sve što može i štetno preplitanje</li>
+<li>Ne javlja se uvek, naravno, ali bilo kada imamo stanje koje može da izlgeda isto spolja a nije, u opasnosti smo</li>
+</ul>
+</section>
+<section id="rešenje" class="slide level2">
+<h2>Rešenje?</h2>
+<ul>
+<li>Ubacimo polje za određivanje verzije</li>
+<li>Sada kada radimo <code>compare_and_swap</code> operaciju sve što treba da uradimo jeste da je uradimo nad dve vrednosti istovremeno.</li>
+<li>Jedna vrednost je pokazivač, druga je ista kao pokazivač u dimenzijama ali sadrži samo monotono rastuć broj verzije promene što garantuje detekciju ABA problema (osim ako nemamo overflow, ali na 64-bitnim arhitekturama to nije veliki rizik)</li>
+<li>Da li to uopšte može?</li>
+</ul>
+</section>
+<section id="dwcas" class="slide level2">
+<h2>DWCAS</h2>
+<ul>
+<li>Proizvođači procesora su nam to omogućili</li>
+<li>Generički termin za ovo je Double Word Compare and Swap</li>
+<li>Intel to zove <code>cmpxchg16b</code> i dostupno je na novim procesorima (Pogledajte da li se u /proc/cpuinfo nalazi flag cx16)</li>
+<li>Onda nam samo treba da napravimo umesto pokazivača struct koji je pokazivač + verzija i da ubedimo kompajler da emituje ovu korisnu instrukciju i sve je lako</li>
+</ul>
+</section>
+<section id="lako" class="slide level2">
+<h2>Lako?</h2>
+<ul>
+<li>Nikako.</li>
+<li>Prvo, ima teškoća u implementaciji ovoga kako valja ali sa tim se, uz pažnju, da izboriti.<br />
+</li>
+<li>Kompajleri će vam prirediti mnogo gori problem: kako stvari stoje GCC, recimo, jednostavno <em>odbija</em> da emituje DWCAS instrukciju maltene šta god vi radili.</li>
+<li>Jedini kompajler na kome sam uspeo da proizvedem korektan kod je <code>clang</code> a i on zahteva poseban tretman – struct koji koristite za DWCAS mora biti eksplicitno poravnan u memoriji na 16 bajtova što obično nije potrebno.</li>
+</ul>
+</section>
+<section id="verzija-sa-dwcas" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb42"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;thread&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;atomic&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cassert&gt;</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstdint&gt;</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-1" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb43"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> List_member <span class="op">{</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> next<span class="op">;</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> buffer<span class="op">[</span><span class="dv">512</span><span class="op">];</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> <span class="kw">alignas</span><span class="op">(</span><span class="dv">2</span> <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">void</span><span class="op">*))</span> p_aba <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-2" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb44"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">uintptr_t</span> aba<span class="op">;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> p<span class="op">;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> List <span class="op">{</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    atomic<span class="op">&lt;</span>p_aba<span class="op">&gt;</span> first<span class="op">;</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-3" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb45"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>    List <span class="op">()</span> <span class="op">{</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>      first<span class="op">.</span>store<span class="op">({</span><span class="dv">0</span><span class="op">,</span> <span class="kw">nullptr</span><span class="op">});</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">};</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">);</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    List_member<span class="op">*</span> unlink<span class="op">();</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-4" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb46"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> List<span class="op">::</span>link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">){</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    p_aba found <span class="op">=</span> first<span class="op">.</span>load<span class="op">();</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    p_aba next<span class="op">;</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span><span class="op">{</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>        member<span class="op">-&gt;</span>next <span class="op">=</span> found<span class="op">.</span>p<span class="op">;</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>        next<span class="op">.</span>aba <span class="op">=</span> found<span class="op">.</span>aba <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-5" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb47"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>        next<span class="op">.</span>p <span class="op">=</span> member<span class="op">;</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span><span class="cf">while</span><span class="op">(!</span>first<span class="op">.</span>compare_exchange_weak<span class="op">(</span>found<span class="op">,</span> next<span class="op">));</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>List_member<span class="op">*</span> List<span class="op">::</span>unlink<span class="op">(){</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    p_aba found <span class="op">=</span> first<span class="op">.</span>load<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-6" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb48"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>    p_aba novi<span class="op">;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">do</span><span class="op">{</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span><span class="op">(</span>found<span class="op">.</span>p <span class="op">==</span> <span class="kw">nullptr</span><span class="op">)</span> <span class="cf">return</span> <span class="kw">nullptr</span><span class="op">;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>      novi<span class="op">.</span>p <span class="op">=</span> found<span class="op">.</span>p<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>      novi<span class="op">.</span>aba <span class="op">=</span> found<span class="op">.</span>aba <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span><span class="cf">while</span><span class="op">(!</span>first<span class="op">.</span>compare_exchange_weak<span class="op">(</span>found<span class="op">,</span> novi<span class="op">));</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> found<span class="op">.</span>p<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-7" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb49"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> f<span class="op">(</span>List<span class="op">*</span> baferi<span class="op">){</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> x <span class="op">=</span> <span class="kw">nullptr</span><span class="op">;</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10000</span><span class="op">;</span> i<span class="op">++){</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>x <span class="op">==</span> <span class="kw">nullptr</span><span class="op">){</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> baferi<span class="op">-&gt;</span>unlink<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-8" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb50"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span><span class="cf">else</span><span class="op">{</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>      baferi<span class="op">-&gt;</span>link<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>      x <span class="op">=</span> <span class="kw">nullptr</span><span class="op">;</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span><span class="op">(</span>x <span class="op">!=</span> <span class="kw">nullptr</span><span class="op">){</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-9" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb51"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>    baferi<span class="op">-&gt;</span>link<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  List l<span class="op">;</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b1 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-10" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb52"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b2 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b3 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b4 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> b5 <span class="op">=</span> <span class="kw">new</span> List_member<span class="op">();</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b1<span class="op">);</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b2<span class="op">);</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b3<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-11" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb53"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b4<span class="op">);</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  l<span class="op">.</span>link<span class="op">(</span>b5<span class="op">);</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  thread t1<span class="op">(</span>f<span class="op">,</span> <span class="op">&amp;</span>l<span class="op">);</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  thread t2<span class="op">(</span>f<span class="op">,</span> <span class="op">&amp;</span>l<span class="op">);</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  thread t3<span class="op">(</span>f<span class="op">,</span> <span class="op">&amp;</span>l<span class="op">);</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  t1<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  t2<span class="op">.</span>join<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-12" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb54"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>  t3<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  List_member<span class="op">*</span> p<span class="op">;</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">!=</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi nema dovoljno bafera posle testa&quot;</span><span class="op">);</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-13" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb55"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>  <span class="ot">assert</span><span class="op">((</span><span class="kw">nullptr</span> <span class="op">==</span> l<span class="op">.</span>unlink<span class="op">())</span> <span class="op">&amp;&amp;</span> <span class="st">&quot;U klasi ima sufficit bafera posle testa&quot;</span><span class="op">);</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b1<span class="op">;</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b2<span class="op">;</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b3<span class="op">;</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b4<span class="op">;</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">delete</span> b5<span class="op">;</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="verzija-sa-dwcas-14" class="slide level2">
+<h2>Verzija sa DWCAS</h2>
+<div class="sourceCode" id="cb56"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="kako-se-ovo-kompajlira" class="slide level2">
+<h2>Kako se ovo kompajlira?</h2>
+<pre><code>clang++ -O3 -pthread -std=c++20 -mcx16 -o lld lockless_double.cpp</code></pre>
+</section>
+<section id="da-li-stvarno-emituje-instrukciju" class="slide level2">
+<h2>Da li stvarno emituje instrukciju?</h2>
+<pre><code>objdump -d lld|grep cmpxchg16b</code></pre>
+</section>
+<section id="rezultat" class="slide level2">
+<h2>Rezultat</h2>
+<p><img data-src="img/2023-03-14-04-07-30.png" /></p>
+</section>
+<section id="šta-možemo-da-naučimo-iz-ovoga" class="slide level2">
+<h2>Šta možemo da naučimo iz ovoga?</h2>
+<ul>
+<li>Atomsko programiranje je opasno - kao što ime i sugeriše.</li>
+<li>Problemi su jako izazovni i kompleksni za razumevanje i zavise od hardvera koji nikako nije univerzalan</li>
+<li>Debagovanje je efektivno nemoguće</li>
+<li>Dokumentacija je vrlo štura i, recimo, primer dat na cppreference (inače vrlo pouzdan izvor) sadrži ABA problem ako se implementira.</li>
+</ul>
+</section>
+<section id="šta-možemo-da-naučimo-iz-ovoga-1" class="slide level2">
+<h2>Šta možemo da naučimo iz ovoga?</h2>
+<ul>
+<li>Treba se baviti ovim samo ako ste <em>veoma</em> sigurni da znate šta radite, i ako ste uvereni da će posledice biti vredne truda.<br />
+</li>
+<li>Naročito morate se postarate, čak i pre nego počnete, da su sledeće stvari tačne:
+<ul>
+<li>Performanse su apsolutno kritične</li>
+<li>Vreme koje je neophodno za lock-ovanje u nekoj strukturi je važan faktor usporenja</li>
+<li>Greška u implementaciji neće imati pogubne posledice, tj. ono što programirate sme da se sruši a da se ne desi kataklizma.</li>
+</ul></li>
+</ul>
+</section>
+<section id="šta-možemo-da-naučimo-iz-ovoga-2" class="slide level2">
+<h2>Šta možemo da naučimo iz ovoga?</h2>
+<ul>
+<li>Čak i tada treba dvaput razmisliti: u zavisnosti od neverovatno suptilnih razlika u tome kako upravljate memorijom može se desiti da dobijete brži kod na <code>x86_64</code> platformi (dobra uređenost) i kod koji je sporji nego da smo koristili mutex na ARM platformi zato što je ona vrlo sklona, arhitektonski govoreći, out-of-order egzekuciji.<br />
+</li>
+<li>Dalje, ako je to moguće, valja koristiti gotove implementacije kao što su one u standardnoj biblioteci ili u bibliotekama kao što je Folly i Abseil</li>
+</ul>
+</section>
+<section id="šta-možemo-da-naučimo-iz-ovoga-3" class="slide level2">
+<h2>Šta možemo da naučimo iz ovoga?</h2>
+<ul>
+<li>Nemojte podceniti težinu rada na ovom nivou: pravljenje nečega tako prostog kao što je jednostruko linkovana lista koja je bez lock-ova a <em>korektna</em> je bio ozbiljan istraživački projekat.</li>
+<li>Ne samo to, eksperti i dalje znaju da se zbune: bag vezan za baš ove probleme je vrebao u Linux kernelu <strong>deset godina.</strong></li>
+</ul>
+</section></section>
+<section>
+<section id="pitanja" class="title-slide slide level1">
+<h1>Pitanja</h1>
+
+</section>
+<section id="pitanja-1" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta karakteriše semafor?</li>
+<li>Koje operacije su vezane za semafor?</li>
+<li>Kako semafor obezbeđuje sinhronizaciju međusobne isključivosti?</li>
+<li>Kako se obično implementira semafor?</li>
+<li>U čemu se semafori razlikuju od isključivih regiona?</li>
+<li>Koji semafori postoje?</li>
+<li>Šta karakteriše binarni semafor?</li>
+</ul>
+</section>
+<section id="pitanja-2" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta karakteriše raspodeljeni binarni semafor?</li>
+<li>Šta karakteriše generalni semafor?</li>
+<li>Šta omogućuje raspodeljeni binarni semafor?</li>
+<li>Šta omogućuje binarni semafor?</li>
+<li>Šta omogućuje generalni semafor?</li>
+<li>Koje su prednosti i mane semafora?</li>
+</ul>
+</section>
+<section id="pitanja-3" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta je lockless programiranje / programiranje bez zaključavanja?</li>
+<li>Šta je ABA problem?</li>
+<li>Šta je DWCAS i zašto je potreban?</li>
+<li>Šta su mane a šta prednosti programiranja bez zaključavanja / lockless programiranja?</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: false,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
