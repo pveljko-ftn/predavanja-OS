@@ -1077,6 +1077,1306 @@
 <span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    popl <span class="op">%</span>ebp</span>
 <span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>    ret</span></code></pre></div>
 </section></section>
+<section>
+<section id="izvršilac-simulatora" class="title-slide slide level1">
+<h1>Izvršilac simulatora</h1>
+
+</section>
+<section id="delovi-cpptss-izvršioca" class="slide level2">
+<h2>Delovi CppTss izvršioca</h2>
+<ul>
+<li>Deo CppTss-a koji ima ulogu jezgra operativnog sistema se naziva izvršilac.</li>
+<li>Funkcionalna sličnost CppTss izvršioca sa operativnim sistemom ima za posledicu sličnost njihovih izvedbi.</li>
+<li>Struktura CppTss izvršioca se može predstaviti pomoću istih slojeva kao i struktura operativnog sistema.</li>
+<li>Ključna razlika je da CppTss izvršilac ne sadrži modul za rukovanje datotekama, jer CppTss ne podržava pojam datoteke.</li>
+</ul>
+</section>
+<section id="delovi-cpptss-izvršioca-1" class="slide level2">
+<h2>Delovi CppTss izvršioca</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modul</th>
+<th>Elementi u kodu</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>sistemske niti</td>
+<td>thread_wake_up_deamon() thread_destroyer_deamon() thread_zero() klasa Delta</td>
+</tr>
+<tr class="even">
+<td>modul za rukovanje procesima</td>
+<td>klasa thread klasa Thread_image</td>
+</tr>
+<tr class="odd">
+<td>modul za rukovanje datotekama</td>
+<td>-</td>
+</tr>
+<tr class="even">
+<td>modul za rukovanje random memorijom</td>
+<td>klasa Memory_fragment</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="delovi-cpptss-izvršioca-2" class="slide level2">
+<h2>Delovi CppTss izvršioca</h2>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Modul</th>
+<th>Elementi u kodu</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>modul za rukovanje kontrolerima</td>
+<td>klasa Timer_driver klasa Exception_driver klasa Driver</td>
+</tr>
+<tr class="even">
+<td>modul za rukovanje procesorom</td>
+<td>klasa condition_variable klasa unique_lock klasa mutex klasa Kernel klasa Atomic_region klasa Ready_list klasa Descriptor klasa Permit klasa List_link klasa Failure</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="klasa-failure" class="slide level2">
+<h2>Klasa Failure</h2>
+<div class="sourceCode" id="cb68"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Failure_codes <span class="op">{</span> MEMORY_SHORTAGE<span class="op">,</span> NOTIFY_OUTSIDE_EXCLUSIVE_REGION <span class="op">};</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Failure <span class="op">{</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="kw">protected</span><span class="op">:</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">const</span> <span class="dt">char</span> <span class="op">*</span>f_name<span class="op">;</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  Failure_codes f_code<span class="op">;</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span></code></pre></div>
+</section>
+<section id="klasa-failure-1" class="slide level2">
+<h2>Klasa Failure</h2>
+<div class="sourceCode" id="cb69"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>  Failure<span class="op">(</span><span class="at">const</span> <span class="dt">char</span> <span class="op">*</span>fname<span class="op">,</span> <span class="at">const</span> Failure_codes fcode<span class="op">)</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>      <span class="op">:</span> f_name<span class="op">(</span>fname<span class="op">),</span> f_code<span class="op">(</span>fcode<span class="op">){};</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="at">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> f_name<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> Failure_codes code<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> f_code<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>Failure failure_memory_shortage<span class="op">(</span><span class="st">&quot;MEMORY SHORTAGE!&quot;</span><span class="op">,</span> MEMORY_SHORTAGE<span class="op">);</span></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>Failure</span></code></pre></div>
+</section>
+<section id="klasa-failure-2" class="slide level2">
+<h2>Klasa Failure</h2>
+<div class="sourceCode" id="cb70"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>    failure_notify_outside_exclusive_region<span class="op">(</span><span class="st">&quot;NOTIFY OUTSIDE EXCLUSIVE REGION!&quot;</span><span class="op">,</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>                                            NOTIFY_OUTSIDE_EXCLUSIVE_REGION<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-list_link" class="slide level2">
+<h2>Klasa List_link</h2>
+<div class="sourceCode" id="cb71"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> List_link <span class="op">{</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>left<span class="op">;</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>right<span class="op">;</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  List_link<span class="op">(</span><span class="at">const</span> List_link <span class="op">&amp;);</span></span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> List_link <span class="op">&amp;);</span></span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span></code></pre></div>
+</section>
+<section id="klasa-list_link-1" class="slide level2">
+<h2>Klasa List_link</h2>
+<div class="sourceCode" id="cb72"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>  List_link<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    right <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    left <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>left_get<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> left<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>right_get<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> right<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> insert<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> link<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-list_link-2" class="slide level2">
+<h2>Klasa List_link</h2>
+<div class="sourceCode" id="cb73"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>extract<span class="op">();</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> empty<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span><span class="kw">this</span> <span class="op">==</span> right<span class="op">);</span> <span class="op">};</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> not_empty<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">!</span>empty<span class="op">();</span> <span class="op">};</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> List_link<span class="op">::</span>insert<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> link<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>  link<span class="op">-&gt;</span>left <span class="op">=</span> left<span class="op">;</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  link<span class="op">-&gt;</span>right <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-list_link-3" class="slide level2">
+<h2>Klasa List_link</h2>
+<div class="sourceCode" id="cb74"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>  left<span class="op">-&gt;</span>right <span class="op">=</span> link<span class="op">;</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  left <span class="op">=</span> link<span class="op">;</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>List_link <span class="op">*</span>List_link<span class="op">::</span>extract<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>p <span class="op">=</span> right<span class="op">;</span></span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  right<span class="op">-&gt;</span>right<span class="op">-&gt;</span>left <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  right <span class="op">=</span> right<span class="op">-&gt;</span>right<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-list_link-4" class="slide level2">
+<h2>Klasa List_link</h2>
+<div class="sourceCode" id="cb75"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> p<span class="op">;</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-list_link-5" class="slide level2">
+<h2>Klasa List_link</h2>
+<ul>
+<li>Klasa List_link omogućuje obrazovanje dvosmerne cirkularne liste.</li>
+<li>Nju predstavlja objekat ove klase, koji tada istovremeno služi kao njen početak i kraj.</li>
+<li>Takođe se podrazumeva da se oni uvezuju na njen kraj i da se izvezuju sa njenog početka.</li>
+<li>Dvosmerna cirkularna lista se obrazuje pomoću polja left i right.</li>
+<li>Operacije klase List_link omogućuju preuzimanje vrednosti ovih polja: left_get(), right_get()</li>
+<li>uvezivanje novog elementa na kraj liste - insert()</li>
+<li>izvezivanje elementa sa početka liste - extract()</li>
+<li>proveru da li u listi ima uvezanih elemenata - not_empty()</li>
+<li>proveru da li je lista prazna - empty()</li>
+</ul>
+</section>
+<section id="klasa-list_link-6" class="slide level2">
+<h2>Klasa List_link</h2>
+<p><img data-src="./img//image.png" /></p>
+</section>
+<section id="klasa-permit" class="slide level2">
+<h2>Klasa Permit</h2>
+<div class="sourceCode" id="cb76"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Permit <span class="op">{</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> free<span class="op">;</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>  Permit <span class="op">*</span>previous<span class="op">;</span></span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>  List_link admission_list<span class="op">;</span></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>  List_link fulfilled_list<span class="op">;</span></span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span></code></pre></div>
+</section>
+<section id="klasa-permit-1" class="slide level2">
+<h2>Klasa Permit</h2>
+<div class="sourceCode" id="cb77"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>  Permit<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>    free <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    previous <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">bool</span> not_free<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span>free <span class="op">==</span> <span class="kw">false</span><span class="op">);</span> <span class="op">};</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> take<span class="op">()</span> <span class="op">{</span> free <span class="op">=</span> <span class="kw">false</span><span class="op">;</span> <span class="op">};</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> release<span class="op">()</span> <span class="op">{</span> free <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> <span class="op">};</span></span></code></pre></div>
+</section>
+<section id="klasa-permit-2" class="slide level2">
+<h2>Klasa Permit</h2>
+<div class="sourceCode" id="cb78"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> admission_insert<span class="op">(</span>List_link <span class="op">*</span>link<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>    admission_list<span class="op">.</span>insert<span class="op">(</span>link<span class="op">);</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> fulfilled_insert<span class="op">(</span>List_link <span class="op">*</span>link<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    fulfilled_list<span class="op">.</span>insert<span class="op">(</span>link<span class="op">);</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> List_link <span class="op">*</span>admission_extract<span class="op">()</span> <span class="op">{</span> <span class="cf">return</span> admission_list<span class="op">.</span>extract<span class="op">();</span> <span class="op">};</span></span></code></pre></div>
+</section>
+<section id="klasa-permit-3" class="slide level2">
+<h2>Klasa Permit</h2>
+<div class="sourceCode" id="cb79"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> List_link <span class="op">*</span>fulfilled_extract<span class="op">()</span> <span class="op">{</span> <span class="cf">return</span> fulfilled_list<span class="op">.</span>extract<span class="op">();</span> <span class="op">};</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">bool</span> admission_not_empty<span class="op">()</span> <span class="op">{</span> <span class="cf">return</span> admission_list<span class="op">.</span>not_empty<span class="op">();</span> <span class="op">};</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">bool</span> fulfilled_not_empty<span class="op">()</span> <span class="op">{</span> <span class="cf">return</span> fulfilled_list<span class="op">.</span>not_empty<span class="op">();</span> <span class="op">};</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> Descriptor<span class="op">;</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="klasa-permit-4" class="slide level2">
+<h2>Klasa Permit</h2>
+<ul>
+<li>Klasa Permit opisuje rukovanje propusnicama. Polje free klase Permit čuva stanje propusnice.</li>
+<li>Lista (polje previous) je vezana za nit koja je dobila pomenute propusnice. Propusnice se uvezuju u ovu listu u redosledu u kome ih je nit dobila, a izvezuju iz nje u obrnutom redosledu, jer se u obrnutom redosledu propusnice vraćaju.</li>
+<li>Oko polja admission_list klase Permit se obrazuje lista deskriptora niti koje čekaju na propusnicu da bi ušle u isključivi region, a oko njenog polja fulfiled_list se obrazuje lista deskriptora niti koje čekaju na propusnicu nakon ispunjenja uslova.</li>
+</ul>
+</section>
+<section id="klasa-permit-5" class="slide level2">
+<h2>Klasa Permit</h2>
+<ul>
+<li>Operacije klase Permit:</li>
+<li>not_free() - da li je propusnica zauzeta</li>
+<li>take() - zauzimanje propusnice</li>
+<li>release() - oslobadjanje propusnice</li>
+<li>admission_insert(), admission_extract(), admission_not_empty(), fullfilled_insert(), fulfilled_extract(), fulfilled_not_empty() - za rukovanje listama deskriptora niti</li>
+</ul>
+</section>
+<section id="klasa-permit-6" class="slide level2">
+<h2>Klasa Permit</h2>
+<ul>
+<li>Pozivi operacija not_free() i take() moraju biti u istom atomskom regionu , inače se može desiti da više niti jedna za drugom, proverom ustanovi da je ista propusnica slobodna i da zatim, jedna za drugom, zauzme istu propusnicu.</li>
+<li>Pozivi operacija za rukovanje listama deskriptora moraju biti u atomskom regionu.</li>
+</ul>
+</section>
+<section id="klasa-descriptor" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<div class="sourceCode" id="cb80"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">int</span> Stack_item<span class="op">;</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Descriptor <span class="op">:</span> <span class="kw">private</span> List_link <span class="op">{</span> <span class="co">// nasledjuje se klasa List_link</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// da bi bilo moguce deskriptore niti uvezivati u liste</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="kw">protected</span><span class="op">:</span></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>  Stack_item <span class="op">*</span>stack_top<span class="op">;</span> <span class="co">// pokazivac na vrh steka niti</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> priority<span class="op">;</span>          <span class="co">// prioritet niti</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  Permit <span class="op">*</span>last<span class="op">;</span>          <span class="co">// adresa poslednje dobijene propusnice</span></span></code></pre></div>
+</section>
+<section id="klasa-descriptor-1" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<div class="sourceCode" id="cb81"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">unsigned</span> tag<span class="op">;</span>          <span class="co">// privezak deskriptora niti</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>  Descriptor<span class="op">();</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">unsigned</span> tag_get<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> tag<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> tag_set<span class="op">(</span><span class="dt">unsigned</span> t<span class="op">)</span> <span class="op">{</span> tag <span class="op">=</span> t<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> link_permit<span class="op">(</span>Permit <span class="op">*</span><span class="at">const</span> permit<span class="op">);</span> <span class="co">// uvezivanje</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// propusnice u listu propusnica prilikom ulaska niti u kriticnu sekciju</span></span></code></pre></div>
+</section>
+<section id="klasa-descriptor-2" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<div class="sourceCode" id="cb82"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> Permit <span class="op">*</span>ulink_permit<span class="op">();</span> <span class="co">// izvezivanje propusnice iz</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// liste propusnica niti prilikom njenog izlazka iz kriticne sekcije</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> Ready_list<span class="op">;</span></span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> Kernel<span class="op">;</span></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> thread<span class="op">;</span></span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>Descriptor<span class="op">::</span>Descriptor<span class="op">()</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-descriptor-3" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<div class="sourceCode" id="cb83"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>  stack_top <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  priority <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  last <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  tag <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Descriptor<span class="op">::</span>link_permit<span class="op">(</span>Permit <span class="op">*</span><span class="at">const</span> permit<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  permit<span class="op">-&gt;</span>previous <span class="op">=</span> last<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-descriptor-4" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<div class="sourceCode" id="cb84"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>  last <span class="op">=</span> permit<span class="op">;</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>Permit <span class="op">*</span>Descriptor<span class="op">::</span>ulink_permit<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>  Permit <span class="op">*</span>permit <span class="op">=</span> last<span class="op">;</span></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>  last <span class="op">=</span> permit<span class="op">-&gt;</span>previous<span class="op">;</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> permit<span class="op">;</span></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-descriptor-5" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<ul>
+<li>Klasa Descriptor određuje deskriptor niti.</li>
+<li>Ona nasleđuje klasu List_link, da bi bilo moguće deskriptore niti uvezivati u liste.</li>
+<li>Polje stack_top klase Descriptor sadrži pokazivač (adresu) vrha steka niti.</li>
+<li>Prioritet niti je sadržan u polju priority ove klase.</li>
+<li>Polje last klase Descriptor sadrži adresu poslednje dobijene propusnice.</li>
+<li>Polje tag ove klase je namenjeno za smeštanje priveska deskriptora niti.</li>
+</ul>
+</section>
+<section id="klasa-descriptor-6" class="slide level2">
+<h2>Klasa Descriptor</h2>
+<ul>
+<li>Klasa Descriptor nudi operacije za pristup nekim od njenih polja: tag_get(), tag_set(), kao i operacije za uvezivanje propusnice u listu propusnica niti prilikom njenog ulaska u kritični region: link_permit(), odnosno za izvezivanje propusnice iz liste propusnica niti prilikom njenog izlaska iz kritičnog regiona: ulink_permit().</li>
+</ul>
+</section>
+<section id="klasa-ready_list" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb85"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">unsigned</span> PRIORITY_NUMBER <span class="op">=</span> <span class="dv">32</span><span class="op">;</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Priority <span class="op">{</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  TERMINAL <span class="op">=</span> <span class="op">-</span><span class="dv">1</span><span class="op">,</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  ZERO <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>  PR01<span class="op">,</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  PR02<span class="op">,</span></span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>  PR03<span class="op">,</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-1" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb86"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>  PR04<span class="op">,</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>  PR05<span class="op">,</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  PR06<span class="op">,</span></span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  PR07<span class="op">,</span></span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>  PR08<span class="op">,</span></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>  PR09<span class="op">,</span></span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>  PR10<span class="op">,</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-2" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb87"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>  PR11<span class="op">,</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>  PR12<span class="op">,</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  PR13<span class="op">,</span></span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  PR14<span class="op">,</span></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>  PR15<span class="op">,</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>  PR16<span class="op">,</span></span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>  PR17<span class="op">,</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-3" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb88"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>  PR18<span class="op">,</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  PR19<span class="op">,</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  PR20<span class="op">,</span></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>  PR21<span class="op">,</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>  PR22<span class="op">,</span></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>  PR23<span class="op">,</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>  PR24<span class="op">,</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-4" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb89"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>  PR25<span class="op">,</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  PR26<span class="op">,</span></span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  PR27<span class="op">,</span></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>  PR28<span class="op">,</span></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>  PR29<span class="op">,</span></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  PR30<span class="op">,</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  SYSTEM <span class="op">=</span> <span class="dv">31</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-5" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb90"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Ready_list <span class="op">{</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">unsigned</span> priority_bits<span class="op">;</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  List_link ready<span class="op">[</span>PRIORITY_NUMBER<span class="op">];</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  Ready_list<span class="op">(</span><span class="at">const</span> Ready_list <span class="op">&amp;);</span></span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>  Ready_list <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Ready_list <span class="op">&amp;);</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-6" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb91"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  Ready_list<span class="op">()</span> <span class="op">:</span> priority_bits<span class="op">(</span><span class="dv">0</span><span class="op">){};</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> highest<span class="op">()</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> insert<span class="op">(</span>Descriptor <span class="op">*</span>d<span class="op">);</span></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  Descriptor <span class="op">*</span>extract<span class="op">();</span></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> higher_than<span class="op">(</span>Descriptor <span class="op">*</span>d<span class="op">)</span> <span class="at">const</span><span class="op">;</span></span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-7" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb92"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Ready_list<span class="op">::</span>highest<span class="op">()</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> n <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>priority_bits <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> ad__get_index_of_most_significant_set_bit<span class="op">(</span>priority_bits<span class="op">);</span></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> n<span class="op">;</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Ready_list<span class="op">::</span>insert<span class="op">(</span>Descriptor <span class="op">*</span>d<span class="op">)</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-8" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb93"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>d<span class="op">-&gt;</span>priority <span class="op">!=</span> TERMINAL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>    priority_bits <span class="op">=</span> ad__set_bit<span class="op">(</span>priority_bits<span class="op">,</span> d<span class="op">-&gt;</span>priority<span class="op">);</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">[</span>d<span class="op">-&gt;</span>priority<span class="op">].</span>insert<span class="op">(</span>d<span class="op">);</span></span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>Descriptor <span class="op">*</span>Ready_list<span class="op">::</span>extract<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>  Descriptor <span class="op">*</span>d<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-9" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb94"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>  d <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)(</span>ready<span class="op">[</span>highest<span class="op">()].</span>extract<span class="op">());</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>ready<span class="op">[</span>d<span class="op">-&gt;</span>priority<span class="op">].</span>empty<span class="op">())</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>    priority_bits <span class="op">=</span> ad__clear_bit<span class="op">(</span>priority_bits<span class="op">,</span> d<span class="op">-&gt;</span>priority<span class="op">);</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> d<span class="op">;</span></span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> Ready_list<span class="op">::</span>higher_than<span class="op">(</span>Descriptor <span class="op">*</span>d<span class="op">)</span> <span class="at">const</span> <span class="op">{</span></span>
+<span id="cb94-7"><a href="#cb94-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span>highest<span class="op">()</span> <span class="op">&gt;</span> d<span class="op">-&gt;</span>priority<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-10" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<div class="sourceCode" id="cb95"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> Ready_list ready<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-ready_list-11" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<ul>
+<li>Klasa Ready_list omogućuje rukovanje spremnim nitima.</li>
+<li>Primer takvog rukovanja je brzo pronalaženje najprioritetnije niti među spremnim nitima, što je osnov za ispunjenje zahteva da je uvek aktivna najprioritetnija nit.</li>
+<li>Radi toga, svakom od prioriteta niti se dodeljuje posebna lista spremnih niti i podrazumeva se da se deskriptor spremne niti uvek uvezuje na kraj liste spremnih niti koja odgovara prioritetu dotične niti.</li>
+<li>Takođe se podrazumeva da se deskriptor spremne niti uvek izvezuje sa početka odabrane liste spremnih niti.</li>
+<li>Na ovaj način spremne niti istog prioriteta se uvek aktiviraju u redosledu u kome su postajale spremne.</li>
+</ul>
+</section>
+<section id="klasa-ready_list-12" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<ul>
+<li>Sve liste spremnih niti zajedno formiraju multi-listu (Ready::ready).</li>
+<li>Rukovanje ovom multi-listom obuhvata:</li>
+<li>Dobijanje prioriteta najprioritetnije neprazne liste spremnih niti: Ready::highest()</li>
+<li>Uvezivanje deskriptora niti na kraj odgovarajuće liste spremnih niti: Ready::insert()</li>
+<li>izvezivanje deskriptora niti sa početka najprioritetnije neprazne liste spremnih niti: Ready::extract()</li>
+<li>poređenje prioriteta najprioritetnije neprazne liste spremnih niti sa prioritetom zadane niti: Ready::higher_than()</li>
+</ul>
+</section>
+<section id="klasa-ready_list-13" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<ul>
+<li>Pošto je multi-lista niz listi spremnih niti, deskriptor spremne niti se uvezuje na kraj liste spremnih niti koju direktno indeksira prioritet ove niti.</li>
+<li>Međutim, za operaciju izvezivanja deskriptora iz najprioritetnije neprazne liste spremnih niti, potrebno je prvo pronaći najprioritetniju nepraznu listu spremnih niti.</li>
+<li>Brzo pronalaženje najprioritetnije neprazne liste spremnih niti se ostvaruje tako da se svaka lista spremnih niti reprezentuje jednim bitom koji sadrži 1 ako je lista neprazna, a 0 ako je lista prazna.</li>
+</ul>
+</section>
+<section id="klasa-ready_list-14" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<ul>
+<li>Ove bite sadrži Ready::priority_bits, tako da se na značajnijim pozicijama nalaze biti prioritetnijih listi spremnih niti.</li>
+<li>Na najmanje značajnoj poziciji je bit nulte liste spremnih niti, sa prioritetom 0.</li>
+<li>U njoj se nalazi posebna nulta nit, sa prioritetom 0.</li>
+<li>Ona angažuje procesor kada nema drugih spremnih niti.</li>
+<li>Kada je nulta nit u stanju “spremna”, tada je njen deskriptor uvezan u nultu listu spremnih niti. Nulta nit može biti još samo u stanju “aktivna”.</li>
+<li>Ona u to stanje prelazi kada ne postoji neka druga nit koja može da zaposli procesor.</li>
+</ul>
+</section>
+<section id="klasa-ready_list-15" class="slide level2">
+<h2>Klasa Ready_list</h2>
+<ul>
+<li>Najniži prioritet spremnih niti 0 (ZERO) je rezervisan za nultu nit, a najviši prioritet spremnih niti 31 (SYSTEM) je rezervisan za sistemske niti.</li>
+<li>Između se nalaze prioriteti korisničkih niti (PR01, PR02, …, PR30).</li>
+<li>Za uništavane niti, koje čekaju da budu uništene i koje više ne mogu biti spremne (a ni aktivne), uveden je poseban zavšni prioritet -1 (TERMINAL) koji omogućuje njihovo posebno tretiranje u okviru operacije Ready::insert().</li>
+</ul>
+</section>
+<section id="klasa-atomic_region" class="slide level2">
+<h2>Klasa Atomic_region</h2>
+<div class="sourceCode" id="cb96"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Atomic_region <span class="op">{</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> flags<span class="op">;</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  Atomic_region<span class="op">(</span><span class="at">const</span> Atomic_region <span class="op">&amp;);</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  Atomic_region <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Atomic_region <span class="op">&amp;);</span></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>  Atomic_region<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-atomic_region-1" class="slide level2">
+<h2>Klasa Atomic_region</h2>
+<div class="sourceCode" id="cb97"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">~</span>Atomic_region<span class="op">();</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>Atomic_region<span class="op">::</span>Atomic_region<span class="op">()</span> <span class="op">{</span> flags <span class="op">=</span> ad__disable_interrupts<span class="op">();</span> <span class="op">}</span></span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>Atomic_region<span class="op">::~</span>Atomic_region<span class="op">()</span> <span class="op">{</span> ad__restore_interrupts<span class="op">(</span>flags<span class="op">);</span> <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel" class="slide level2">
+<h2>Klasa Kernel</h2>
+<ul>
+<li>Klasa Kernel omogućuje rukovanje procesorom. Rukovanje procesorom se svodi na preključivanje procesora sa jedne niti na drugu.</li>
+<li>Za preključivanje je neophodno imati adresu deskriptora aktivne niti sa koje se procesor preključuje (active), adresu deskriptora niti na koju se procesor preključuje (pretender), kao i adresu deskriptora niti sa koje se procesor preključio (former).</li>
+<li>Operaciju preključivanja poziva privatna operacija switch_to(), koja postavlja pokazivač deskriptora aktivne niti active i pokazivač deskriptora niti sa koje se procesor preključio former.</li>
+</ul>
+</section>
+<section id="klasa-kernel-1" class="slide level2">
+<h2>Klasa Kernel</h2>
+<ul>
+<li>Preključivanje je nužno vezano za raspoređivanje (scheduling), odnosno za izbor niti na koju se procesor preključuje.</li>
+<li>Ciljevi raspoređivanja kod CppTss izvršioca su da uvek bude aktivna najprioritetnija spremna nit i da se ravnomerno deli vreme procesora između spremnih niti istog prioriteta. Do raspoređivanja dolazi:</li>
+<li>kada se pojavi spremna nit sa višim prioritetom od aktivne niti (schedule())</li>
+<li>na kraju kvantuma (periodic_schedule())</li>
+</ul>
+</section>
+<section id="klasa-kernel-2" class="slide level2">
+<h2>Klasa Kernel</h2>
+<ul>
+<li>Klasa Kernel nasleđuje klasu Deskriptor da bi jedini objekat klase Kernel reprezentovao deskriptor main() niti.</li>
+<li>Konstruktor ove klase proglašava aktivnom main() nit. Pošto main() nit koristi stek konkurentnog programa kao svoj stek, za nju nije potrebno zauzeti stek.</li>
+<li>U nadležnosti klase Kernel nije samo preključivanje, nego i podrška viših slojeva iz hijerarhijske strukture CppTss izvršioca.</li>
+</ul>
+</section>
+<section id="klasa-kernel-3" class="slide level2">
+<h2>Klasa Kernel</h2>
+<ul>
+<li>Funkcije:</li>
+<li>make_ready() - omogućava aktivnost niti</li>
+<li>expect() - omogućuje očekivanje dešavanja događaja</li>
+<li>signal() - omogućuje objavu dešavanja događaja</li>
+<li>exclusive_in() - za ulazak u isključivi region</li>
+<li>exclusive_out() - za izlazak iz isključivog regiona</li>
+<li>wait() - očekivanje ispunjenja uslova</li>
+<li>notify_one() - objava ispunjenja uslova</li>
+<li>U operacijama deljene promenljive kernel se koriste atomski regioni radi zaštite njene konzistentnosti, kao i konzistentnosti argumenata iz poziva ovih operacija.</li>
+</ul>
+</section>
+<section id="klasa-kernel-4" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb98"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Kernel <span class="op">:</span> <span class="kw">public</span> Descriptor <span class="op">{</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  Descriptor <span class="op">*</span>active<span class="op">;</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  Descriptor <span class="op">*</span>pretender<span class="op">;</span></span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  Descriptor <span class="op">*</span>former<span class="op">;</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  Kernel<span class="op">(</span><span class="at">const</span> Kernel <span class="op">&amp;);</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>  Kernel <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Kernel <span class="op">&amp;);</span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> switch_to<span class="op">(</span>Descriptor <span class="op">*</span><span class="at">const</span> d<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-5" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb99"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> schedule<span class="op">();</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> periodic_schedule<span class="op">();</span></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  Kernel<span class="op">()</span> <span class="op">:</span> active<span class="op">(</span><span class="dv">0</span><span class="op">),</span> pretender<span class="op">(</span><span class="dv">0</span><span class="op">),</span> former<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>    priority <span class="op">=</span> PR15<span class="op">;</span></span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>    active <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-6" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb100"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> make_ready<span class="op">(</span>Descriptor <span class="op">*</span><span class="at">const</span> d<span class="op">);</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> expect<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">);</span></span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> signal<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">);</span></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> exclusive_in<span class="op">(</span>Permit <span class="op">*</span><span class="at">const</span> permit<span class="op">);</span></span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> wait<span class="op">(</span><span class="at">const</span> <span class="dt">unsigned</span> t<span class="op">,</span> List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">);</span></span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> notify_one<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-7" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb101"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> <span class="dt">void</span> exclusive_out<span class="op">();</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">inline</span> Descriptor <span class="op">*</span>active_get<span class="op">()</span> <span class="at">const</span> <span class="op">{</span> <span class="cf">return</span> active<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="dt">void</span> yield<span class="op">();</span></span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> Timer_driver<span class="op">;</span></span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>switch_to<span class="op">(</span>Descriptor <span class="op">*</span><span class="at">const</span> d<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>  former <span class="op">=</span> active<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-8" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb102"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>  active <span class="op">=</span> d<span class="op">;</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  ad__stack_swap<span class="op">(&amp;(</span>former<span class="op">-&gt;</span>stack_top<span class="op">),</span> active<span class="op">-&gt;</span>stack_top<span class="op">);</span></span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb102-4"><a href="#cb102-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>schedule<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb102-5"><a href="#cb102-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>ready<span class="op">.</span>higher_than<span class="op">(</span>active<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb102-6"><a href="#cb102-6" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">.</span>insert<span class="op">(</span>active<span class="op">);</span></span>
+<span id="cb102-7"><a href="#cb102-7" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> ready<span class="op">.</span>extract<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-9" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb103"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a>    switch_to<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>periodic_schedule<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>  ready<span class="op">.</span>insert<span class="op">(</span>active<span class="op">);</span></span>
+<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>  pretender <span class="op">=</span> ready<span class="op">.</span>extract<span class="op">();</span></span>
+<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>active <span class="op">!=</span> pretender<span class="op">)</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-10" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb104"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>    switch_to<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>make_ready<span class="op">(</span>Descriptor <span class="op">*</span><span class="at">const</span> d<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>  ready<span class="op">.</span>insert<span class="op">(</span>d<span class="op">);</span></span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>expect<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">)</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-11" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb105"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>  waiting_list<span class="op">-&gt;</span>insert<span class="op">(</span>active<span class="op">);</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>  pretender <span class="op">=</span> ready<span class="op">.</span>extract<span class="op">();</span></span>
+<span id="cb105-3"><a href="#cb105-3" aria-hidden="true" tabindex="-1"></a>  switch_to<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb105-4"><a href="#cb105-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb105-5"><a href="#cb105-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>signal<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb105-6"><a href="#cb105-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>waiting_list<span class="op">-&gt;</span>not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb105-7"><a href="#cb105-7" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)</span>waiting_list<span class="op">-&gt;</span>extract<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-12" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb106"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">.</span>insert<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>    schedule<span class="op">();</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>exclusive_in<span class="op">(</span>Permit <span class="op">*</span><span class="at">const</span> permit<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>permit<span class="op">-&gt;</span>not_free<span class="op">())</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-13" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb107"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>    permit<span class="op">-&gt;</span>admission_insert<span class="op">(</span>active<span class="op">);</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> ready<span class="op">.</span>extract<span class="op">();</span></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>    switch_to<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>    permit<span class="op">-&gt;</span>take<span class="op">();</span></span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>    active<span class="op">-&gt;</span>link_permit<span class="op">(</span>permit<span class="op">);</span></span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-14" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb108"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>wait<span class="op">(</span><span class="at">const</span> <span class="dt">unsigned</span> t<span class="op">,</span> List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  Permit <span class="op">*</span>permit <span class="op">=</span> active<span class="op">-&gt;</span>ulink_permit<span class="op">();</span></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>  active<span class="op">-&gt;</span>tag <span class="op">=</span> t<span class="op">;</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>permit<span class="op">-&gt;</span>fulfilled_not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)</span>permit<span class="op">-&gt;</span>fulfilled_extract<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-15" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb109"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>    pretender<span class="op">-&gt;</span>link_permit<span class="op">(</span>permit<span class="op">);</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">.</span>insert<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>permit<span class="op">-&gt;</span>admission_not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)</span>permit<span class="op">-&gt;</span>admission_extract<span class="op">();</span></span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a>    pretender<span class="op">-&gt;</span>link_permit<span class="op">(</span>permit<span class="op">);</span></span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">.</span>insert<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-16" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb110"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>    permit<span class="op">-&gt;</span>release<span class="op">();</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>  waiting_list<span class="op">-&gt;</span>insert<span class="op">(</span>active<span class="op">);</span></span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>  pretender <span class="op">=</span> ready<span class="op">.</span>extract<span class="op">();</span></span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a>  switch_to<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>notify_one<span class="op">(</span>List_link <span class="op">*</span><span class="at">const</span> waiting_list<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>  Permit <span class="op">*</span>permit <span class="op">=</span> active<span class="op">-&gt;</span>last<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-17" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb111"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>permit <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="op">&amp;</span>failure_notify_outside_exclusive_region<span class="op">;</span></span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>waiting_list<span class="op">-&gt;</span>not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)</span>waiting_list<span class="op">-&gt;</span>extract<span class="op">();</span></span>
+<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>    permit<span class="op">-&gt;</span>fulfilled_insert<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-18" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb112"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Kernel<span class="op">::</span>exclusive_out<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>  Permit <span class="op">*</span>permit <span class="op">=</span> active<span class="op">-&gt;</span>ulink_permit<span class="op">();</span></span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>permit<span class="op">-&gt;</span>fulfilled_not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)</span>permit<span class="op">-&gt;</span>fulfilled_extract<span class="op">();</span></span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>    pretender<span class="op">-&gt;</span>link_permit<span class="op">(</span>permit<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-19" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb113"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">.</span>insert<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>permit<span class="op">-&gt;</span>admission_not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>    pretender <span class="op">=</span> <span class="op">(</span>Descriptor <span class="op">*)</span>permit<span class="op">-&gt;</span>admission_extract<span class="op">();</span></span>
+<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a>    pretender<span class="op">-&gt;</span>link_permit<span class="op">(</span>permit<span class="op">);</span></span>
+<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a>    ready<span class="op">.</span>insert<span class="op">(</span>pretender<span class="op">);</span></span>
+<span id="cb113-6"><a href="#cb113-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span></span>
+<span id="cb113-7"><a href="#cb113-7" aria-hidden="true" tabindex="-1"></a>    permit<span class="op">-&gt;</span>release<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-kernel-20" class="slide level2">
+<h2>Klasa Kernel</h2>
+<div class="sourceCode" id="cb114"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>  schedule<span class="op">();</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> Kernel kernel<span class="op">;</span></span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> yield<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a>  Atomic_region set_up<span class="op">;</span></span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">.</span>periodic_schedule<span class="op">();</span></span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-mutex" class="slide level2">
+<h2>Klasa mutex</h2>
+<div class="sourceCode" id="cb115"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> mutex <span class="op">:</span> <span class="kw">private</span> Permit <span class="op">{</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>  mutex<span class="op">(</span><span class="at">const</span> mutex <span class="op">&amp;);</span></span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>  mutex <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> mutex <span class="op">&amp;);</span></span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-5"><a href="#cb115-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb115-6"><a href="#cb115-6" aria-hidden="true" tabindex="-1"></a>  mutex<span class="op">(){};</span></span>
+<span id="cb115-7"><a href="#cb115-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> lock<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-mutex-1" class="slide level2">
+<h2>Klasa mutex</h2>
+<div class="sourceCode" id="cb116"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> unlock<span class="op">();</span></span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> mutex<span class="op">::</span>lock<span class="op">()</span> <span class="op">{</span> kernel<span class="op">.</span>exclusive_in<span class="op">(</span><span class="kw">this</span><span class="op">);</span> <span class="op">}</span></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> mutex<span class="op">::</span>unlock<span class="op">()</span> <span class="op">{</span> kernel<span class="op">.</span>exclusive_out<span class="op">();</span> <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-unique_lock" class="slide level2">
+<h2>Klasa unique_lock</h2>
+<div class="sourceCode" id="cb117"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="kw">class</span> MUTEX<span class="op">&gt;</span> <span class="kw">class</span> unique_lock <span class="op">{</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>  unique_lock<span class="op">(</span><span class="at">const</span> unique_lock <span class="op">&amp;);</span></span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>  unique_lock <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> unique_lock <span class="op">&amp;);</span></span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb117-5"><a href="#cb117-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb117-6"><a href="#cb117-6" aria-hidden="true" tabindex="-1"></a>  unique_lock<span class="op">(</span>MUTEX <span class="op">&amp;</span>mx<span class="op">);</span></span>
+<span id="cb117-7"><a href="#cb117-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">~</span>unique_lock<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-unique_lock-1" class="slide level2">
+<h2>Klasa unique_lock</h2>
+<div class="sourceCode" id="cb118"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="kw">class</span> MUTEX<span class="op">&gt;</span> unique_lock<span class="op">&lt;</span>MUTEX<span class="op">&gt;::</span>unique_lock<span class="op">(</span>MUTEX <span class="op">&amp;</span>mx<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">.</span>exclusive_in<span class="op">((</span>Permit <span class="op">*)&amp;</span>mx<span class="op">);</span></span>
+<span id="cb118-4"><a href="#cb118-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb118-5"><a href="#cb118-5" aria-hidden="true" tabindex="-1"></a><span class="kw">template</span> <span class="op">&lt;</span><span class="kw">class</span> MUTEX<span class="op">&gt;</span> unique_lock<span class="op">&lt;</span>MUTEX<span class="op">&gt;::~</span>unique_lock<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb118-6"><a href="#cb118-6" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">.</span>exclusive_out<span class="op">();</span></span>
+<span id="cb118-7"><a href="#cb118-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb119"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> condition_variable <span class="op">{</span></span>
+<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  List_link list_head<span class="op">;</span></span>
+<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  List_link <span class="op">*</span>position<span class="op">;</span></span>
+<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb119-6"><a href="#cb119-6" aria-hidden="true" tabindex="-1"></a>  condition_variable<span class="op">()</span> <span class="op">{</span> position <span class="op">=</span> <span class="op">&amp;</span>list_head<span class="op">;</span> <span class="op">};</span></span>
+<span id="cb119-7"><a href="#cb119-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> wait<span class="op">(</span>unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> <span class="op">&amp;</span>lock<span class="op">,</span> <span class="dt">unsigned</span> t <span class="op">=</span> <span class="dv">0</span><span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-1" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb120"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> notify_one<span class="op">();</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> first<span class="op">(</span><span class="dt">unsigned</span> <span class="op">*</span>t <span class="op">=</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> last<span class="op">();</span></span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> next<span class="op">(</span><span class="dt">unsigned</span> <span class="op">*</span>t <span class="op">=</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> attach_tag<span class="op">(</span><span class="dt">unsigned</span> t<span class="op">);</span></span>
+<span id="cb120-6"><a href="#cb120-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb120-7"><a href="#cb120-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> condition_variable<span class="op">::</span>wait<span class="op">(</span>unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> <span class="op">&amp;</span>lock<span class="op">,</span> <span class="dt">unsigned</span> t<span class="op">)</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-2" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb121"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">.</span>wait<span class="op">(</span>t<span class="op">,</span> position<span class="op">);</span></span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>  position <span class="op">=</span> <span class="op">&amp;</span>list_head<span class="op">;</span></span>
+<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> condition_variable<span class="op">::</span>notify_one<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">.</span>notify_one<span class="op">(&amp;</span>list_head<span class="op">);</span></span>
+<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>  position <span class="op">=</span> <span class="op">&amp;</span>list_head<span class="op">;</span></span>
+<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-3" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb122"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> condition_variable<span class="op">::</span>first<span class="op">(</span><span class="dt">unsigned</span> <span class="op">*</span>t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> r <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>list_head<span class="op">.</span>not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>    position <span class="op">=</span> list_head<span class="op">.</span>right_get<span class="op">();</span></span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>t <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>      <span class="op">*</span>t <span class="op">=</span> <span class="op">((</span>Descriptor <span class="op">*)</span>position<span class="op">)-&gt;</span>tag_get<span class="op">();</span></span>
+<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-4" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb123"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span>r<span class="op">);</span></span>
+<span id="cb123-3"><a href="#cb123-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> condition_variable<span class="op">::</span>last<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> r <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb123-6"><a href="#cb123-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>list_head<span class="op">.</span>not_empty<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb123-7"><a href="#cb123-7" aria-hidden="true" tabindex="-1"></a>    position <span class="op">=</span> <span class="op">&amp;</span>list_head<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-5" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb124"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span>r<span class="op">);</span></span>
+<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb124-5"><a href="#cb124-5" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> condition_variable<span class="op">::</span>next<span class="op">(</span><span class="dt">unsigned</span> <span class="op">*</span>t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb124-6"><a href="#cb124-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> r <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb124-7"><a href="#cb124-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>position <span class="op">!=</span> <span class="op">&amp;</span>list_head<span class="op">)</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-6" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb125"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>    position <span class="op">=</span> position<span class="op">-&gt;</span>right_get<span class="op">();</span></span>
+<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>position <span class="op">!=</span> <span class="op">&amp;</span>list_head<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>t <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">*</span>t <span class="op">=</span> <span class="op">((</span>Descriptor <span class="op">*)</span>position<span class="op">)-&gt;</span>tag_get<span class="op">();</span></span>
+<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>      r <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-7" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb126"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span>r<span class="op">);</span></span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> condition_variable<span class="op">::</span>attach_tag<span class="op">(</span><span class="dt">unsigned</span> t<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> r <span class="op">=</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb126-5"><a href="#cb126-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>position <span class="op">!=</span> <span class="op">&amp;</span>list_head<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb126-6"><a href="#cb126-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">((</span>Descriptor <span class="op">*)</span>position<span class="op">)-&gt;</span>tag_set<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb126-7"><a href="#cb126-7" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-condition_variable-8" class="slide level2">
+<h2>Klasa condition_variable</h2>
+<div class="sourceCode" id="cb127"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span>r<span class="op">);</span></span>
+<span id="cb127-3"><a href="#cb127-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-driver" class="slide level2">
+<h2>Klasa Driver</h2>
+<ul>
+<li>Klasa Driver omogućuje smeštanje adrese obrađivača prekida u tabelu prekida: Driver::start_interrupt_handling().</li>
+<li>Pored toga, ova klasa uvodi definiciju klase Event koja omogućuje zaustavljanje aktivnosti niti do dešavanja događaja i objavu dešavanja događaja.</li>
+</ul>
+</section>
+<section id="klasa-driver-1" class="slide level2">
+<h2>Klasa Driver</h2>
+<div class="sourceCode" id="cb128"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Driver <span class="op">{</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="kw">protected</span><span class="op">:</span></span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> start_interrupt_handling<span class="op">(</span>Vector_numbers vector_number<span class="op">,</span></span>
+<span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a>                                <span class="dt">void</span> <span class="op">(*</span>handler<span class="op">)());</span></span>
+<span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span> Event <span class="op">{</span></span>
+<span id="cb128-6"><a href="#cb128-6" aria-hidden="true" tabindex="-1"></a>    List_link list_head<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-driver-2" class="slide level2">
+<h2>Klasa Driver</h2>
+<div class="sourceCode" id="cb129"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> expect<span class="op">();</span></span>
+<span id="cb129-3"><a href="#cb129-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> signal<span class="op">();</span></span>
+<span id="cb129-4"><a href="#cb129-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb129-5"><a href="#cb129-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb129-6"><a href="#cb129-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Driver<span class="op">::</span>start_interrupt_handling<span class="op">(</span>Vector_numbers vector_number<span class="op">,</span></span>
+<span id="cb129-7"><a href="#cb129-7" aria-hidden="true" tabindex="-1"></a>                                      <span class="dt">void</span> <span class="op">(*</span>handler<span class="op">)())</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-driver-3" class="slide level2">
+<h2>Klasa Driver</h2>
+<div class="sourceCode" id="cb130"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>  ad__set_vector<span class="op">(</span>vector_number<span class="op">,</span> handler<span class="op">);</span></span>
+<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Driver<span class="op">::</span>Event<span class="op">::</span>expect<span class="op">()</span> <span class="op">{</span> kernel<span class="op">.</span>expect<span class="op">(&amp;</span>list_head<span class="op">);</span> <span class="op">}</span></span>
+<span id="cb130-5"><a href="#cb130-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Driver <span class="op">{</span></span>
+<span id="cb130-6"><a href="#cb130-6" aria-hidden="true" tabindex="-1"></a><span class="kw">protected</span><span class="op">:</span></span>
+<span id="cb130-7"><a href="#cb130-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> start_interrupt_handling<span class="op">(</span>Vector_numbers vector_number<span class="op">,</span></span></code></pre></div>
+</section>
+<section id="klasa-driver-4" class="slide level2">
+<h2>Klasa Driver</h2>
+<div class="sourceCode" id="cb131"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>                                <span class="dt">void</span> <span class="op">(*</span>handler<span class="op">)());</span></span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">class</span> Event <span class="op">{</span></span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>    List_link list_head<span class="op">;</span></span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">public</span><span class="op">:</span></span>
+<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> expect<span class="op">();</span></span>
+<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> signal<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klasa-driver-5" class="slide level2">
+<h2>Klasa Driver</h2>
+<div class="sourceCode" id="cb132"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Driver<span class="op">::</span>start_interrupt_handling<span class="op">(</span>Vector_numbers vector_number<span class="op">,</span></span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a>                                      <span class="dt">void</span> <span class="op">(*</span>handler<span class="op">)())</span> <span class="op">{</span></span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span>
+<span id="cb132-6"><a href="#cb132-6" aria-hidden="true" tabindex="-1"></a>  ad__set_vector<span class="op">(</span>vector_number<span class="op">,</span> handler<span class="op">);</span></span>
+<span id="cb132-7"><a href="#cb132-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-driver-6" class="slide level2">
+<h2>Klasa Driver</h2>
+<div class="sourceCode" id="cb133"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Driver<span class="op">::</span>Event<span class="op">::</span>expect<span class="op">()</span> <span class="op">{</span> kernel<span class="op">.</span>expect<span class="op">(&amp;</span>list_head<span class="op">);</span> <span class="op">}</span></span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Driver<span class="op">::</span>Event<span class="op">::</span>signal<span class="op">()</span> <span class="op">{</span> kernel<span class="op">.</span>signal<span class="op">(&amp;</span>list_head<span class="op">);</span> <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<ul>
+<li>Iz klase Driver su izvedene klase Exception_driver i Timer_driver.</li>
+<li>Prva od njih omogućuje reakciju na pojavu hardverskih izuzetaka, radi izazivanja prevremenog kraja konkurentnog programa.</li>
+<li>Druga od ovih klasa omogućuje rukovanje vremenom.</li>
+<li>Klasa Exception_driver uvodi operaciju interrupt_handler(). Ova operacija zaustavlja izvršavanje konkurentnog programa.</li>
+</ul>
+</section>
+<section id="klase-exception_driver-i-timer_driver-1" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<ul>
+<li>Rukovanje vremenom obuhvata:</li>
+<li>brojanje otkucaja sata, radi praćenja proticanja sistemskog vremena</li>
+<li>odbrojavanje otkucaja sata preostalih do kraja kvantuma aktivne niti</li>
+<li>odbrojavanja otkucaja sata preostalih do buđenja uspavane niti</li>
+<li>Kada broj otkucaja, preostalih do isticanja kvantuma aktivne niti, padne na nulu, potrebno je pokrenuti periodično raspoređivanje.</li>
+</ul>
+</section>
+<section id="klase-exception_driver-i-timer_driver-2" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<ul>
+<li>Takođe, kada broj otkucaja, preostalih do buđenja uspavane niti, padne na nulu, potrebno je probuditi sve niti za koje je nastupio trenutak buđenja.</li>
+<li>Svi prethodno pobrojani poslovi se nalaze u nadležnosti operacije interrupt_handler() koju uvodi klasa Timer_driver.</li>
+<li>Polje current_ticks ove klase sadrži sistemsko vreme, polje countdown sadrži broj otkucaja do buđenja, a polje rest broj otkucaja do isticanja kvantuma.</li>
+<li>Funkcija now() vraća sadržaj polja current_ticks, odnosno vraća sistemsko vreme.</li>
+</ul>
+</section>
+<section id="klase-exception_driver-i-timer_driver-3" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb134"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">unsigned</span> <span class="dt">long</span> QUANTUM <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Exception_driver <span class="op">:</span> <span class="kw">public</span> Driver <span class="op">{</span></span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">void</span> interrupt_handler<span class="op">();</span></span>
+<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a>  Exception_driver<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb134-7"><a href="#cb134-7" aria-hidden="true" tabindex="-1"></a>    start_interrupt_handling<span class="op">(</span>FP_EXCEPTION<span class="op">,</span> interrupt_handler<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver-4" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb135"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">};</span></span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Exception_driver<span class="op">::</span>interrupt_handler<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a>  ad__report_and_finish<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">HARDWARE EXCEPTION!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> Exception_driver exception_driver<span class="op">;</span></span>
+<span id="cb135-7"><a href="#cb135-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Timer_driver <span class="op">:</span> <span class="kw">public</span> Driver <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver-5" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb136"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">unsigned</span> <span class="dt">long</span> current_ticks<span class="op">;</span></span>
+<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">unsigned</span> <span class="dt">long</span> countdown<span class="op">;</span></span>
+<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">unsigned</span> <span class="dt">long</span> rest<span class="op">;</span></span>
+<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">unsigned</span> <span class="dt">long</span> quantum<span class="op">;</span></span>
+<span id="cb136-5"><a href="#cb136-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> Event alarm<span class="op">;</span></span>
+<span id="cb136-6"><a href="#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">void</span> interrupt_handler<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver-6" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb137"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>  Timer_driver<span class="op">()</span> <span class="op">{</span> start_interrupt_handling<span class="op">(</span>TIMER<span class="op">,</span> interrupt_handler<span class="op">);</span> <span class="op">};</span></span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="dt">unsigned</span> <span class="dt">long</span> now<span class="op">();</span></span>
+<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> Delta<span class="op">;</span></span>
+<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">long</span> Timer_driver<span class="op">::</span>current_ticks <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb137-7"><a href="#cb137-7" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">long</span> Timer_driver<span class="op">::</span>countdown <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver-7" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb138"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">long</span> Timer_driver<span class="op">::</span>rest <span class="op">=</span> QUANTUM<span class="op">;</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>Timer_driver<span class="op">::</span>Event Timer_driver<span class="op">::</span>alarm<span class="op">;</span></span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Timer_driver<span class="op">::</span>interrupt_handler<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a>  current_ticks<span class="op">++;</span></span>
+<span id="cb138-5"><a href="#cb138-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">((--</span>rest<span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb138-6"><a href="#cb138-6" aria-hidden="true" tabindex="-1"></a>    rest <span class="op">=</span> quantum<span class="op">;</span></span>
+<span id="cb138-7"><a href="#cb138-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">((</span>countdown <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">((--</span>countdown<span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">))</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver-8" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb139"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>    alarm<span class="op">.</span>signal<span class="op">();</span></span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>rest <span class="op">==</span> quantum<span class="op">)</span></span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>    kernel<span class="op">.</span>periodic_schedule<span class="op">();</span></span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> Timer_driver timer_driver<span class="op">;</span></span>
+<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">long</span> now<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb139-7"><a href="#cb139-7" aria-hidden="true" tabindex="-1"></a>  Atomic_region ar<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klase-exception_driver-i-timer_driver-9" class="slide level2">
+<h2>Klase Exception_driver i Timer_driver</h2>
+<div class="sourceCode" id="cb140"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> timer_driver<span class="op">.</span>current_ticks<span class="op">;</span></span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<ul>
+<li>Klasa Memory_fragment omogućuje rukovanje slobodnom radnom memorijom. Slobodnu radnu memoriju obrazuje celi broj jedinica sastavljenih od UNIT bajta.</li>
+<li>Rukovanje slobodnom radnom memorijom podrazumeva da se uvek zauzima, odnosno da se uvek oslobađa celi broj ovih jedinica.</li>
+<li>Zauzimanja ovakvih zona slobodne radne memorije, odnosno njihova oslobađanja uzrokuju iscepkanost slobodne radne memorije u odsečke.</li>
+<li>Odsečci se zato uvezuju u jednosmernu listu, uređenu u rastućem redosledu njihovih početnih adresa.</li>
+<li>Radi toga, početak svakog odsečka sadrži svoju veličinu, izraženu u pomenutim jedinicama od po UNIT bajta, i pokazivač narednog odsečka.</li>
+<li>Veličinu odsečka i pokazivač narednog odsečka sadrže polja size i next klase Memory_fragment.</li>
+</ul>
+</section>
+<section id="klasa-memory_fragment-1" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<ul>
+<li>Konstruktor klase Memory_fragment opisuje obrazovanje liste odsečaka slobodne radne memorije, sastavljene od stalnog odsečka čija veličina je 0 i od odsečka koji obuhvata raspoloživu slobodnu radnu memoriju.</li>
+<li>Stalnom (prvom) odsečku odgovara objekt memory klase Memory_fragment, koji je jedini objekt ove klase. Dodavanju drugog odsečka prethodi provera da li je obezbeđeno dovoljno radne memorije za potrebe konkurentnog programa.</li>
+<li>Ako nije, izvršavanje konkurentnog programa se završava uz poruku INITIAL MEMORY SHORTAGE.</li>
+<li>Pošto je UNIT jednak veličini stranice, uvek se zauzima toliko radne memorije da u nju može da stane traženi broj stranica, a da početak raspoložive slobodne radne memorije bude postavljen na početak prve stranice.</li>
+</ul>
+</section>
+<section id="klasa-memory_fragment-2" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<ul>
+<li>Zauzimanje slobodne radne memorije omogućuje operacija take() klase Memory_fragment.</li>
+<li>Zauzima se jedna jedinica od UNIT bajta više nego što je traženo.</li>
+<li>Ona prethodi preostalim zauzetim jedinicama memorije i sadrži ukupnu veličinu zauzete memorije. Ova veličina se koristi prilikom kasnijeg oslobađanja zauzete memorije.</li>
+<li>Zauzimanju prethodi pretraživanje liste odsečaka, radi pronalaženja prvog dovoljno velikog odsečka.</li>
+<li>Pretraživanje uvek počinje od stalnog odsečka. Ako se pronađe dovoljno velik odsečak, traženi bajti se zauzimaju s njegovog kraja. Ako pronađeni odsečak obuhvata baš traženi broj bajta, tada se on isključuje iz liste i zauzimaju se svi njegovi bajti.</li>
+</ul>
+</section>
+<section id="klasa-memory_fragment-3" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<ul>
+<li>Oslobađanje prethodno zauzete radne memorije omogućuje operacija free() klase Memory_fragment.</li>
+<li>Za oslobađanje je neophodno u listi odsečaka pronaći odsečak iza koga će se oslobađani odsečak uvezati u ovu listu.</li>
+<li>Pre uvezivanja proverava se da li oslobađani odsečak može da se spoji u jedan odsečak sa svojim prethodnikom i sa svojim sledbenikom.</li>
+<li>Odsečak se uvezuje u pomenutu listu samo ako ovo spajanje nije moguće.</li>
+</ul>
+</section>
+<section id="klasa-memory_fragment-4" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<ul>
+<li>Prethodno opisane operacije klase Memory_fragment su namenjene za zauzimanje i oslobađanje radne memorije prilikom stvaranja i uništavanja objekata pojedinih klasa.</li>
+<li>Da bi se njihova namena ostvarila, neophodno je da ove operacije pozivaju globalni operatori new() i delete().</li>
+<li>Ali, tada razne niti mogu da pozivaju operacije klase Memory_fragment posredstvom prethodna dva operatora i da tako ugroze konzistentnost liste odsečaka.</li>
+<li>Da bi se to sprečilo, ova klasa nasleđuje klasu mutex i tako omogućuje zaključavanje i otključavanje njenog jedinog objekta memory. To je obezbeđeno u definicijama funkcija operator new() i operator delete(), radi ostvarenja međusobne isključivosti različitih pristupanja listi odsečaka.</li>
+</ul>
+</section>
+<section id="klasa-memory_fragment-5" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb141"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">size_t</span> UNIT <span class="op">=</span> PAGE_SIZE<span class="op">;</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Memory_fragment <span class="op">:</span> <span class="kw">public</span> mutex <span class="op">{</span></span>
+<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">size_t</span> size<span class="op">;</span></span>
+<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>  Memory_fragment <span class="op">*</span>next<span class="op">;</span></span>
+<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>  Memory_fragment<span class="op">(</span><span class="at">const</span> Memory_fragment <span class="op">&amp;);</span></span>
+<span id="cb141-6"><a href="#cb141-6" aria-hidden="true" tabindex="-1"></a>  Memory_fragment <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Memory_fragment <span class="op">&amp;);</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-6" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb142"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>  Memory_fragment<span class="op">();</span></span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">*</span>take<span class="op">(</span><span class="dt">size_t</span> size<span class="op">);</span></span>
+<span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> free<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>address<span class="op">);</span></span>
+<span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb142-6"><a href="#cb142-6" aria-hidden="true" tabindex="-1"></a>Memory_fragment<span class="op">::</span>Memory_fragment<span class="op">()</span> <span class="op">:</span> size<span class="op">(</span><span class="dv">0</span><span class="op">),</span> next<span class="op">(</span><span class="kw">this</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb142-7"><a href="#cb142-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">size_t</span> free_memory <span class="op">=</span> <span class="dv">2000</span> <span class="op">*</span> UNIT<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-7" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb143"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>  <span class="dt">size_t</span> beginning <span class="op">=</span> <span class="op">(</span><span class="dt">size_t</span><span class="op">)</span>malloc<span class="op">(</span>free_memory <span class="op">+</span> UNIT <span class="op">-</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>beginning <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a>    ad__report_and_finish<span class="op">(</span><span class="st">&quot;INITIAL MEMORY SHORTAGE&quot;</span><span class="op">);</span></span>
+<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb143-5"><a href="#cb143-5" aria-hidden="true" tabindex="-1"></a>    beginning <span class="op">=</span> <span class="op">(</span>beginning <span class="op">+</span> UNIT <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">~(</span>UNIT <span class="op">-</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb143-6"><a href="#cb143-6" aria-hidden="true" tabindex="-1"></a>    next <span class="op">=</span> <span class="op">(</span>Memory_fragment <span class="op">*)</span>beginning<span class="op">;</span></span>
+<span id="cb143-7"><a href="#cb143-7" aria-hidden="true" tabindex="-1"></a>    next<span class="op">-&gt;</span>size <span class="op">=</span> free_memory<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-8" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb144"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a>    next<span class="op">-&gt;</span>next <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span>
+<span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb144-3"><a href="#cb144-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb144-4"><a href="#cb144-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>Memory_fragment<span class="op">::</span>take<span class="op">(</span><span class="dt">size_t</span> size<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb144-5"><a href="#cb144-5" aria-hidden="true" tabindex="-1"></a>  size <span class="op">+=</span> <span class="dv">2</span> <span class="op">*</span> UNIT – <span class="dv">1</span><span class="op">;</span> <span class="co">// 1 UNIT za broj zauzetih i drugi ako</span></span>
+<span id="cb144-6"><a href="#cb144-6" aria-hidden="true" tabindex="-1"></a>  size <span class="op">-=</span> size <span class="op">%</span> UNIT<span class="op">;</span>  <span class="co">// size nije ceo broj unita</span></span>
+<span id="cb144-7"><a href="#cb144-7" aria-hidden="true" tabindex="-1"></a>  Memory_fragment <span class="op">*</span>m <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-9" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb145"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>  Memory_fragment <span class="op">*</span>p <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="op">(</span>p<span class="op">-&gt;</span>next <span class="op">!=</span> <span class="kw">this</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">((</span>p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>size<span class="op">)</span> <span class="op">&lt;</span> size<span class="op">)</span></span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a>      p <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>size <span class="op">==</span> size<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a>      m <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>      p<span class="op">-&gt;</span>next <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-10" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb146"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>      p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>size <span class="op">-=</span> size<span class="op">;</span></span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a>      m <span class="op">=</span> <span class="op">(</span>Memory_fragment <span class="op">*)((</span><span class="dt">size_t</span><span class="op">)(</span>p<span class="op">-&gt;</span>next<span class="op">)</span> <span class="op">+</span> <span class="op">(</span>p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>size<span class="op">));</span></span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-11" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb147"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>m <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb147-2"><a href="#cb147-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="op">&amp;</span>failure_memory_shortage<span class="op">;</span></span>
+<span id="cb147-3"><a href="#cb147-3" aria-hidden="true" tabindex="-1"></a>  m<span class="op">-&gt;</span>size <span class="op">=</span> size<span class="op">;</span></span>
+<span id="cb147-4"><a href="#cb147-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span><span class="dt">void</span> <span class="op">*)((</span><span class="dt">size_t</span><span class="op">)</span>m <span class="op">+</span> UNIT<span class="op">);</span></span>
+<span id="cb147-5"><a href="#cb147-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb147-6"><a href="#cb147-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Memory_fragment<span class="op">::</span>free<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>address<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb147-7"><a href="#cb147-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>address <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-12" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb148"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>    Memory_fragment <span class="op">*</span>a <span class="op">=</span> <span class="op">(</span>Memory_fragment <span class="op">*)((</span><span class="dt">size_t</span><span class="op">)</span>address <span class="op">-</span> UNIT<span class="op">);</span></span>
+<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a>    Memory_fragment <span class="op">*</span>p <span class="op">=</span> <span class="kw">this</span><span class="op">;</span></span>
+<span id="cb148-3"><a href="#cb148-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>p<span class="op">-&gt;</span>next <span class="op">!=</span> <span class="kw">this</span><span class="op">)</span></span>
+<span id="cb148-4"><a href="#cb148-4" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">(</span>a <span class="op">&gt;</span> p<span class="op">-&gt;</span>next<span class="op">)</span></span>
+<span id="cb148-5"><a href="#cb148-5" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb148-6"><a href="#cb148-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">else</span></span>
+<span id="cb148-7"><a href="#cb148-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-13" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb149"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">((((</span><span class="dt">size_t</span><span class="op">)</span>p<span class="op">)</span> <span class="op">+</span> <span class="op">(</span>p<span class="op">-&gt;</span>size<span class="op">))</span> <span class="op">==</span> <span class="op">((</span><span class="dt">size_t</span><span class="op">)</span>a<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>      p<span class="op">-&gt;</span>size <span class="op">+=</span> a<span class="op">-&gt;</span>size<span class="op">;</span></span>
+<span id="cb149-3"><a href="#cb149-3" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="op">((((</span><span class="dt">size_t</span><span class="op">)</span>p<span class="op">)</span> <span class="op">+</span> <span class="op">(</span>p<span class="op">-&gt;</span>size<span class="op">))</span> <span class="op">==</span> <span class="op">((</span><span class="dt">size_t</span><span class="op">)(</span>p<span class="op">-&gt;</span>next<span class="op">)))</span> <span class="op">{</span></span>
+<span id="cb149-4"><a href="#cb149-4" aria-hidden="true" tabindex="-1"></a>        p<span class="op">-&gt;</span>size <span class="op">+=</span> p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>size<span class="op">;</span></span>
+<span id="cb149-5"><a href="#cb149-5" aria-hidden="true" tabindex="-1"></a>        p<span class="op">-&gt;</span>next <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb149-6"><a href="#cb149-6" aria-hidden="true" tabindex="-1"></a>      <span class="op">}</span></span>
+<span id="cb149-7"><a href="#cb149-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">((((</span><span class="dt">size_t</span><span class="op">)</span>a<span class="op">)</span> <span class="op">+</span> <span class="op">(</span>a<span class="op">-&gt;</span>size<span class="op">))</span> <span class="op">==</span> <span class="op">((</span><span class="dt">size_t</span><span class="op">)(</span>p<span class="op">-&gt;</span>next<span class="op">)))</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-14" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb150"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>      a<span class="op">-&gt;</span>size <span class="op">+=</span> p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>size<span class="op">;</span></span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>      a<span class="op">-&gt;</span>next <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a>      p<span class="op">-&gt;</span>next <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb150-4"><a href="#cb150-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb150-5"><a href="#cb150-5" aria-hidden="true" tabindex="-1"></a>      a<span class="op">-&gt;</span>next <span class="op">=</span> p<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb150-6"><a href="#cb150-6" aria-hidden="true" tabindex="-1"></a>      p<span class="op">-&gt;</span>next <span class="op">=</span> a<span class="op">;</span></span>
+<span id="cb150-7"><a href="#cb150-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-15" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb151"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a><span class="at">static</span> Memory_fragment memory<span class="op">;</span></span>
+<span id="cb151-4"><a href="#cb151-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span><span class="kw">operator</span> <span class="kw">new</span><span class="op">(</span><span class="dt">size_t</span> size<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb151-5"><a href="#cb151-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> <span class="op">*</span>memory_block<span class="op">;</span></span>
+<span id="cb151-6"><a href="#cb151-6" aria-hidden="true" tabindex="-1"></a>  memory<span class="op">.</span>lock<span class="op">();</span></span>
+<span id="cb151-7"><a href="#cb151-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> <span class="op">{</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-16" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb152"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>    memory_block <span class="op">=</span> memory<span class="op">.</span>take<span class="op">(</span>size<span class="op">);</span></span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">catch</span> <span class="op">(...)</span> <span class="op">{</span></span>
+<span id="cb152-3"><a href="#cb152-3" aria-hidden="true" tabindex="-1"></a>    memory<span class="op">.</span>unlock<span class="op">();</span></span>
+<span id="cb152-4"><a href="#cb152-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span><span class="op">;</span></span>
+<span id="cb152-5"><a href="#cb152-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb152-6"><a href="#cb152-6" aria-hidden="true" tabindex="-1"></a>  memory<span class="op">.</span>unlock<span class="op">();</span></span>
+<span id="cb152-7"><a href="#cb152-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> memory_block<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klasa-memory_fragment-17" class="slide level2">
+<h2>Klasa Memory_fragment</h2>
+<div class="sourceCode" id="cb153"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb153-2"><a href="#cb153-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="kw">operator</span> <span class="kw">delete</span><span class="op">(</span><span class="dt">void</span> <span class="op">*</span>address<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb153-3"><a href="#cb153-3" aria-hidden="true" tabindex="-1"></a>  memory<span class="op">.</span>lock<span class="op">();</span></span>
+<span id="cb153-4"><a href="#cb153-4" aria-hidden="true" tabindex="-1"></a>  memory<span class="op">.</span>free<span class="op">(</span>address<span class="op">);</span></span>
+<span id="cb153-5"><a href="#cb153-5" aria-hidden="true" tabindex="-1"></a>  memory<span class="op">.</span>unlock<span class="op">();</span></span>
+<span id="cb153-6"><a href="#cb153-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<ul>
+<li>Rukovanje nitima omogućuju klase Thread_image i thread, kao i definicije funkcija thread_destroyer_deamon(), destroy() i undetached_threads().</li>
+<li>Klasa Thread_image opisuje sliku niti, sastavljenu od:</li>
+<li>deskriptora niti</li>
+<li>uslova (ended) koji omogućuje čekanje završetka aktivnosti niti</li>
+<li>oznake da regularan kraj aktivnosti niti može da nastupi kao posledica kraja aktivnosti procesa kome dotična nit pripada (detached)</li>
+<li>steka niti</li>
+</ul>
+</section>
+<section id="klase-thread_image-i-thread-1" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<ul>
+<li>Klasa thread omogućuje:</li>
+<li>međusobnu isključivost svojih operacija (mx)</li>
+<li>brojanje niti za koje koje nije regularno da kraj njihove aktivnosti nastupi kao posledica kraja aktivnosti procesa kome dotične niti pripadaju (undetached_threads_number)</li>
+<li>uništavanje niti (termination, terminating)</li>
+<li>pristup slici niti (ti)</li>
+<li>Konstruktor klase thread omogućuje kreiranje niti. U toku kreiranja niti pripremi se njen stek za preključivanje, da bi automatski započelo izvršavanje funkcije koja opisuje ponašanje niti nakon prvog preključivanja na nit.</li>
+<li>Završetak aktivnosti niti se otkriva u okviru operacija join() i detach() na osnovu završnog prioriteta niti (TERMINAL).</li>
+</ul>
+</section>
+<section id="klase-thread_image-i-thread-2" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<ul>
+<li>Na završetku aktivnosti niti, u toku izvršavanja funkcije destroy(), omogućuje se nastavak aktivnosti niti koja čeka dotični završetak i oslobađanje prostora koga zauzima slika niti, što je u nadležnosti sistemske niti thread_destroyer_deamon().</li>
+<li>Funkcija undetached_threads() omogućuje proveru da li postoje niti za koje nije regularno da kraj njihove aktivnosti nastupi kao posledica kraja aktivnosti procesa kome dotične niti pripadaju, da bi se na kraju aktivnosti procesa ukazalo na prevremeni završetak ovakvih niti.</li>
+</ul>
+</section>
+<section id="klase-thread_image-i-thread-3" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb154"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">unsigned</span> DEFAULT_STACK_SIZE <span class="op">=</span> <span class="dv">4096</span><span class="op">;</span></span>
+<span id="cb154-2"><a href="#cb154-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Thread_image <span class="op">:</span> <span class="kw">public</span> Descriptor <span class="op">{</span></span>
+<span id="cb154-3"><a href="#cb154-3" aria-hidden="true" tabindex="-1"></a>  condition_variable ended<span class="op">;</span></span>
+<span id="cb154-4"><a href="#cb154-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">bool</span> detached<span class="op">;</span></span>
+<span id="cb154-5"><a href="#cb154-5" aria-hidden="true" tabindex="-1"></a>  Stack_item stack<span class="op">[</span>DEFAULT_STACK_SIZE<span class="op">];</span></span>
+<span id="cb154-6"><a href="#cb154-6" aria-hidden="true" tabindex="-1"></a>  Thread_image<span class="op">(</span><span class="at">const</span> Thread_image <span class="op">&amp;);</span></span>
+<span id="cb154-7"><a href="#cb154-7" aria-hidden="true" tabindex="-1"></a>  Thread_image <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> Thread_image <span class="op">&amp;);</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-4" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb155"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb155-2"><a href="#cb155-2" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb155-3"><a href="#cb155-3" aria-hidden="true" tabindex="-1"></a>  Thread_image<span class="op">(</span><span class="dt">void</span> <span class="op">(*</span>thread_function<span class="op">)(),</span> Priority p<span class="op">);</span></span>
+<span id="cb155-4"><a href="#cb155-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="kw">class</span> thread<span class="op">;</span></span>
+<span id="cb155-5"><a href="#cb155-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="dt">void</span> destroy<span class="op">();</span></span>
+<span id="cb155-6"><a href="#cb155-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb155-7"><a href="#cb155-7" aria-hidden="true" tabindex="-1"></a>Thread_image<span class="op">::</span>Thread_image<span class="op">(</span><span class="dt">void</span> <span class="op">(*</span>thread_function<span class="op">)(),</span> Priority p<span class="op">)</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-5" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb156"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>    <span class="op">:</span> detached<span class="op">(</span><span class="kw">false</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb156-2"><a href="#cb156-2" aria-hidden="true" tabindex="-1"></a>  stack_top <span class="op">=</span> <span class="op">&amp;(</span>stack<span class="op">[</span>DEFAULT_STACK_SIZE<span class="op">]);</span></span>
+<span id="cb156-3"><a href="#cb156-3" aria-hidden="true" tabindex="-1"></a>  ad__stack_init<span class="op">(&amp;</span>stack_top<span class="op">,</span> <span class="op">(</span><span class="dt">unsigned</span><span class="op">)</span>thread_function<span class="op">);</span></span>
+<span id="cb156-4"><a href="#cb156-4" aria-hidden="true" tabindex="-1"></a>  priority <span class="op">=</span> p<span class="op">;</span></span>
+<span id="cb156-5"><a href="#cb156-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb156-6"><a href="#cb156-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> thread <span class="op">{</span></span>
+<span id="cb156-7"><a href="#cb156-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> mutex mx<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-6" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb157"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> <span class="dt">unsigned</span> undetached_threads_number<span class="op">;</span></span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> condition_variable termination<span class="op">;</span></span>
+<span id="cb157-3"><a href="#cb157-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">static</span> Thread_image <span class="op">*</span>terminating<span class="op">;</span></span>
+<span id="cb157-4"><a href="#cb157-4" aria-hidden="true" tabindex="-1"></a>  Thread_image <span class="op">*</span>ti<span class="op">;</span></span>
+<span id="cb157-5"><a href="#cb157-5" aria-hidden="true" tabindex="-1"></a>  thread<span class="op">(</span><span class="at">const</span> thread <span class="op">&amp;);</span></span>
+<span id="cb157-6"><a href="#cb157-6" aria-hidden="true" tabindex="-1"></a>  thread <span class="op">&amp;</span><span class="kw">operator</span><span class="op">=(</span><span class="at">const</span> thread <span class="op">&amp;);</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-7" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb158"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>  thread<span class="op">(</span><span class="dt">void</span> <span class="op">(*</span>thread_function<span class="op">)(),</span> Priority p <span class="op">=</span> PR15<span class="op">);</span></span>
+<span id="cb158-3"><a href="#cb158-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> join<span class="op">();</span></span>
+<span id="cb158-4"><a href="#cb158-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">void</span> detach<span class="op">();</span></span>
+<span id="cb158-5"><a href="#cb158-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="dt">void</span> thread_destroyer_deamon<span class="op">();</span></span>
+<span id="cb158-6"><a href="#cb158-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="dt">void</span> destroy<span class="op">();</span></span>
+<span id="cb158-7"><a href="#cb158-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">friend</span> <span class="dt">bool</span> undetached_threads<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-8" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb159"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb159-2"><a href="#cb159-2" aria-hidden="true" tabindex="-1"></a>mutex thread<span class="op">::</span>mx<span class="op">;</span></span>
+<span id="cb159-3"><a href="#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> thread<span class="op">::</span>undetached_threads_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb159-4"><a href="#cb159-4" aria-hidden="true" tabindex="-1"></a>condition_variable thread<span class="op">::</span>termination<span class="op">;</span></span>
+<span id="cb159-5"><a href="#cb159-5" aria-hidden="true" tabindex="-1"></a>Thread_image <span class="op">*</span>thread<span class="op">::</span>terminating<span class="op">;</span></span>
+<span id="cb159-6"><a href="#cb159-6" aria-hidden="true" tabindex="-1"></a>thread<span class="op">::</span>thread<span class="op">(</span><span class="dt">void</span> <span class="op">(*</span>thread_function<span class="op">)(),</span> Priority p<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb159-7"><a href="#cb159-7" aria-hidden="true" tabindex="-1"></a>  ti <span class="op">=</span> <span class="kw">new</span> Thread_image<span class="op">(</span>thread_function<span class="op">,</span> p<span class="op">);</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-9" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb160"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>  unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb160-2"><a href="#cb160-2" aria-hidden="true" tabindex="-1"></a>  undetached_threads_number<span class="op">++;</span></span>
+<span id="cb160-3"><a href="#cb160-3" aria-hidden="true" tabindex="-1"></a>  kernel<span class="op">.</span>make_ready<span class="op">(</span>ti<span class="op">);</span></span>
+<span id="cb160-4"><a href="#cb160-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb160-5"><a href="#cb160-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread<span class="op">::</span>join<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb160-6"><a href="#cb160-6" aria-hidden="true" tabindex="-1"></a>  unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb160-7"><a href="#cb160-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>ti<span class="op">-&gt;</span>priority <span class="op">!=</span> TERMINAL<span class="op">)</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-10" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb161"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb161-1"><a href="#cb161-1" aria-hidden="true" tabindex="-1"></a>    ti<span class="op">-&gt;</span>ended<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb161-2"><a href="#cb161-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb161-3"><a href="#cb161-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread<span class="op">::</span>detach<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb161-4"><a href="#cb161-4" aria-hidden="true" tabindex="-1"></a>  unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb161-5"><a href="#cb161-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">((</span>ti<span class="op">-&gt;</span>priority <span class="op">!=</span> TERMINAL<span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">(!</span>ti<span class="op">-&gt;</span>detached<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb161-6"><a href="#cb161-6" aria-hidden="true" tabindex="-1"></a>    ti<span class="op">-&gt;</span>detached <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb161-7"><a href="#cb161-7" aria-hidden="true" tabindex="-1"></a>    undetached_threads_number<span class="op">--;</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-11" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb162"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb162-2"><a href="#cb162-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb162-3"><a href="#cb162-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_destroyer_deamon<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb162-4"><a href="#cb162-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> <span class="op">(;;)</span> <span class="op">{</span></span>
+<span id="cb162-5"><a href="#cb162-5" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>thread<span class="op">::</span>mx<span class="op">);</span></span>
+<span id="cb162-6"><a href="#cb162-6" aria-hidden="true" tabindex="-1"></a>    thread<span class="op">::</span>termination<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb162-7"><a href="#cb162-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">delete</span> thread<span class="op">::</span>terminating<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-12" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb163"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb163-2"><a href="#cb163-2" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb163-3"><a href="#cb163-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> destroy<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb163-4"><a href="#cb163-4" aria-hidden="true" tabindex="-1"></a>  unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>thread<span class="op">::</span>mx<span class="op">);</span></span>
+<span id="cb163-5"><a href="#cb163-5" aria-hidden="true" tabindex="-1"></a>  thread<span class="op">::</span>terminating <span class="op">=</span> <span class="op">(</span>Thread_image <span class="op">*)</span>kernel<span class="op">.</span>active_get<span class="op">();</span></span>
+<span id="cb163-6"><a href="#cb163-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="op">(</span>thread<span class="op">::</span>terminating<span class="op">-&gt;</span>ended<span class="op">.</span>last<span class="op">())</span></span>
+<span id="cb163-7"><a href="#cb163-7" aria-hidden="true" tabindex="-1"></a>    thread<span class="op">::</span>terminating<span class="op">-&gt;</span>ended<span class="op">.</span>notify_one<span class="op">();</span></span></code></pre></div>
+</section>
+<section id="klase-thread_image-i-thread-13" class="slide level2">
+<h2>Klase Thread_image i thread</h2>
+<div class="sourceCode" id="cb164"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>thread<span class="op">::</span>terminating<span class="op">-&gt;</span>detached<span class="op">)</span></span>
+<span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a>    thread<span class="op">::</span>undetached_threads_number<span class="op">--;</span></span>
+<span id="cb164-3"><a href="#cb164-3" aria-hidden="true" tabindex="-1"></a>  thread<span class="op">::</span>terminating<span class="op">-&gt;</span>priority <span class="op">=</span> TERMINAL<span class="op">;</span></span>
+<span id="cb164-4"><a href="#cb164-4" aria-hidden="true" tabindex="-1"></a>  thread<span class="op">::</span>termination<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb164-5"><a href="#cb164-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb164-6"><a href="#cb164-6" aria-hidden="true" tabindex="-1"></a><span class="dt">bool</span> undetached_threads<span class="op">()</span> <span class="op">{</span> <span class="cf">return</span> <span class="op">(</span>thread<span class="op">::</span>undetached_threads_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">);</span> <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="klasa-delta" class="slide level2">
+<h2>Klasa Delta</h2>
+<ul>
+<li>Klasa Delta i funkcije thread_wake_up_deamon(), sleep_for() i sleep_until() zajedno omogućuju uspavljivanje i buđenje niti, a funkcija thread_zero() opisuje aktivnost nulte (sistemske) niti.</li>
+<li>sleep_for() omogućuje uspavljivanje aktivne niti dok ne protekne zadani broj otkucaja sata</li>
+<li>sleep_until() omogućuje uspavljivanje aktivne niti dok ne nastupi zadani trenutak sistemskog vremena.</li>
+</ul>
+</section>
+<section id="klasa-delta-1" class="slide level2">
+<h2>Klasa Delta</h2>
+<ul>
+<li>Oko polja list klase Delta se formira lista deskriptora uspavanih niti.</li>
+<li>Da se za svaku uspavanu nit ne bi proveravalo, nakon svakog otkucaja, da li je nastupilo vreme njenog buđenja, deskriptori uspavanih niti se uvezuju u listu u hronološkom redosledu buđenja niti.</li>
+<li>Svakom od ovih deskriptora je dodeljen privezak koji pokazuje relativno vreme buđenja (relativni broj otkucaja do buđenja) u odnosu na prethodnika u listi.</li>
+<li>Ovakva lista se zove delta lista.</li>
+<li>Zahvaljujući delta listi, nakon svakog otkucaja potrebno je proveriti da li je nastupio trenutak buđenja samo za nit koja se najranije budi, odnosno samo za prvi deskriptor iz delta liste.</li>
+<li>Pošto može da bude više niti, čije buđenje je vezano za isti trenutak, unapred nije poznato koliko niti treba probuditi nakon otkucaja sata.</li>
+</ul>
+</section>
+<section id="klasa-delta-2" class="slide level2">
+<h2>Klasa Delta</h2>
+<ul>
+<li>Operaciju awake() klase Delta poziva sistemska nit Wake_up_daemon(). Vreme njenog buđenja je uvek jednako najranijem vremenu buđenja korisničkih niti.</li>
+<li>Nakon buđenja, sistemska nit budi sve korisničke niti sa početka delta liste, za koje je nastupio trenutak buđenja.</li>
+<li>Čekanje buđenja omogućuje poziv operacije Timer_driver::alarm.expect().</li>
+</ul>
+</section>
+<section id="klasa-delta-3" class="slide level2">
+<h2>Klasa Delta</h2>
+<ul>
+<li>Dužinu čekanja određuje vrednost lokalne promenljive tag, kada ima uspavanih korisničkih niti (na čije prisustvo ukazuje vrednost lokalne promenljive sleeping).</li>
+<li>Dužina čekanja se skraćuje za vrednost lokalne promenljive passed_ticks, koja registruje vreme proteklo na buđenju korisničkih niti.</li>
+</ul>
+</section>
+<section id="klasa-delta-4" class="slide level2">
+<h2>Klasa Delta</h2>
+<ul>
+<li>Operaciju sleep() klase Delta poziva, posredstvom funkcije sleep_for(), korisnička nit, da bi se njen deskriptor uključio u delta listu, a njena aktivnost privremeno zaustavila.</li>
+<li>Konstruktor klase Delta omogućuje kreiranje sistemskih niti korišćenjem bezimenih (privremenih) objekata klase thread.</li>
+<li>Konzistentnost delta liste štite isključivi regioni u telima operacija awake() i sleep() klase Delta.</li>
+</ul>
+</section></section>
     </div>
   </div>
 
