@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Datoteke</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Datoteke</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">2023-04</p>
+</section>
+
+<section>
+<section id="datoteke" class="title-slide slide level1">
+<h1>Datoteke</h1>
+
+</section>
+<section id="svojstva-datoteka" class="slide level2">
+<h2>Svojstva datoteka</h2>
+<ul>
+<li>Svaka datoteka poseduje ime koje bira korisnik. Poželjno je da ime datoteke ukazuje na:</li>
+<li>njen konkretan sadržaj</li>
+<li>na vrstu njenog sadržaja (radi klasifikacije datoteka po njihovom sadržaju)</li>
+<li>Zato su imena datoteka dvodelna npr:</li>
+<li>godina1.txt</li>
+<li>Može da predstavlja ime datoteke, koja sadrži podatke o studentima prve godine studija. Na to ukazuje prvi deo imena godina1, dok drugi deo imena txt ove datoteke govori da je datoteka tekstualna, odnosno da sadrži samo vidljive ASCII znakove.</li>
+</ul>
+</section>
+<section id="svojstva-datoteka-1" class="slide level2">
+<h2>Svojstva datoteka</h2>
+<ul>
+<li>Rukovanje datotekom obuhvata ne samo rukovanje njenim sadržajem, nego i rukovanje njenim imenom. Izmena imena datoteke moguća je kod:</li>
+<li>Stvaranja datoteke</li>
+<li>Editovanja</li>
+<li>Kompilacije</li>
+<li>Kopiranja</li>
+</ul>
+</section>
+<section id="organizacija-datoteka" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>Datoteke se grupišu u skupove datoteka (datoteke sa podacima o studentima pojedinih godina studija istog odseka pripadaju istom skupu).</li>
+<li>Svaki skup datoteka predstavlja imenik (directory, folder) koji sadrži imena svih datoteka koje pripadaju datom skupu.</li>
+<li>Radi razlikovanja imenika, svaki od njih poseduje ime koje bira korisnik. Na primer:</li>
+<li>odsek</li>
+<li>može da predstavlja ime imenika, koji obuhvata datoteke sa podacima o studentima svih godina studija istog odseka.</li>
+</ul>
+</section>
+<section id="organizacija-datoteka-1" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>Razvrstavanjem datoteka uz pomoć imenika nastaje hijerarhijska organizacija datoteka, u kojoj su na višem nivou hijerarhije imenici, a na nižem nivou se nalaze datoteke, čija imena su sadržana u ovim imenicima.</li>
+<li>Hijerarhijsku oznaku ili putanju (path name) datoteke obrazuju ime imenika za koji je datoteka vezana i ime datoteke. Delove putanje obično razdvaja znak / (ili znak  ):</li>
+<li>odsek1/godina1.txt</li>
+<li>predstavlja putanju datoteke, koja sadrži podatke o studentima prve godine studija sa prvog odseka.</li>
+<li>Uobičajeno je da se ime imenika završava znakom /</li>
+</ul>
+</section>
+<section id="organizacija-datoteka-2" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>Hijerarhijska organizacija datoteka ima više nivoa, kada jedan imenik sadrži, pored imena datoteka, i imena drugih imenika, odnosno obuhvata, pored datoteka, i druge imenike.</li>
+<li>Obuhvaćeni imenici se nalaze na nižem nivou hijerarhije. Na primer, imenik fakultet obuhvata imenike pojedinih odseka.</li>
+<li>Na vrhu hijerarhijske organizacije datoteka se nalazi korenski imenik (root) koji obično nema ime.</li>
+</ul>
+</section>
+<section id="organizacija-datoteka-3" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>U slučaju više nivoa u hijerarhijskoj organizaciji datoteka, putanju datoteke obrazuju imena imenika sa svih nivoa hijerarhije (navedena u redosledu od najvišeg nivoa na dole) kao i ime datoteke.</li>
+<li>Na primer:</li>
+<li>/fakultet/odsek1/godina1.txt</li>
+<li>predstavlja putanju datoteke godina1.txt, koja pripada imeniku odsek1. Ovaj imenik pripada imeniku fakultet, a on pripada korenskom imeniku /.</li>
+</ul>
+</section>
+<section id="organizacija-datoteka-4" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>Hijerarhijska organizacija datoteka dozvoljava da postoje datoteke (imenici) sa istim imenima, pod uslovom da pripadaju raznim imenicima. <img data-src="./img//4ce0426e-ff6a-4d62-b9e9-ddb81aa89cf6.png" /></li>
+</ul>
+</section>
+<section id="organizacija-datoteka-5" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>U hijerarhijskoj organizaciji datoteka korenskom imeniku pripadaju imenici fakultet1 i fakultet2.</li>
+<li>Svaki od njih sadrži imenike odsek1 i odsek2. Pri tome, oba imenika sa imenom odsek1 sadrže datoteku godina1.txt.</li>
+<li>Putanje omogućuju razlikovanje istoimenih imenika, odnosno istoimenih datoteka. Tako, putanje:</li>
+<li>/fakultet1/odsek1/ i /fakultet2/odsek1/</li>
+<li>omogućuju razlikovanje imenika sa imenom</li>
+<li>odsek1,</li>
+<li>a putanje:</li>
+<li>/fakultet1/odsek1/godina1.txt</li>
+<li>/fakultet2/odsek1/godina1.txt</li>
+<li>omogućuju razlikovanje datoteka sa imenom godina1.txt</li>
+</ul>
+</section>
+<section id="organizacija-datoteka-6" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>Zahvaljujući hijerarhijskoj organizaciji datoteka, moguće je rukovanje skupovima datoteka.</li>
+<li>Na primer, moguće je kopiranje celog imenika, odnosno kopiranje svih datoteka i imenika, koji mu pripadaju.</li>
+<li>Navođenje apsolutne putanje datoteke, sa svim prethodećim imenicima, je potrebno kad god je moguć nesporazum, zbog datoteka sa istim imenima, odnosno, zbog imenika sa istim imenima.</li>
+<li>Ali, ako postoji mogućnost određivanja nekog imenika kao radnog (working directory), tada se njegova putanja može podrazumevati i ne mora se navoditi.</li>
+</ul>
+</section>
+<section id="organizacija-datoteka-7" class="slide level2">
+<h2>Organizacija datoteka</h2>
+<ul>
+<li>Na primer, ako se podrazumeva da je:</li>
+<li>/fakultet1/odsek1/</li>
+<li>radni imenik, tada:</li>
+<li>godina1.txt</li>
+<li>jednoznačno označava datoteku, koja pripada imeniku odsek1 iz imenika fakultet1.</li>
+<li>Radni imenik omogućuje korišćenje relativnih putanja. Na primer, ako se podrazumeva da je:</li>
+<li>/fakultet1/</li>
+<li>radni imenik, tada:</li>
+<li>odsek1/godina1.txt</li>
+<li>jednoznačno označava datoteku, koja pripada imeniku fakultet1.</li>
+<li>Datoteke koje pripadaju istoj hijerarhijskoj organizaciji obrazuju sistem datoteka.</li>
+</ul>
+</section>
+<section id="zaštita-datoteka" class="slide level2">
+<h2>Zaštita datoteka</h2>
+<ul>
+<li>Za uspešnu upotrebu podataka, trajno pohranjenih u datotekama, neophodna je zaštita datoteka.</li>
+<li>Ona obezbeđuje da podaci, sadržani u datoteci, neće biti izmenjeni bez znanja i saglasnosti njihovog vlasnika (zabrana prava pisanja).</li>
+<li>Takođe, ona obezbeđuje da podatke, sadržane u datoteci jednog korisnika, bez njegove dozvole drugi korisnici ne mogu da koriste (zabrana prava čitanja).</li>
+</ul>
+</section>
+<section id="zaštita-datoteka-1" class="slide level2">
+<h2>Zaštita datoteka</h2>
+<ul>
+<li>Na ovaj način uvedeno pravo pisanja i pravo čitanja datoteke omogućuju da se za svakog korisnika jednostavno ustanovi koja vrsta rukovanja datotekom mu je dozvoljena, a koja ne.</li>
+<li>Tako, korisniku, koji ne poseduje pravo pisanja datoteke, nisu dozvoljena rukovanja datotekom, koja izazivaju izmenu njenog sadržaja.</li>
+<li>Ili, korisniku, koji ne poseduje pravo čitanja datoteke, nisu dozvoljena rukovanja datotekom, koja zahtevaju preuzimanje njenog sadržaja.</li>
+</ul>
+</section>
+<section id="zaštita-datoteka-2" class="slide level2">
+<h2>Zaštita datoteka</h2>
+<ul>
+<li>Za izvršne datoteke uskraćivanje prava čitanja je prestrogo, jer sprečava ne samo neovlašćeno uzimanje tuđeg izvršnog programa, nego i njegovo izvršavanje (execution).</li>
+<li>Zato je uputno, radi izvršnih datoteka, uvesti posebno pravo izvršavanja programa, sadržanih u izvršnim datotekama.</li>
+<li>Zahvaljujući posedovanju ovog prava, korisnik može da pokrene izvršavanje programa, sadržanog u izvršnoj datoteci, i onda kada nema pravo njenog čitanja.</li>
+</ul>
+</section>
+<section id="zaštita-datoteka-3" class="slide level2">
+<h2>Zaštita datoteka</h2>
+<ul>
+<li>Pravo čitanja, pravo pisanja i pravo izvršavanja datoteke predstavljaju tri prava pristupa datotekama (file access control), na osnovu kojih se za svakog korisnika utvrđuje koje vrste rukovanja datotekom su mu dopuštene.</li>
+<li>Da se za svaku datoteku ne bi evidentirala prava pristupa za svakog korisnika pojedinačno, uputno je sve korisnike razvrstati u kategorije i za svaku od njih vezati pomenuta prava pristupa.</li>
+<li>Iskustvo pokazuje da su dovoljne tri kategorije korisnika. Jednoj pripada vlasnik datoteke, drugoj njegovi saradnici, a trećoj ostali korisnici.</li>
+</ul>
+</section>
+<section id="matrica-zaštite" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>Ima tri kolone (po jednu za svaku kategoriju korisnika) i onoliko redova koliko ima datoteka.</li>
+<li>U preseku svakog reda i svake kolone matrice zaštite navode se prava pristupa datoteci iz posmatranog reda za korisnike koji pripadaju kategoriji iz posmatrane kolone. <img data-src="./img//6275e27b-a667-44b3-a0c5-79ec3e10859e.png" /></li>
+</ul>
+</section>
+<section id="matrica-zaštite-1" class="slide level2">
+<h2>Matrica zaštite</h2>
+<p><img data-src="./img//c074b7d1-b300-4e43-aadf-d7cd1b0ce0bc.png" /></p>
+</section>
+<section id="matrica-zaštite-2" class="slide level2">
+<h2>Matrica zaštite</h2>
+<p><img data-src="./img//9b132add-dd8b-4016-b3ce-17a917ef2add.png" /></p>
+</section>
+<section id="matrica-zaštite-3" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>Prava pristupa iz matrice zaštite se mogu vezati za:</li>
+<li>datoteke i čuvati u deskriptorima datoteka</li>
+<li>vezati za korisnike</li>
+<li>U prvom slučaju redovi matrice zaštite su raspoređeni po deskriptorima raznih datoteka, a u drugom slučaju elemente kolona matrice zaštite čuvaju pojedini korisnici.</li>
+<li>Za uspeh izloženog koncepta zaštite datoteka neophodno je onemogućiti neovlašćeno menjanje matrice zaštite.</li>
+<li>Jedino vlasnik datoteke sme da zadaje i menja prava pristupa sebi, svojim saradnicima i ostalim korisnicima. Zato je potrebno znati za svaku datoteku ko je njen vlasnik.</li>
+</ul>
+</section>
+<section id="matrica-zaštite-4" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>To se postiže tako što svoju aktivnost svaki korisnik započinje svojim predstavljanjem (login).</li>
+<li>U toku predstavljanja korisnik predočava svoje ime i navodi dokaz da je on osoba za koju se predstavlja, za šta je, najčešće, dovoljna lozinka.</li>
+<li>Predočeno ime i navedena lozinka se porede sa spiskom imena i spiskom za njih vezanih lozinki registrovanih korisnika.</li>
+<li>Predstavljanje je uspešno, ako se u spiskovima imena i lozinki registrovanih korisnika pronađu predočeno ime i navedena lozinka.</li>
+</ul>
+</section>
+<section id="matrica-zaštite-5" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>Predstavljanje korisnika se zasniva na pretpostavci da su njihova imena javna, ali da su im lozinke tajne.</li>
+<li>Zato je i spisak imena registrovanih korisnika javan, a spisak lozinki registrovanih korisnika tajan.</li>
+<li>Jedina dva slučaja, u kojima ima smisla dozvoliti korisnicima posredan pristup spisku lozinki, su:</li>
+<li>radi njihovog predstavljanja</li>
+<li>radi izmene njihove lozinke</li>
+</ul>
+</section>
+<section id="matrica-zaštite-6" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>Za predstavljanje korisnika uvodi se posebna operacija, koja omogućuje samo proveru da li se zadani par (ime, lozinka) može pronaći u spiskovima imena i lozinki registrovanih korisnika.</li>
+<li>Slično, za izmenu lozinki uvodi se posebna operacija, koja omogućuje samo promenu lozinke onome ko zna postojeću lozinku.</li>
+<li>Sva druga rukovanja spiskovima imena i lozinki registrovanih korisnika, kao što su ubacivanje u ove spiskove novih parova (ime, lozinka), ili njihovo izbacivanje iz ovih spiskova, nalaze se u nadležnosti poverljive osobe, koja se naziva administrator (superuser).</li>
+</ul>
+</section>
+<section id="uid-i-gid" class="slide level2">
+<h2>UID i GID</h2>
+<ul>
+<li>Da bi se pojednostavila provera korisničkih prava pristupa, uputno je, umesto imena korisnika, uvesti njegovu numeričku oznaku.</li>
+<li>Radi klasifikacije korisnika zgodno je da ovu numeričku oznaku obrazuju dva redna broja.</li>
+<li>Prvi od njih označava korisnika, a drugi od njih označava grupu kojoj korisnik pripada.</li>
+<li>Podrazumeva se da su svi korisnici iz iste grupe međusobno saradnici.</li>
+<li>Prema tome, redni broj korisnika (UID, User IDentification) jednoznačno određuje vlasnika.</li>
+<li>Saradnici vlasnika su svi korisnici koji imaju isti redni broj grupe (GID, Group Identification) kao i vlasnik.</li>
+<li>Posebna grupa se rezerviše za administratore.</li>
+</ul>
+</section>
+<section id="matrica-zaštite-7" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>Da se provera ne bi obavljala prilikom svakog pristupa datoteci, umesno je takvu proveru obaviti samo pre prvog pristupa.</li>
+<li>To je zadatak operacije otvaranja datoteke, koja prethodi operacijama, kao što su pisanje ili čitanje datoteke.</li>
+<li>Pomoću operacije otvaranja se saopštava i na koji način korisnik namerava da koristi datoteku.</li>
+<li>Ako je njegova namera u skladu sa njegovim pravima, otvaranje datoteke je uspešno, a pristup datoteci je dozvoljen, ali samo u granicama iskazanih namera.</li>
+<li>Iza operacija pisanja ili čitanja datoteke sledi operacija zatvaranja datoteke.</li>
+</ul>
+</section>
+<section id="matrica-zaštite-8" class="slide level2">
+<h2>Matrica zaštite</h2>
+<ul>
+<li>Numerička oznaka vlasnika datoteke i prava pristupa korisnika iz pojedinih klasa predstavljaju atribute datoteke.</li>
+<li>Zaštita datoteka uvodi pojam sigurnost (security) koji se odnosi na uspešnost zaštite od neovlašćenog korišćenja ne samo datoteka, nego i ostalih delova računara kojima upravlja operativni sistem.</li>
+<li>Sigurnost se bavi načinima prepoznavanja ili identifikacije korisnika (authentication), kao i načinima provere njihovih prava pristupa (authorization).</li>
+<li>Operativni sistem nudi mehanizme sigurnosti pomoću kojih mogu da se ostvare različite politike sigurnosti.</li>
+</ul>
+</section></section>
+<section>
+<section id="ext2fs" class="title-slide slide level1">
+<h1>ext2fs</h1>
+
+</section>
+<section id="blokovi" class="slide level2">
+<h2>Blokovi</h2>
+<ul>
+<li>ext2 smatra da se ono na čemu se zasniva sastoji od sektora (mi smo ih zvali blokovi na našem lažnom disku) koji se grupišu u blokove.</li>
+<li>Jedan blok u ex2fs je par Kb koji mora biti stepen broja 2. Na mom disku to je 4kb.</li>
+<li>Blokovi se grupišu u grupe ne bi li se smanjila fragmentacija. Maksimalna veličina grupe je 8 x veličina bloka u blokovima, tj. jedna grupa na mom disku je 8 x 4096 = 32 768 blokova. Ovo je neophodno zato što bitmapa, koja čuva šta je slobodno a šta nije zauzima samo jedan blok.</li>
+</ul>
+</section>
+<section id="superblok" class="slide level2">
+<h2>Superblok</h2>
+<ul>
+<li>Superblok sadrži sve informacije o tome kako je podešen fajl sistem. Primarno, to se nalazi 1024 bajtova daleko od početka diska, ali zato što je apsolutno neophodno da se ovi podaci ne izgube (inače nema šanse da se podaci sa particije vrate) superblok se replicira.</li>
+<li>U starim verzijama ext2fs stavlja se kopija na početak svake grupe blokova. To gubi dosta prostora, te se danas tipično samo stavlja tek u poneku grupu, tipično stepene 3, 5, ili 7.</li>
+</ul>
+</section>
+<section id="grupa-i-superblok" class="slide level2">
+<h2>Grupa i superblok</h2>
+<p><img data-src="img/2023-04-11-01-58-38.png" /></p>
+</section>
+<section id="inode" class="slide level2">
+<h2>Inode</h2>
+<ul>
+<li>Inoda (index node) je fundamentalan koncept za ext2 fajl sistem: sve o čemu fajl sistem vodi računa (fajl, direktorijum, link…) ima indeksni čvor, inodu. Taj čvor sadrži sve metapodatke o fajlu (tu se nalaze podaci o vlasniku, dozvolama, itd.) kao i, vrlo bitno, pokazivač ka blokovima sistema gde se fajlovi nalaze.</li>
+<li>Sve inode se nalaze u inode tabelama, sa po jednom takvom tabelom po grupi blokova.</li>
+</ul>
+</section>
+<section id="fajl-sistem-pokazivači-i-inoda" class="slide level2">
+<h2>Fajl sistem pokazivači i inoda</h2>
+<ul>
+<li>Postavlja se pitanje, kako da znamo gde se sve na disku nalazi naš fajl? ext2 ima jednostavan pristup. Prvo čuva 12 pokazivača (broja bloka) sa tkzv. direktnim podacima. Ako fajl stane tu, dobro. Ako ne, ima i pokazivač ka jednostruko indirektnom bloku.</li>
+<li>Taj pokazivač pokazuje na blok koji u sebi sadrži sekvencu pokazivača ka blokovima sa podacima.</li>
+<li>Ako i dalje nema mesta? Onda imamo pokazivač ka dvostruko indirektnom bloku koji u sebi sadrži pokazivače ka blokovima koji u sebi imaju pokazivače ka blokovima podataka.</li>
+</ul>
+</section>
+<section id="fajl-sistem-pokazivači-i-inoda-1" class="slide level2">
+<h2>Fajl sistem pokazivači i inoda</h2>
+<ul>
+<li>Ako i dalje nema mesta?</li>
+<li>Onda imamo trostruko indirektnu adresu</li>
+<li>To je pokazivač na blok koji sadrži listu pokazivača koji pokazuju na blokove koji sadrže liste pokazivača koje pokazuju na blokove koje imaju u sebi podatke.Ovo znači da ima maksimalna veličina fajla a to je za sistem sa 32 - bitnim pokazivačima na blok</li>
+</ul>
+</section>
+<section id="fajl-sistem-pokazivači-i-inoda-2" class="slide level2">
+<h2>Fajl sistem pokazivači i inoda</h2>
+<ul>
+<li>12 * bs + (bs / 4) * bs + (bs / 4) * (bs / 4) * bs + (bs / 4) * (bs / 4) * (bs / 4) * bs bajtova,</li>
+<li>gde je bs veličina bloka,</li>
+<li>tako da za 4kb blok maksimalna veličina bi bila oko 4402345721856 bajtova,odn.oko 4100GB.</li>
+</ul>
+</section>
+<section id="veličina-fajla-u-praksi" class="slide level2">
+<h2>Veličina fajla u praksi</h2>
+<p>U praksi, fajl je ograničen on - disk veličinom bloka(koja se razlikuje od ext2 bloka i iznosi 512 bajtova) i time što je sistem 32 - bitni, te je maksimalan broj on - disk blokova u <span class="math inline">\(2^{32} - 1\)</span>, što znači da je stvarni limit na veličinu fajla <span class="math inline">\((2^{32} - 1) \cdot 512\)</span>, odn.2TB</p>
+</section>
+<section id="inoda" class="slide level2">
+<h2>Inoda</h2>
+<p><img data-src="img/2023-04-11-01-59-43.png" /></p>
+</section>
+<section id="direktorijumi-i-linkovi" class="slide level2">
+<h2>Direktorijumi i linkovi</h2>
+<ul>
+<li>Što se tiče ext2 sve je fajl.</li>
+<li>Samo što određeni fajlovi imaju posebno interpretiran sadržaj, npr:</li>
+<li>Linkovi su ‘pokazivač’ ka drugom fajlu</li>
+<li>Ovo se odnosi na meke, simbolične linkove. Tvrdi linkovi su u stvari stavka u direktorijumu koja se odnosi na istu inod-u kao i neki drugi fajl.</li>
+<li>Direktorijumi su lista pokazivača ka fajlovima</li>
+</ul>
+</section>
+<section id="da-li-se-ovo-koristi" class="slide level2">
+<h2>Da li se ovo koristi?</h2>
+<ul>
+<li>Tehnički, koriste se modernije verzije, ext3 i ext4 koje su u velikoj meri kompatibilne sa tim kako ext2 radi.</li>
+<li>Ext je od ‘extensible’ tako da je oduvek bila ideja da fajl sistem može da se proširi.</li>
+<li>Glavna promena koja je ubačena u ext3 je vođenje žurnala diska.</li>
+</ul>
+</section>
+<section id="žurnal-fajl-sistemamotivacija" class="slide level2">
+<h2>Žurnal fajl sistema—motivacija</h2>
+<ul>
+<li>Za određene operacije diska neželjen prekid (recimo gubljenjem struje) je spektakularno loša ideja. Ako brišemo fajl na disku očekujemo sledeće operacije u ext2:</li>
+<li>Uklonimo zapis o fajlu iz sadžraja direktorijuma tog fajla.</li>
+<li>Ako nema više tvrdih linkova na nju, oslobodimo inode tog fajla podešavanjem bitmape.</li>
+<li>Oslobodimo sve blokove na koje pokazujemo tako što modifikujemo bitmape i metapodatke svih grupa gde se nalaze blokovi tog fajla.</li>
+</ul>
+</section>
+<section id="žurnal-fajl-sistemamotivacija-1" class="slide level2">
+<h2>Žurnal fajl sistema—motivacija</h2>
+<ul>
+<li>Za veliki fajl ovo su potencijalno stotine upisa na disk, a fajl sistem je samo konzistentan sam sa sobom na početku svih tih upisa i na kraju. Prekid bilo gde izaziva, npr. prostor koji ne koristi nijedan fajl, a koji je tehnički i dalje zauzet, ili inode koji se vodi kao zauzet a kome ne možete da priđete ili hiljadu drugih problema.</li>
+<li>To znači da gubitak struje dovodi do potencijalnog oštećenja diska što moramo da (pokušavamo) da otklonimo posebnim komandama kao što je fsck. Ovo nije idealno.</li>
+</ul>
+</section>
+<section id="žurnal-fajl-sistema" class="slide level2">
+<h2>Žurnal fajl sistema</h2>
+<ul>
+<li>Rešenje ovog problema jeste da postoji deo fajl sistema (žurnal) alociran i organizovan kao cirkularni bafer koji sadrži zapis svih promena koje hoćemo da uradimo i koji se povremeno prazni tako što se logovane operacije izvrše na disku.</li>
+<li>Ako nestane struje u sred procesa, prilikom sledećeg aktiviranja fajl sistema (Unix to zove ‘mount’-ovanje fajl sistema), se primeti da ima neizvršenih žurnal operacija, i postara se da su ili sve te operacije izvršene (te je sistem konzistentan) ili se od cele operacije odustalo.</li>
+</ul>
+</section>
+<section id="konzistentnost-žurnala" class="slide level2">
+<h2>Konzistentnost žurnala</h2>
+<ul>
+<li>Ovo nije savršeno rešenje. Prvi problem je: Šta ako nestane struje baš kada pišemo žurnal?</li>
+<li>Rešenje je da se izračuna i prvo upiše kontrola vrednost (checksum) cele transakcije, tako da ako pukne upis pre kraja, to se može preko kontrolne vrednosti ustvrditi i ta transakcija ignorisati u žurnalu.</li>
+</ul>
+</section>
+<section id="konzistentnost-žurnala-1" class="slide level2">
+<h2>Konzistentnost žurnala</h2>
+<ul>
+<li>Drugi, mnogo veći problem, jeste interakcija između keširanja upisa na disk i žurnala. Žurnal se bazira na ideji da znamo redosled operacija upisa i da nećemo, recimo, početi da upisujemo podatke pre nego alociramo prostor kroz metapodatke.</li>
+<li>I fajl sistem i sami disk uređaji često menjaju redosled operacija upisa zbog performansi. I mi smo to radili!</li>
+<li>Ovo je rizik koji neki fajl sistemi, ext4, na primer, rešavaju uvođenjem barijera: tačaka gde se keš nasilno spusti na sam disk.</li>
+</ul>
+</section></section>
+<section>
+<section id="fajl-sistemi-uopšte" class="title-slide slide level1">
+<h1>Fajl sistemi uopšte</h1>
+
+</section>
+<section id="sloj-operativnog-sistema-za-rukovanje-datotekama" class="slide level2">
+<h2>Sloj operativnog sistema za rukovanje datotekama</h2>
+<ul>
+<li>Zadatak: ozbezbediti punu slobodu rukovanja podacima u datotekama.</li>
+<li>Punu slobodu rukovanja podacima nudi predstava datoteke kao niza bajta.</li>
+<li>Niz se može, po potrebi, menjati i njemu se može pristupati u proizvoljnom redosledu, korišćenjem rednog broja bajta za njegovu identifikaciju.</li>
+<li>Ovakva predstava datoteke dozvoljava da se datoteka posmatra kao skup slogova iste ili različite dužine, koji se identifikuju pomoću posebnih indeksa.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Sadržaji datoteka se nalaze u blokovima masovne memorije. Za bilo kakvo rukovanje ovim sadržajem neophodno je da on dospe u radnu memoriju.</li>
+<li>Zato je rukovanje bajtima sadržaja datoteke neraskidivo povezano sa prebacivanjem blokova sa ovim bajtima između radne i masovne memorije.</li>
+<li>Pri tome se bajti prebacuju iz radne u masovnu memoriju radi njihovog trajnog čuvanja, a iz masovne u radnu memoriju radi obrade.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-1" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Da bi ovakvo prebacivanje bilo moguće, neophodno je da sloj za rukovanje datotekama uspostavi preslikavanje rednih brojeva bajta u redne brojeve njima odgovarajućih blokova.</li>
+<li>Ovakvo preslikavanje se najlakše uspostavlja, ako se sadržaj datoteke nalazi u susednim blokovima.</li>
+<li>Ovakve datoteke se nazivaju kontinualne (contiguous).</li>
+<li>Kod kontinualnih datoteka redni broj bloka sa traženim bajtom se određuje kao količnik rednog broja bajta i veličine bloka, izražene brojem bajta koje sadrži svaki blok.</li>
+<li>Pri tome, ostatak deljenja ukazuje na relativni položaj bajta u bloku.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-2" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Kontinualne datoteke zahtevaju od sloja za rukovanje datotekama da za svaku datoteku vodi evidenciju o:</li>
+<li>imenu datoteke</li>
+<li>rednom broju početnog bloka</li>
+<li>dužini datoteke</li>
+<li>Ove podatke čuva deskriptor datoteke.</li>
+<li>Dužina datoteke može biti izražena brojem bajta, ali i brojem blokova, koga obavezno prati podatak o popunjenosti poslednjeg zauzetog bloka.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-3" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Pojava da poslednji zauzeti blok datoteke nije popunjen do kraja se naziva interna fragmentacija (internal fragmentation).</li>
+<li>Ova pojava je važna, jer nepopunjeni poslednji zauzeti blok datoteke predstavlja neupotrebljen deo masovne memorije.</li>
+<li>Sloj za rukovanje datotekama obavezno vodi i evidenciju slobodnih blokova masovne memorije.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-4" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Za potrebe kontinualnih datoteka bitno je da ova evidencija olakša pronalaženje dovoljno dugačkih nizova susednih blokova.</li>
+<li>Zato je podesna evidencija u obliku niza bita (bit map), u kome svaki bit odgovara jednom bloku i pokazuje da li je on zauzet (0) ili slobodan (1).</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-5" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>U slučaju ovakve evidencije, pronalaženje dovoljno dugačkih nizova susednih blokova se svodi na pronalaženje dovoljno dugačkog niza jedinica u nizu bita koji odslikava zauzetost masovne memorije.</li>
+<li>Rukovanje slobodnim blokovima masovne memorije zahteva sinhronizaciju (međusobnu isključivost procesa), da bi se, na primer, izbeglo da više procesa, nezavisno jedan od drugog, zauzme iste slobodne blokove masovne memorije.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-6" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Pojava iscepkanosti slobodnih blokova masovne memorije u kratke nizove susednih blokova otežava rukovanje kontinualnim datotekama.</li>
+<li>Ta pojava se zove eksterna fragmentacija (external fragmentation).</li>
+<li>Ona nastaje kao rezultat višestrukog stvaranja i uništenja datoteka u slučajnom redosledu, pa nakon uništavanja datoteka ostaju nizovi slobodnih susednih blokova, međusobno razdvojeni blokovima postojećih datoteka.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-7" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Problem eksterne fragmentacije se povećava, kada se, prilikom traženja dovoljno dugačkog niza susednih blokova, pronađe niz duži od potrebnog, jer se tada zauzima (allocation) samo deo blokova u pronađenom nizu.</li>
+<li>To dovodi do daljeg drobljenja nizova slobodnih susednih blokova, jer preostaju sve kraći nizovi slobodnih susednih blokova.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-8" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<p><img data-src="./img//52441add-2da0-451f-87d0-d275bd9c9116.png" /></p>
+</section>
+<section id="kontinualne-datoteke-9" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Eksterna fragmentacija je problematična, jer posredno izaziva neupotrebljivost slobodnih blokova masovne memorije.</li>
+<li>Eksterna fragmentacija onemogućuje stvaranje kontinualne datoteke, čija dužina je jednaka sumi slobodnih blokova, kada oni ne obrazuju niz susednih blokova.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-10" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<p><img data-src="./img//feec2531-1682-48f6-a388-5886497339b8.png" /></p>
+</section>
+<section id="kontinualne-datoteke-11" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Problem eksterne fragmentacije se može rešiti sabijanjem (compaction) datoteka, tako da svi slobodni blokovi budu potisnuti iza datoteka i da tako obrazuju niz susednih blokova. Mana ovog postupka je njegova dugotrajnost.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-12" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>U opštem slučaju produženje kontinualne datoteke je komplikovano, jer zahteva stvaranje nove, veće kontinualne datoteke, prepisivanje sadržaja produžavane datoteke u novu datoteku i uništavanje produžavane datoteke.</li>
+<li>Problem produženja kontinualne datoteke se ublažava, ako se dozvoli da se kontinualna datoteka sastoji od više kontinualnih delova.</li>
+</ul>
+</section>
+<section id="kontinualne-datoteke-13" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<p><img data-src="./img//a4204215-99c3-4291-b956-fa1071ef109b.png" /></p>
+</section>
+<section id="kontinualne-datoteke-14" class="slide level2">
+<h2>Kontinualne datoteke</h2>
+<ul>
+<li>Pri tome se za svaki od ovih delova u deskriptoru datoteke čuvaju podaci o rednom broju početnog bloka dotičnog dela i o njegovoj dužini (extent list).</li>
+<li>Ovakav pristup je zgodan za veoma dugačke datoteke (namenjene za čuvanje zvučnog ili video zapisa).</li>
+</ul>
+</section>
+<section id="rasute-datoteke" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Upotrebnu vrednost kontinualnih datoteka značajno smanjuju problemi:</li>
+<li>eksterne fragmentacije</li>
+<li>potreba da se unapred zna njihova veličina</li>
+<li>teškoće sa njihovim produžavanjem.</li>
+<li>Zato se umesto kontinualnih koriste rasute (noncontiguous) datoteke, čiji sadržaj je smešten (rasut) u nesusednim blokovima masovne memorije.</li>
+<li>Kod rasutih datoteka redni brojevi bajta se preslikavaju u redne brojeve blokova pomoću posebne tabele pristupa (file allocation table - FAT).</li>
+</ul>
+</section>
+<section id="rasute-datoteke-1" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Njeni elementi sadrže redne brojeve blokova. Indekse ovih elemenata određuje količnik rednog broja bajta i veličine bloka.</li>
+<li>Iz prethodnog sledi da dužinu rasutih datoteka ograničava veličina tabele pristupa.</li>
+<li>Zato se veličina tabele pristupa dimenzionira tako da zadovolji najveće praktične zahteve u pogledu dužine rasutih datoteka.</li>
+</ul>
+</section>
+<section id="rasute-datoteke-2" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Tabele pristupa se čuvaju u blokovima masovne memorije (kao, uostalom, i sadržaji datoteka).</li>
+<li>Radi manjeg zauzeća, važno je da se u blokovima masovne memorije ne čuva uvek cela tabela pristupa, nego samo njen neophodan (stvarno korišćen) deo.</li>
+<li>Zato se tabela pristupa deli u odsečke.</li>
+<li>Početni odsečak, sa p elemenata tabele pristupa je uvek prisutan. On nije veći od bloka masovne memorije. Dodatni odsečci su prisutni samo kad su neophodni.</li>
+</ul>
+</section>
+<section id="rasute-datoteke-3" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Svaki dodatni odsečak je jednak bloku masovne memorije i može da sadrži b elemenata tabele pristupa (b &gt; p).</li>
+<li>Prema tome, tabela pristupa svake rasute datoteke zauzima jedan blok , u kome se nalazi početni odsečak ove tabele sa p njenih elemenata.</li>
+<li>Za tabelu pristupa se, po potrebi, zauzima još jedan blok sa dodatnim odsečkom, u kome se nalazi narednih b njenih elemenata.</li>
+</ul>
+</section>
+<section id="rasute-datoteke-4" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Kada zatreba još dodatnih odsečaka, za tabelu pristupa se zauzima poseban blok prvog stepena indirekcije.</li>
+<li>On sadrži do b rednih brojeva blokova sa dodatnim odsečcima.</li>
+<li>U svakom od njih se nalazi b novih elemenata tabele pristupa.</li>
+</ul>
+</section>
+<section id="rasute-datoteke-5" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Na kraju, po potrebi, za ovu tabelu se zauzima poseban blok drugog stepena indirekcije.</li>
+<li>On sadrži do b rednih brojeva blokova prvog stepena indirekcije.</li>
+<li>Svaki od njih sadrži do b rednih brojeva blokova sa dodatnim odsečcima, a u svakom od njih se nalazi b novih elemenata tabele pristupa.</li>
+<li>Prema tome, ukupno ima 1+b+b2 dodatnih odsečaka, svaki sa b elemenata tabele pristupa.</li>
+</ul>
+</section>
+<section id="rasute-datoteke-6" class="slide level2">
+<h2>Rasute datoteke</h2>
+<p><img data-src="./img//8dcbe284-13c6-40fa-8917-b17289acc81e.png" /></p>
+</section>
+<section id="rasute-datoteke-7" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Deskriptor rasute datoteke sadrži početni odsečak tabele pristupa, redni broj njenog prvog dodatnog odsečka, redni broj bloka prvog stepena indirekcije i redni broj bloka drugog stepena indirekcije.</li>
+<li>Pored toga, ovaj deskriptor sadrži i dužinu rasute datoteke, da bi se znalo koliko blokova je zauzeto sadržajem i koliko je popunjen poslednji zauzeti blok.</li>
+</ul>
+</section>
+<section id="rasute-datoteke-8" class="slide level2">
+<h2>Rasute datoteke</h2>
+<ul>
+<li>Ideja, korišćena za organizaciju tabele pristupa, može da se upotrebi i za organizaciju evidencije slobodnih blokova masovne memorije.</li>
+<li>U ovom slučaju ova evidencija ima oblik liste slobodnih blokova.</li>
+<li>Slobodni blokovi, uvezani u ovu listu, sadrže redne brojeve ostalih slobodnih blokova, pa podsećaju na blokove prvog stepena indirekcije.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Iza rukovanja datotekama krije se rukovanje blokovima masovne memorije, u kojima se nalaze i sadržaj i deskriptor i, eventualno, dodatni odsečci tabele pristupa svake rasute datoteke.</li>
+<li>Rukovanje ovim blokovima usložnjava činjenica da se međusobno zavisni podaci nalaze u raznim blokovima.</li>
+<li>Pošto se blokovi modifikuju u radnoj memoriji, a trajno čuvaju u masovnoj memoriji, prirodno je da u pojedinim trenucima postoji razlika između blokova u masovnoj memoriji i njihovih kopija u radnoj memoriji.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-1" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Probleme izaziva gubitak kopija blokova u radnoj memoriji, na primer, zbog nestanka napajanja.</li>
+<li>Tako, na primer, produženje rasute datoteke zahteva:</li>
+<li>izmenu evidencije slobodnih blokova, radi isključivanja pronađenog slobodnog bloka iz ove evidencije</li>
+<li>izmenu tabele pristupa produžavane rasute datoteke, radi smeštanja rednog broja novog bloka u element ove tabele.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-2" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Izmena evidencije slobodnih blokova dovodi do promene jedne od kopija njenih blokova u radnoj memoriji. Isti efekat ima i izmena tabele pristupa produžavane rasute datoteke.</li>
+<li>Ako obe izmenjene kopije budu prebačene u masovnu memoriju, tada je produženje rasute datoteke uspešno obavljeno.</li>
+<li>Ako ni jedna od kopija ne dospe u masovnu memoriju, tada produženje rasute datoteke nije obavljeno, jer nije registrovano u masovnoj memoriji.</li>
+<li>Ali, ako samo jedna od promenjenih kopija dospe u masovnu memoriju, tada se javljaju problemi konzistentnosti sistema datoteka.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-3" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>U jednom slučaju, kada samo promenjena kopija bloka evidencije slobodnih blokova dospe u masovnu memoriju, blok isključen iz ove evidencije postaje izgubljen, jer njegov redni broj nije prisutan niti u ovoj evidenciji, a niti u tabeli pristupa neke od rasutih datoteka.</li>
+<li>U drugom slučaju, kada samo promenjena kopija bloka tabele pristupa dospe u masovnu memoriju, blok, pridružen ovoj tabeli, ostaje i dalje uključen u evidenciju slobodnih blokova.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-4" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Prvi slučaj je bezazlen, jer se izgubljeni blokovi mogu pronaći.</li>
+<li>Pronalaženje izgubljenih blokova se zasniva na traženju blokova koji nisu prisutni ni u evidenciji slobodnih blokova, ni u tabelama pristupa rasutih datoteka.</li>
+<li>Za razliku od prvog slučaja, drugi slučaj je neprihvatljiv, jer može da izazove istovremeno uključivanje istog bloka u više rasutih datoteka, čime se narušava njihova konzistentnost.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-5" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Zato je neophodno uvek prebacivati u masovnu memoriju prvo promenjenu kopiju bloka evidencije slobodnih blokova, pa tek iza toga i promenjenu kopiju bloka tabele pristupa.</li>
+<li>Znači, potrebno je paziti na redosled u kome se izmenjene kopije blokova prebacuju u masovnu memoriju.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-6" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>U opštem slučaju konzistentnost sistema datoteka može da se zasniva na vođenju pregleda izmena (journal).</li>
+<li>Pre bilo kakve izmene sistema datoteka, u pregledu izmena se registruje potpun opis nameravane izmene, na osnovu koga je moguće izvršiti oporavak sistema datoteka posle nedovršene izmene.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-7" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Tek nakon toga se pristupa izmeni sistema datoteka. Po uspešno obavljenoj izmeni, u pregledu izmena se to i registruje.</li>
+<li>Ako u pregledu izmena nije registrovan potpun opis nameravane izmene, tada izmena nije ni započeta, pa je sistem datoteka u konzistentom stanju.</li>
+<li>Kada je u pregledu izmena registrovan potpun opis nameravane izmene, ali nije registrovano njeno uspešno obavljanje, tada je sistem datoteka moguće vratiti u konzistentno stanje.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-8" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Ako su u pregledu izmena registrovani potpuni opis nameravane izmene i njeno uspešno obavljanje, tada je sistem datoteka u konzistentnom stanju.</li>
+<li>Ideja pregleda izmena može da bude osnova za organizovanje celog sistema datoteka (log structured file system).</li>
+<li>U ovom pristupu izmena svake datoteke se registruje samo u posebnom pregledu izmena, čijom kasnijom analizom se, po potrebi, rekonstruiše aktuelni sadržaj datoteke.</li>
+</ul>
+</section>
+<section id="konzistentnost-sistema-datoteka-9" class="slide level2">
+<h2>Konzistentnost sistema datoteka</h2>
+<ul>
+<li>Nakon izmene kopije bloka u radnoj memoriji, važno je što pre izmenjenu kopiju prebaciti u masovnu memoriju, radi smanjenja mogućnosti da se ona izgubi (na primer, kao posledica nestanka napajanja).</li>
+<li>To je naročito važno, ako izmena nije rezultat automatske obrade, nego ljudskog rada (na primer, editiranja), jer se tada ne može automatski rekonstruisati.</li>
+</ul>
+</section>
+<section id="baferski-prostor" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Pristupi sadržaju datoteke mogu zahtevati prebacivanje više blokova u radnu memoriju:</li>
+<li>bloka sa deskriptorom datoteke</li>
+<li>jednog ili više dodatnih blokova tabele pristupa</li>
+<li>bloka sa traženim bajtima sadržaja</li>
+<li>Pošto je, sa stanovišta procesora, prenos blokova na relaciji radna i masovna memorija, spor (dugotrajan), dobra ideja je zauzeti u radnoj memoriji prostor za više bafera, namenjenih za čuvanje kopija korišćenih blokova (block cache, buffer cache).</li>
+<li>Pošto je radna memorija mnogo manja od masovne, njeni baferi mogu istovremeno da sadrže mali broj kopija blokova masovne memorije.</li>
+</ul>
+</section>
+<section id="baferski-prostor-1" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Zato je važno da baferi sadrže kopije blokova, koje će biti korišćene u neposrednoj budućnosti, jer se samo tako značajno ubrzava obrada podataka.</li>
+<li>Problem se javlja kada su svi baferi napunjeni, a potrebno je pristupiti bloku masovne memorije, čija kopija nije prisutna u nekom od bafera.</li>
+<li>U tom slučaju neizbežno je oslobađanje nekog od bafera, da bi se u njega smestila kopija potrebnog bloka.</li>
+<li>Iskustvo pokazuje da je najbolji pristup osloboditi bafer za koga trenutak poslednjeg pristupa njegovom sadržaju prethodi trenucima poslednjeg pristupa sadržajima svih ostalih bafera (Least Recently Used - LRU).</li>
+</ul>
+</section>
+<section id="baferski-prostor-2" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Za takav bafer se kaže da ima najstariju referencu.</li>
+<li>Pri oslobađanju bafera, njegov dotadašnji sadržaj se poništava, kada bafer sadrži neizmenjenu kopiju bloka, jer je ona identična bloku masovne memorije.</li>
+<li>U suprotnom slučaju, neophodno je sačuvati izmene, pa se kopija prebacuje u masovnu memoriju.</li>
+<li>U oslobođeni bafer se prebacuje kopija potrebnog bloka masovne memorije.</li>
+</ul>
+</section>
+<section id="baferski-prostor-3" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Da bi se znalo koja od kopija ima najstariju referencu, baferi se uvezuju u listu.</li>
+<li>Na početak ovakve liste se uvek prebacuje bafer sa upravo korišćenom kopijom (sa najnovijom referencom), pa na njen kraj nužno dospeva bafer sa najstarijom referencom.</li>
+</ul>
+</section>
+<section id="baferski-prostor-4" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Baferovanje izmenjenih kopija blokova u radnoj memoriji zahteva da se odredi trenutak u kome se izmenjena kopija prebacuje u masovnu memoriju.</li>
+<li>Ako se izmenjena kopija prebacuje u masovnu memoriju odmah nakon svake izmene, tada se usporava rad.</li>
+<li>Ako se izmenjena kopija prebacuje u masovnu memoriju tek pri oslobađanju bafera, tada se povećava mogućnost gubljenja izmene.</li>
+</ul>
+</section>
+<section id="baferski-prostor-5" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Rešavanje ovoga problema se može posredno prepustiti korisniku, ako se uvede posebna sistemska operacija (sync()) za izazivanje prebacivanja sadržaja bafera u masovnu memoriju.</li>
+<li>U tom slučaju izmenjene kopije dospevaju u masovnu memoriju ili kada se baferi oslobađaju ili kada to zatraži korisnik.</li>
+<li>Potreba da se kopija bloka što brže nakon izmene prebaci u masovnu memoriju je u suprotnosti sa nastojanjem da se blokovi što ređe prenose između radne i masovne memorije.</li>
+</ul>
+</section>
+<section id="baferski-prostor-6" class="slide level2">
+<h2>Baferski prostor</h2>
+<ul>
+<li>Na brzinu prebacivanja podataka između radne i masovne memorije važan uticaj ima i veličina bloka.</li>
+<li>Što je blok veći, u proseku se potroši manje vremena na prebacivanje jednog bajta između radne i masovne memorije.</li>
+<li>Međutim, što je blok veći, veća je i interna fragmentacija.</li>
+<li>Ta dva oprečna zahteva utiču na izbor veličine bloka, koja se kreće od 512 bajta do 8192 bajta.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>Deskriptor datoteke, pored atributa koji omogućuju preslikavanje rednih brojeva bajta u redne brojeve blokova, sadrži i:</li>
+<li>numeričku oznaku vlasnika datoteke</li>
+<li>prava pristupa datoteci za njenog vlasnika, za njegove saradnike i za ostale korisnike</li>
+<li>podatak da li je datoteka zaključana ili ne</li>
+<li>SUID podatak da li numerička oznaka vlasnika datoteke postaje numerička oznaka vlasnika procesa stvorenog na osnovu sadržaja datoteke (važi samo za izvršne datoteke)</li>
+<li>datum poslednje izmene datoteke</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-1" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>Činjenica, da deskriptor datoteke sadrži prava pristupa datoteci, podrazumeva da je sadržaj masovne memorije fizički zaštićen.</li>
+<li>To podrazumeva da se centralni delovi računara nalaze u zaštićenoj (sigurnoj) prostoriji, a da su samo periferni delovi računara direktno na raspolaganju korisnicima.</li>
+<li>Kada to nije moguće, alternativa je da sadržaj masovne memorije bude kriptovan.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-2" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>Podatak da li je datoteka zaključana ili ne se čuva u kopiji deskriptora u radnoj memoriji.</li>
+<li>Ova kopija nastane prilikom otvaranja datoteke.</li>
+<li>Podatak da li je datoteka zaključana ili ne je uveden radi ostvarenja međusobne isključivosti procesa u toku pristupa datoteci.</li>
+<li>Pri tome se podrazumeva da su aktivnosti ovih procesa međusobno isključive i u toku obavljanja operacije zaključavanja datoteke.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-3" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>U ovoj operaciji se proverava da li je datoteka zaključana i eventualno obavi njeno zaključavanje.</li>
+<li>Sinhronizacija procesa u toku obavljanja ove operacije je neophodna, da bi se sprečilo da dva ili više procesa istovremeno zaključe da je ista datoteka otključana i da, nezavisno jedan od drugog, istovremeno zaključaju pomenutu datoteku.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-4" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>Pomenuta sinhronizacija obezbeđuje da uvek najviše jedan proces zaključa datoteku, jer samo on pronalazi otključanu datoteku, dok svi preostali istovremeno aktivni procesi pronalaze zaključanu datoteku.</li>
+<li>Ako je za nastavak aktivnosti ovih preostalih procesa neophodno da pristupe datoteci, tada se njihova aktivnost zaustavlja do otključavanja datoteke.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-5" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>Njeno izvršavanje omogućuje nastavak aktivnosti samo jednog od procesa, čija aktivnost je zaustavljena do otključavanja datoteke.</li>
+<li>Ako takav proces postoji, datoteka se i ne otključava, nego se samo prepušta novom procesu. Inače, datoteka se otključava.</li>
+<li>I operacija otključavanja datoteka zahteva sinhronizaciju procesa.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-6" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>U slučaju zaključavanja datoteke, moguće je da proces nastavi svoju aktivnost i nakon neuspešnog pokušaja zaključavanja datoteke.</li>
+<li>Jasno, tada se podrazumeva da on neće pristupati pomenutoj datoteci.</li>
+<li>Prema tome, operacija zaključavanja datoteke je blokirajuća, kada, radi uslovne sinhronizacije, u toku njenog obavljanja dolazi do zaustavljanja aktivnosti procesa, dok se ne stvore uslovi za međusobno isključive pristupe zaključanoj datoteci.</li>
+</ul>
+</section>
+<section id="deskriptor-datoteke-7" class="slide level2">
+<h2>Deskriptor datoteke</h2>
+<ul>
+<li>Ova operacija je neblokirajuća, kada njena povratna vrednost ukazuje na neuspešan pokušaj zaključavanja datoteke i na nemogućnost pristupa datoteci, koju je zaključao neki drugi proces.</li>
+<li>Sinhronizaciju procesa moraju da obezbede ne samo operacije zaključavanja i otključavanja datoteke, nego i sve druge operacije za rukovanje deskriptorima datoteka.</li>
+<li>Jedino tako se može obezbediti očuvanje konzistentnosti deskriptora.</li>
+</ul>
+</section>
+<section id="imenici" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Ime datoteke je prirodno vezano za njen deskriptor.</li>
+<li>Pošto se ime datoteke nalazi u imeniku, uz njega bi, u imenik, mogao da bude smešten i deskriptor datoteke.</li>
+<li>Međutim, tipičan način korišćenja imenika je njihovo pretraživanje, radi pronalaženja imena imenika ili imena datoteke, navedene u datoj putanji.</li>
+</ul>
+</section>
+<section id="imenici-1" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Ovakvo pretraživanje prirodno prethodi pristupu sadržaju datoteke, odnosno sadržaju imenika.</li>
+<li>Brzina tog pretraživanja je veća što su imenici kraći, jer se tada manje podataka prebacuje između radne i masovne memorije.</li>
+<li>Znači uputno je da imenici sadrže samo imena datoteka i imenika, a ne i njihove deskriptore, pogotovo ako su deskriptori veliki.</li>
+<li>Zato se deskriptori (inodes) čuvaju na disku van imenika.</li>
+</ul>
+</section>
+<section id="imenici-2" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Da bi se uspostavila veza između imena datoteka, odnosno imena imenika sa jedne strane i njihovih deskriptora sa druge strane, u imenicima se, uz imena datoteka, odnosno uz imena imenika, navode i redni brojevi njihovih deskriptora, koji jednoznačno određuju ove deskriptore.</li>
+<li>Prema tome, imenik je datoteka koja sadrži tabelu u čijim elementima su imena datoteka (odnosno, imena imenika) i redni brojevi njihovih deskriptora</li>
+</ul>
+</section>
+<section id="imenici-3" class="slide level2">
+<h2>Imenici</h2>
+<p><img data-src="./img//535d5c38-f822-4dba-a8bc-119edc7c8a69.png" /></p>
+</section>
+<section id="imenici-4" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Iz rednog broja deskriptora se može odrediti redni broj bloka masovne memorije, u kome se deskriptor nalazi, ako se izvestan broj susednih blokova rezerviše samo za smeštanje deskriptora.</li>
+<li>Pod pretpostavkom da blok sadrži celi broj deskriptora, količnik rednog broja deskriptora i ukupnog broja deskriptora u bloku određuje redni broj bloka sa deskriptorom.</li>
+<li>Pri tome se podrazumeva da je deskriptor sa rednim brojem 0 rezervisan za korenski imenik.</li>
+</ul>
+</section>
+<section id="imenici-5" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Zahvaljujući ovoj pretpostavci, moguće je uvek pronaći deskriptor korenskog imenika i od njega započeti pretraživanje imenika, što obavezno prethodi pristupu sadržaju datoteke.</li>
+<li>Tako, na primer, za pristup sadržaju datoteke sa putanjom:</li>
+<li>/fakultet/odsek/godina.txt</li>
+<li>potrebno je prebaciti u radnu memoriju blok sa deskriptorom korenskog imenika, koji je poznat, zahvaljujući činjenici da je redni broj (0) deskriptora korenskog imenika unapred zadan.</li>
+</ul>
+</section>
+<section id="imenici-6" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>U deskriptoru korenskog imenika se nalaze redni brojevi blokova sa sadržajem korenskog imenika.</li>
+<li>Nakon prebacivanja ovih blokova u radnu memoriju, moguće je pretražiti sadržaj korenskog imenika, da bi se ustanovilo da li on sadrži ime fakultet.</li>
+<li>Ako sadrži, uz ovo ime je i redni broj deskriptora odgovarajućeg imenika, iz koga se može odrediti redni broj bloka u kome se nalazi ovaj deskriptor.</li>
+</ul>
+</section>
+<section id="imenici-7" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Po prebacivanju ovog bloka u radnu memoriju, u pomenutom deskriptoru se pronalaze redni brojevi blokova sa sadržajem imenika fakultet.</li>
+<li>Nakon prebacivanja ovih blokova u radnu memoriju, moguće je pretražiti sadržaj i ovog imenika, da bi se ustanovilo da li on sadrži ime odsek.</li>
+<li>Ako sadrži, uz ovo ime je i redni broj deskriptora odgovarajućeg imenika, iz koga se može odrediti redni broj bloka u kome se nalazi ovaj deskriptor.</li>
+</ul>
+</section>
+<section id="imenici-8" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Po prebacivanju ovog bloka u radnu memoriju, u pomenutom deskriptoru se pronalaze redni brojevi blokova sa sadržajem imenika odsek.</li>
+<li>Nakon prebacivanja ovih blokova u radnu memoriju moguće je pretražiti sadržaj i ovog imenika, da bi se ustanovilo da li on sadrži ime datoteke godina.txt.</li>
+</ul>
+</section>
+<section id="imenici-9" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>Ako sadrži, uz nju je i redni broj deskriptora odgovarajuće datoteke, iz koga se može odrediti redni broj bloka u kome se nalazi ovaj deskriptor.</li>
+<li>Po prebacivanju ovog bloka u radnu memoriju, u pomenutom deskriptoru se pronalaze redni brojevi blokova sa sadržajem datoteke godina.txt.</li>
+<li>Tek tada je moguć pristup ovom sadržaju.</li>
+</ul>
+</section>
+<section id="imenici-10" class="slide level2">
+<h2>Imenici</h2>
+<p><img data-src="./img//fee04387-6704-4f15-b51d-0ae6dcc18a3a.png" /></p>
+</section>
+<section id="imenici-11" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>U toku pristupa imenicima, neophodno je njihovo zaključavanje, radi obezbeđenja međusobne isključivosti pristupa raznih procesa istom imeniku.</li>
+<li>Za imenike je važno pitanje da li ista datoteka može istovremeno biti registrovana u dva ili više imenika.</li>
+<li>Ako se to dozvoli, tada razne putanje mogu voditi do istog sadržaja.</li>
+</ul>
+</section>
+<section id="imenici-12" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>To je efikasan način da vlasnik, ali i više drugih korisnika istu datoteku mogu naći svaki u svom imeniku, a da ne moraju praviti sopstvenu kopiju datoteke.</li>
+<li>Pri tome, svaki od drugih korisnika može dotičnoj datoteci dati novo ime, koje se naziva link (link).</li>
+<li>Slika sadrži prikaz tri imenika (predstavljeni kvadratima) i tri datoteke (predstavljene krugovima).</li>
+<li>Do srednje datoteke vode dve putanje (link je predstavljen isprekidanom linijom).</li>
+</ul>
+</section>
+<section id="imenici-13" class="slide level2">
+<h2>Imenici</h2>
+<p><img data-src="./img//6f722f62-b64b-47fb-aaa7-8e85c8d9e53a.png" /></p>
+</section>
+<section id="imenici-14" class="slide level2">
+<h2>Imenici</h2>
+<ul>
+<li>U imeniku uz link može biti naveden redni broj deskriptora odgovarajuće datoteke (hard link), ali može biti navedena putanja datoteke njenog vlasnika (soft link).</li>
+<li>U prvom slučaju, deskriptor datoteke mora da sadrži broj linkova.</li>
+<li>Ako se dozvoli da i imenici imaju linkove, tada postaju mogući ciklusi u hijerarhijskoj organizaciji datoteka (jer imenik može sadržati svoj link ili link imenika sa višeg nivoa hijerarhije).</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Prethodno opisano pretraživanje imenika se dešava u okviru izvršavanja sistemske operacije otvaranja datoteke (open()).</li>
+<li>Zato je putanja datoteke obavezni argument poziva ove operacije.</li>
+<li>Njeno izvršavanje prebacuje kopiju deskriptora datoteke u radnu memoriju u tabelu deskriptora datoteka.</li>
+<li>Ova kopija se ne uključuje u deskriptor procesa, u toku čije aktivnosti je inicirano njeno prebacivanje, jer ista datoteka može istovremeno biti otvorena u toku aktivnosti više procesa.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-1" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Da bi svaki od njih koristio istu kopiju deskriptora datoteke, u deskriptoru svakog procesa postoji tabela otvorenih datoteka.</li>
+<li>Svaki njen element sadrži adresu kopije deskriptora odgovarajuće datoteke iz tabele deskriptora datoteka.</li>
+<li>Indeks elementa tabele otvorenih datoteka (u kome je adresa kopije deskriptora otvorene datoteke) predstavlja povratnu vrednost poziva sistemske operacije otvaranja datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-2" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Ovaj indeks otvorene datoteke se koristi kao argument u pozivima drugih sistemskih operacija sloja za rukovanje datotekama.</li>
+<li>On određuje datoteku na koju se pomenuti poziv odnosi.</li>
+<li>Od veličine tabele otvorenih datoteka zavisi najveći mogući broj istovremeno otvorenih datoteka nekog procesa.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-3" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Kao dodatni argument poziva sistemske operacije otvaranja datoteke može se javiti oznaka nameravane vrste pristupa otvaranoj datoteci, koja pokazuje da li se datoteka otvara samo za čitanje, ili za pisanje/čitanje.</li>
+<li>U toku izvršavanja sistemske operacije otvaranja datoteke proverava se da li proces, koji poziva ovu operaciju, poseduje pravo nameravanog pristupa otvaranoj datoteci.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-4" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Za ovo se koristi, sa jedne strane, numerička oznaka vlasnika procesa iz deskriptora procesa, a sa druge strane, numerička oznaka vlasnika otvarane datoteke, kao i prava pristupa otvaranoj datoteci za njenog vlasnika, za njegove saradnike i za ostale korisnike, što sadrži deskriptor otvarane datoteke.</li>
+<li>Otvaranje datoteke je uspešno samo ako proces poseduje pravo nameravanog pristupa datoteci.</li>
+<li>Tada poziv sistemske operacije otvaranja datoteke vraća indeks otvorene datoteke. Inače, on vraća kod greške.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-5" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Oznaka vrste nameravanog pristupa datoteci se čuva u posebnom polju odgovarajućeg elementa tabele otvorenih datoteka, radi naknadne provere ispravnosti pristupa datoteci.</li>
+<li>Pokušaj otvaranja nepostojeće datoteke dovodi do njenog stvaranja, ako se tako navede u argumentima poziva sistemske operacije otvaranja datoteke.</li>
+<li>Alternativa je da postoji posebna operacija (creat()) za stvaranje datoteke (argument poziva ove operacije bi bila putanja stvarane datoteke).</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-6" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Korišćenje datoteke se završava pozivom sistemske operacije zatvaranja datoteke (close()).</li>
+<li>Ona čisti odgovarajući element tabele otvorenih datoteka procesa, koji je pozvao ovu sistemsku operaciju, i prebacuje, eventualno, kopiju deskriptora i baferovane kopije blokova sadržaja zatvarane datoteke u masovnu memoriju (što je neophodno samo ako su ove kopije izmenjene).</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-7" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Kopija deskriptora zatvarane datoteke ostaje u radnoj memoriji, ako, pored procesa koji zatvara datoteku, postoje i drugi procesi koji joj pristupaju.</li>
+<li>Zato kopija deskriptora datoteke sadrži broj procesa koji pristupaju datoteci.</li>
+<li>Obavezni argument poziva sistemske operacije zatvaranja datoteke je indeks otvorene datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-8" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Važno je uočiti da u periodu dok je datoteka otvorena, znači, između uzastopnih poziva sistemskih operacija otvaranja i zatvaranja datoteke, proces nije pod uticajem izmena prava pristupa otvorenoj datoteci, jer izmena prava pristupa postaje delotvorna tek pri narednom otvaranju datoteke, pošto se tek tada ova prava ponovo proveravaju.</li>
+<li>Korisna praksa je da se, na kraju aktivnosti procesa, automatski zatvore sve otvorene datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-9" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Otvorena datoteka se zaključava kada je neophodno ostvariti međusobnu isključivost u toku pristupa njenom sadržaju.</li>
+<li>Datoteka se otključava kada prestane potreba za međusobnom isključivošću u toku rukovanja njenim sadržajem.</li>
+<li>Zaključavanje i otključavanje datoteka se nalazi u nadležnosti posebne sistemske operacije (flock()) koja rukuje kopijom deskriptora zaključavane/ otključavane datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-10" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>U opštem slučaju, operacija zaključavanja datoteke može biti blokirajuća ili neblokirajuća.</li>
+<li>U prvom slučaju aktivnost procesa se zaustavlja tokom pokušaja zaključavanja datoteke, dok zaključavanje ne postane moguće.</li>
+<li>U drugom slučaju, ako zaključavanje datoteke nije moguće, poziv sistemske operacije zaključavanja datoteke vraća kod greške koji objašnjava razlog neuspeha u zaključavanju datoteke.</li>
+<li>Obavezni argument poziva sistemske operacije zaključavanja datoteke je indeks otvorene datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-11" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Nakon otvaranja, sadržaj datoteke se može čitati pozivom sistemske operacije čitanja datoteke (read()) i pisati pozivom sistemske operacije pisanja datoteke (write()), ako je to u skladu sa namerama, izraženim u otvaranju datoteke.</li>
+<li>Obavezni argumenti ovih poziva su indeks otvorene datoteke i broj bajta (koji se čitaju ili pišu).</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-12" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Pored toga, poziv sistemske operacije čitanja sadrži, kao argument, adresu zone radne memorije u koju se smeštaju pročitani bajti, a poziv sistemske operacije pisanja sadrži, kao argument, adresu zone radne memorije iz koje se preuzimaju bajti za pisanje.</li>
+<li>Oba poziva vraćaju vrednost, koja ukazuje na uspešan poziv ili na grešku.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-13" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Podrazumeva se da sistemske operacije pisanja i čitanja nude sekvencijalan pristup datotekama.</li>
+<li>To znači, da, ako jedan poziv sistemske operacije čitanja (pisanja) pročita (upiše) prvi bajt datoteke, naredni takav poziv datoteke će da pročita (upiše) drugi bajt datoteke.</li>
+<li>Radi podrške sekvencijalnom pristupu, svaki element tabele otvorenih datoteka sadrži i posebno polje pozicije u datoteci sa rednim brojem bajta od koga se primenjuje naredno čitanje ili pisanje.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-14" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Svako čitanje ili pisanje pomera poziciju na prvi naredni nepročitani (neupisani) bajt.</li>
+<li>Da bi bili mogući direktni pristupi bajtima datoteke (u proizvoljnom redosledu), postoji sistemska operacija izmene pozicije u datoteci (seek()).</li>
+<li>Obavezni argumenti njenog poziva su indeks otvorene datoteke i podatak o novoj poziciji, dok povratna vrednost ovog poziva ukazuje da li je poziv bio uspešan ili ne.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-15" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Tako, na primer, ako se želi pisati na kraj datoteke, neophodno je prvo pozvati sistemsku operaciju izmene pozicije u datoteci, radi pozicioniranja iza poslednjeg bajta datoteke, i zatim pozvati sistemsku operaciju pisanja.</li>
+<li>Prvi poziv izmeni poziciju u datoteci u odgovarajućem elementu tabele otvorenih datoteka.</li>
+<li>Drugi poziv, na osnovu ove pozicije i kopije deskriptora datoteke, odredi redni broj bloka, ako on postoji, i prebaci njegovu kopiju u radnu memoriju, ako ona već nije bila prisutna u radnoj memoriji.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-16" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>U ovu kopiju se smeste dopisivani bajti i ona se prebaci (odmah ili kasnije, zavisno od strategije baferovanja) u masovnu memoriju.</li>
+<li>Ako blok ne postoji, ili ako se upisivanje proteže na više blokova, upisivanju bajta prethodi zauzimanje blokova.</li>
+<li>Radi toga se menja (proširuje) tabela pristupa datoteke, što može da dovede i do izmene njenog deskriptora.</li>
+<li>Nakon toga se u radnoj memoriji oblikuje novi sadržaj blokova i oni se prebacuju u masovnu memoriju.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-17" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Sloj za rukovanje datotekama nudi posebne sistemske operacije za izmenu atributa datoteke, sadržanih u njenom deskriptoru (kao što su numerička oznaka vlasnika datoteke, prava pristupa datoteci za njenog vlasnika, za njegove saradnike i za ostale korisnike, ili SUID podatak da li numerička oznaka vlasnika datoteke postaje numerička oznaka vlasnika procesa, stvorenog na osnovu sadržaja datoteke).</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-18" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Obavezni argumenti poziva ovih sistemskih operacija su putanja datoteke i nova vrednost menjanog atributa datoteke.</li>
+<li>Njihova povratna vrednost ukazuje na uspešnost poziva.</li>
+<li>U okviru izvršavanja ovih sistemskih operacija pretražuju se imenici, radi prebacivanja u radnu memoriju kopije deskriptora datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-19" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Zatim se proverava da li je ove sistemske operacije pozvao vlasnik datoteke, jer jedino on ima pravo da menja atribute datoteke.</li>
+<li>Ako jeste, tada se menja zadani atribut i blok sa izmenjenom kopijom deskriptora vraća u masovnu memoriju.</li>
+<li>U sistemske operacije za izmenu atributa datoteke spada i sistemska operacija za izmenu imena datoteke.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-20" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Iako se u okviru ove operacije ne menja deskriptor datoteke, nego njen imenik, ovde je, pored pristupa deskriptoru njenog imenika, neophodan i pristup deskriptoru dotične datoteke, radi provere da li je ovu operaciju pozvao vlasnik datoteke.</li>
+<li>Za stvaranje linka (dodatnog imena datoteke) potrebna je posebna sistemska operacija (link()).</li>
+<li>Obavezani argumenti njenog poziva su putanja sa imenom datoteke i putanja sa linkom. U okviru ove operacije se pretražuju imenici radi ubacivanja linka.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-21" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Za uništenje datoteke neophodna je posebna sistemska operacija (unlink()).</li>
+<li>Obavezni argument njenog poziva je putanja uništavane datoteke.</li>
+<li>U okviru sistemske operacije uništenja datoteke, pretražuju se imenici, radi prebacivanja u radnu memoriju kopije deskriptora uništavane datoteke.</li>
+<li>Zatim se proverava da li je broj linkova za ovu datoteku nula i da li je ovu sistemsku operaciju pozvao vlasnik datoteke, pa ako jeste, oslobađaju se blokovi datoteke i njen deskriptor.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-22" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Na kraju se poništava ime datoteke u odgovarajućem imeniku, što predstavlja izmenu njegovog sadržaja.</li>
+<li>Povratna vrednost ove operacije ukazuje da li je ona uspešno obavljena.</li>
+<li>Na primer, uništenje nepostojeće datoteke ne može biti uspešno obavljeno.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-23" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Prethodno opisane sistemske operacije omogućuju pristup svim datotekama, znači i imenicima.</li>
+<li>Ali za pristupe imenicima je potrebno poznavati detalje njihove organizacije, kao što su:</li>
+<li>broj bajta koji je rezervisan za imena datoteka i imenika</li>
+<li>broj bajta koji je rezervisan za redne brojeve njihovih deskriptora</li>
+<li>oznaku koja označava prethodni imenik u hijerarhiji i slično</li>
+</ul>
+</section>
+<section id="sistemske-operacije-sloja-za-rukovanje-datotekama-24" class="slide level2">
+<h2>Sistemske operacije sloja za rukovanje datotekama</h2>
+<ul>
+<li>Potreba za poznavanjem organizacije imenika se izbegava, ako se ponude posebne sistemske operacije za rukovanje imenicima, kao što su operacije za stvaranje imenika, za pregledanje i za izmene njegovog sadržaja, ili za uništenje imenika.</li>
+<li>Među sistemske operacije za rukovanje imenicima spada posebna operacija (mount()) koja omogućuje spajanje dva sistema datoteka, tako što korenski imenik jednog od sistema datoteka postane (zameni) običan imenik drugog sistema datoteka.</li>
+<li>Postoji i suprotna operacija (umount()) koja razdvaja dva prethodno spojena sistema datoteka.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Važno svojstvo pojma datoteke je da je on primenljiv i za opisivanje ulaznih i izlaznih uređaja.</li>
+<li>Tako, ulazni uređaj, kao što je tastatura, odgovara datoteci, čiji sadržaj se može samo čitati, a sastoji se od bajta, koji stižu sa tastature.</li>
+<li>Slično, izlazni uređaj, kao što je ekran, odgovara datoteci, čiji sadržaj se može samo pisati, a sastoji se od bajta, koji se upućuju na ekran.</li>
+<li>Takođe, ulazno izlazni uređaj, kao što je disk, odgovara datoteci, čiji sadržaj se može i pisati i čitati, a sastoji se od bajta iz pojedinih blokova diska.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-1" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Datoteke, koje predstavljaju pojedine ulazne ili izlazne uređaje, se nazivaju specijalne datoteke (special file).</li>
+<li>Specijalne datoteke se dele na znakovne, koje odgovaraju uređajima kao što su tastatura, ekran ili štampač, i na blokovske, koje odgovaraju, na primer, diskovima.</li>
+<li>Znakovne specijalne datoteke podržavaju sekvencijalno čitanje ili pisanje znakova (koji dolaze sa odgovarajućeg urađaja, ili odlaze na odgovarajući uređaj).</li>
+<li>Za ove datoteke izmena pozicije nema smisla.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-2" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Blokovske specijalne datoteke podržavaju čitanje ili pisanje blokova.</li>
+<li>Za njih izmena pozicije omogućuje određivanje rednog broja bloka na koga se primenjuje naredna operacija.</li>
+<li>Blokovske specijalne datoteke omogućuju direktne pristupe blokovima diska, što je važno, na primer, kod pronalaženja izgubljenih blokova, kod sabijanja datoteka, ili kod pripremanja disk jedinica za korišćenje.</li>
+<li>U poslednjem slučaju se određuje namena pojedinih blokova diska:</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-3" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<p><img data-src="./img//8426e3ac-2173-4092-b35f-8e14a3e1c159.png" /></p>
+</section>
+<section id="specijalne-datoteke-4" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Prvi (boot) blok je rezervisan za podatke, koji su potrebni za pokretanje računara</li>
+<li>(operativnog sistema), a drugi (super) blok sadrži:</li>
+<li>podatke o nizu susednih blokova, koji su namenjeni za smeštanje deskriptora datoteka (ovi podaci obuhvataju redni broj prvog bloka iz ovog niza, kao ukupan broj blokova u ovom nizu)</li>
+<li>podatke o slobodnim mestima za deskriptore datoteka</li>
+<li>podatke potrebne za evidenciju (preostalih) slobodnih blokova (u ovu evidenciju se uključuju svi blokovi, koji nisu upotrebljeni za smeštanje sadržaja datoteka ili za tabele pristupa.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-5" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Blokovska specijalna datoteka nije nužno vezana za jedan celi disk.</li>
+<li>Ona se može odnositi na deo diska, koji se naziva particija (partition) i koji tada predstavlja logičku disk jedinicu (logical volume).</li>
+<li>Da bi to bilo moguće, neophodno je raspolagati sredstvima za rukovanje particijama.</li>
+<li>Rukovanje particijama dozvoljava i formiranje logičkih disk jedinica koje obuhvataju više particija na raznim fizičkim diskovima.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-6" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>To omogućava:</li>
+<li>brži pristup blokovima logičke disk jedinice, jer istovremeno mogu biti prebacivani blokovi iz raznih particija sa raznih fizičkih diskova (striping, RAID0),</li>
+<li>veću pouzdanost logičke disk jedinice, jer svaki blok može biti repliciran tako da svaka particija sa raznih fizičkih diskova sadrži potpunu kopiju logičke disk jedinice (mirroring, RAID1)</li>
+<li>oboje (RAID5).</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-7" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Pre korišćenja specijalnih datoteka, neophodno je njihovo otvaranje (radi provere prava pristupa uređaju, koga datoteka predstavlja), i eventualno njihovo zaključavanje (radi ostvarenja međusobne isključivosti pristupa uređaju, koga datoteka predstavlja).</li>
+<li>Nakon korišćenja, sledi eventualno otključavanje i zatvaranje specijalne datoteke.</li>
+<li>Za podršku otvaranja i zatvaranja, odnosno zaključavanja i otključavanja specijalnih datoteka, neophodno je da one poseduju svoje deskriptore.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-8" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Deskriptori specijalnih datoteka obuhvataju atribute, kao što su, na primer numerička oznaka vlasnika datoteke, prava pristupa datoteci za njenog vlasnika, za njegove saradnike i za ostale korisnike, ili podatak da li je datoteka zaključana ili ne.</li>
+<li>Međutim, za operacije čitanja ili pisanja specijalnih datoteka nije potrebno preslikavanje rednih brojeva bajta u redne brojeve blokova masovne memorije.</li>
+<li>Umesto toga za njih je potrebno pozivanje odgovarajućih operacija drajvera uređaja, koje ove datoteke predstavljaju.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-9" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Zato se u deskriptorima specijalnih datoteka ne nalaze podaci o tabeli pristupa, nego podaci o odgovarajućem drajveru i primerku uređaja, koga on opslužuje.</li>
+<li>Za jednoznačno identifikovanje drajvera uvodi se redni broj drajvera (major number), koji služi kao indeks za posebnu tabelu drajvera.</li>
+<li>Polja indeksiranog elementa ove tabele sadrže adrese operacija dotičnog drajvera.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-10" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Prema tome, ako se redni broj drajvera čuva u deskriptoru specijalne datoteke, na osnovu njega je moguće pronaći adrese operacija ovog drajvera (posredstvom odgovarajućeg elementa tabele drajvera).</li>
+<li>U pomenutom deskriptoru se čuva i redni broj uređaja (minor number) koga predstavlja specijalna datoteka, da bi se na njega mogla usmeriti odabrana operacija drajvera.</li>
+</ul>
+</section>
+<section id="specijalne-datoteke-11" class="slide level2">
+<h2>Specijalne datoteke</h2>
+<ul>
+<li>Za izmenu atributa specijalnih datoteka primenljive su sistemske operacije, koje su uvedene s tom namerom za obične datoteke.</li>
+<li>Isto važi i za sistemske operacije za izmenu imena datoteke i za njeno uništenje.</li>
+<li>Pri tome, kod uništenja specijalne datoteke, nema oslobađanja blokova, nego se oslobađa samo njen deskriptor.</li>
+<li>Sistemske operacije prave razliku između običnih i specijalnih datoteka na osnovu posebne oznake, navedene u deskriptoru datoteke.</li>
+</ul>
+</section>
+<section id="standardni-ulaz-i-standardni-izlaz" class="slide level2">
+<h2>Standardni ulaz i standardni izlaz</h2>
+<ul>
+<li>Pojmovi datoteke i procesa su čvrsto povezani, jer je aktivnost procesa posvećena obradi podataka, sadržanih u datotekama.</li>
+<li>Pri tome je tipično da obrađivani podaci stižu u proces iz jedne, ulazne datoteke, a da obrađeni podaci napuštaju proces, završavajući u drugoj, izlaznoj datoteci.</li>
+<li>Ovakav model obrade podataka je dovoljno čest, da opravda uvođenje naziva standardni ulaz (standard input) za ulaznu datoteku i standardni izlaz (standard output) za izlaznu datoteku.</li>
+</ul>
+</section>
+<section id="standardni-ulaz-i-standardni-izlaz-1" class="slide level2">
+<h2>Standardni ulaz i standardni izlaz</h2>
+<ul>
+<li>Pri tome se podrazumeva da se u toku stvaranja procesa otvore i njegov standardni ulaz i njegov standardni izlaz. Zahvaljujući tome, bez posebnog otvaranja se može čitati standardni ulaz i pisati standardni izlaz.</li>
+<li>Kao podrazumevajući standardni ulaz služi specijalna datoteka, koja predstavlja tastaturu, a kao podrazumevajući standardni izlaz služi specijalna datoteka, koja predstavlja ekran.</li>
+</ul>
+</section>
+<section id="standardni-ulaz-i-standardni-izlaz-2" class="slide level2">
+<h2>Standardni ulaz i standardni izlaz</h2>
+<ul>
+<li>U slučaju da proces stvaralac zaustavlja svoju aktivnost, dok traje aktivnost stvorenog procesa, tada je prirodno da stvoreni proces nasledi standardni ulaz i standardni izlaz od procesa stvaraoca i da tako, preuzimajući opsluživanje terminala, nastavi interakciju sa korisnikom.</li>
+<li>Kao indeks otvorene datoteke, koja odgovara standardnom ulazu, može da služi vrednost 0, a kao indeks otvorene datoteke, koja odgovara standardnom izlazu, može da služi vrednost 1.</li>
+</ul>
+</section>
+<section id="spašavanje-datoteka" class="slide level2">
+<h2>Spašavanje datoteka</h2>
+<ul>
+<li>U nadležnosti sloja za rukovanje datotekama nalazi se i podrška spašavanju (backup) datoteka, čiji cilj je da se redovno prave kopije postojećih (svih, ili samo u međuvremenu izmenjenih, odnosno stvorenih) datoteka.</li>
+<li>Na osnovu ovakvih kopija moguće je rekonstruisati (restore) sadržaj oštećenih datoteka.</li>
+<li>Do oštećenja datoteka dolazi na razne načine, kao što je, na primer, pojava loših (neispravnih) blokova.</li>
+<li>Kada se otkriju, loši blokovi se izbacuju iz upotrebe. Jedan način da se to postigne je da se, na primer, formira datoteka loših blokova.</li>
+</ul>
+</section>
+<section id="osnova-sloja-za-rukovanje-datotekama" class="slide level2">
+<h2>Osnova sloja za rukovanje datotekama</h2>
+<ul>
+<li>Sloj za rukovanje datotekama se oslanja na operacije drajvera iz sloja za rukovanje kontrolerima.</li>
+<li>On može da koristi i operacije sloja za rukovanje radnom memorijom, radi zauzimanja bafera, namenjenih za smeštanje kopija blokova, ili kopija deskriptora datoteka, na primer.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: false,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
