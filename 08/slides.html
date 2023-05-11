@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <meta name="dcterms.date" content="2023-05-11">
+  <title>Memorija</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Memorija</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">2023-05-11</p>
+</section>
+
+<section>
+<section id="memorija" class="title-slide slide level1">
+<h1>Memorija</h1>
+
+</section>
+<section id="rukovanje-memorijom" class="slide level2">
+<h2>Rukovanje Memorijom</h2>
+<ul>
+<li>Udžbenik, Poglavlje 12</li>
+</ul>
+</section>
+<section id="zadatak-sloja-za-rukovanje-radnom-memorijom"
+class="slide level2">
+<h2>Zadatak sloja za rukovanje radnom memorijom</h2>
+<ul>
+<li>Sloj za rukovanje radnom memorijom rukuje fizičkom radnom
+memorijom.</li>
+<li>Fizičkoj radnoj memoriji se pristupa posredstvom fizičkog adresnog
+prostora (koga koristi operativni sistem), ali i preko logičkih adresnih
+prostora (po jedan za svaki korisnički proces).</li>
+<li>Logički adresni prostori izoluju procese (međusobno i od operativnog
+sistema) tako što ograničavaju pristup procesa samo na deo fizičke radne
+memorije.</li>
+</ul>
+</section>
+<section id="zadatak-sloja-za-rukovanje-radnom-memorijom-1"
+class="slide level2">
+<h2>Zadatak sloja za rukovanje radnom memorijom</h2>
+<ul>
+<li>To se postiže preslikavanjem logičkog adresnog prostora svakog od
+procesa na samo jedan deo fizičkog adresnog prostora, koji odgovara delu
+fizičke memorije, dodeljene dotičnom procesu.</li>
+<li>Preslikavanje obavlja MMU (Memory Management Unit) tako što logičke
+adrese pretvara (translira) u odgovarajuće fizičke adrese.</li>
+<li>Funkcionisanje i organizacija MMU zavisi od karaktera logičkog
+adresnog prostora. Logički adresni prostor može biti:</li>
+</ul>
+</section>
+<section id="zadatak-sloja-za-rukovanje-radnom-memorijom-2"
+class="slide level2">
+<h2>Zadatak sloja za rukovanje radnom memorijom</h2>
+<ul>
+<li>Kontinualan</li>
+<li>Sastavljen od segmenata raznih veličina</li>
+<li>Sastavljen od stranica iste veličine</li>
+<li>Sastavljen od segmenata raznih veličina koji se sastoje od stranica
+iste veličine</li>
+</ul>
+</section>
+<section id="kontinualni-logički-adresni-prostor" class="slide level2">
+<h2>Kontinualni logički adresni prostor</h2>
+<ul>
+<li>Kontinualni logički adresni prostor se sastoji od jednog niza
+uzastopnih logičkih adresa, koji počinje od logičke adrese 0.</li>
+<li>Veličina kontinualnog logičkog adresnog prostora nadmašuje potrebe
+prosečnog procesa.</li>
+<li>Zato, da bi se mogao detektovati pokušaj izlaska procesa iz njegovog
+logičkog adresnog prostora, neophodno je poznavati najvišu ispravnu
+logičku adresu procesa.</li>
+<li>Ona se zove granična adresa procesa. Logičke adrese procesa ne smeju
+biti veće od njegove granične adrese.</li>
+</ul>
+</section>
+<section id="kontinualni-logički-adresni-prostor-1"
+class="slide level2">
+<h2>Kontinualni logički adresni prostor</h2>
+<ul>
+<li>Za kontinualni logički adresni prostor se podrazumeva da se niz
+uzastopnih logičkih adresa preslikava u niz uzastopnih fizičkih
+adresa.</li>
+<li>Ova dva niza se razlikuju po tome što niz uzastopnih fizičkih adresa
+ne počinje od 0 nego od neke adrese koja se zove bazna adresa.</li>
+<li>Znači, dodavanjem bazne adese logičkoj adresi nastaje fizička
+adresa.</li>
+<li>U toku translacije logičke adrese u fizičku, MMU poredi logičku i
+graničnu adresu. Ako je logička adresa veća, MMU izaziva izuzetak, inače
+sabira baznu adresu sa logičkom adresom da bi dobio fizičku adresu.</li>
+</ul>
+</section>
+<section id="segmentirani-logički-adresni-prostor" class="slide level2">
+<h2>Segmentirani logički adresni prostor</h2>
+<ul>
+<li>Segmentirani logički adresni prostor (segmentation) se sastoji od
+više nizova uzastopnih logičkih adresa (za svaki segment po jedan
+niz).</li>
+<li>Da bi se znalo kom segmentu pripada logička adresa, njeni značajniji
+biti sadrže adresu njenog segmenta, a manje značajni biti sadrže
+unutrašnju adresu u njenom segmentu.</li>
+<li>Pošto je svaki segment kontinualan, on ima svojstva kontinualnog
+logičkog adresnog prostora. Zato svaki segment karakterišu njegova
+granična i bazna adresa.</li>
+</ul>
+</section>
+<section id="segmentirani-logički-adresni-prostor-1"
+class="slide level2">
+<h2>Segmentirani logički adresni prostor</h2>
+<ul>
+<li>U ovom slučaju za translaciju je potrebna tabela segmenata.</li>
+<li>Broj njenih elemenata određuje najveći broj segmenata u
+segmentiranom logičkom adresnom prostoru.</li>
+<li>Svaki element ove tabele sadrži graničnu i baznu adresu
+odgovarajućeg segmenta.</li>
+<li>Adresa segmenta indeksira element tabele segmenata, a njegove
+graničnu i baznu adresu koristi MMU za translaciju unutrašnje adrese
+segmenta u fizičku adresu.</li>
+</ul>
+</section>
+<section id="stranični-logički-adresni-prostor" class="slide level2">
+<h2>Stranični logički adresni prostor</h2>
+<ul>
+<li>Stranični logički adresni prostor (paging) se sastoji od jednog niza
+uzastopnih logičkih adresa (podeljenog u stranice iste veličine).</li>
+<li>Da bi se znalo kojoj stranici pripada logička adresa, njeni
+značajniji biti sadrže adresu njene stranice, a manje značajni biti
+sadrže unutrašnju adresu u njenoj stranici.</li>
+<li>Pošto je svaka stranica kontinualna, ona ima svojstva kontinualnog
+logičkog adresnog prostora.</li>
+</ul>
+</section>
+<section id="stranični-logički-adresni-prostor-1" class="slide level2">
+<h2>Stranični logički adresni prostor</h2>
+<ul>
+<li>Razlika je da je veličina stranice unapred poznata i jednaka stepenu
+broja dva.</li>
+<li>Zato svaku stranicu karakteriše samo njena bazna adresa (graniča
+adresa nije potrebna, jer je unutrašnja adresa ograničena veličinom
+stranice).</li>
+<li>U ovom slučaju za translaciju je potrebna tabela stranica.</li>
+<li>Broj njenih elemenata jednak je najvećem broju stranica u straničnom
+logičkom adresnom prostoru.</li>
+<li>Svaki element ove tabele sadrži baznu adresu odgovarajuće stranice.
+Adresa stranice indeksira element tabele stranica, a njegovu baznu
+adresu koristi MMU za translaciju logičke adrese stranice u fizičku
+adresu.</li>
+</ul>
+</section>
+<section id="odnos-procesa-i-logičkog-adresnog-prostora"
+class="slide level2">
+<h2>Odnos procesa i logičkog adresnog prostora</h2>
+<ul>
+<li>Svaki proces mora da ima neophodne translacione podatke koji
+obuhvataju ili graničnu i baznu adresu, ili tabelu segmenata, ili tabelu
+stranica, ili tabelu segmenata sa pripadnim tabelama stranica.</li>
+<li>Translacione podatke pripremi operativni sistem, prilikom stvaranja
+procesa. Da bi mogao da obavlja translaciju, MMU mora da raspolaže sa
+odgovarajućim translacionim podacima.</li>
+<li>Translacioni podaci se menjaju prilikom preključivanja, pa utiču na
+trajanje preključivanja.</li>
+<li>Veličina slike procesa određuje veličinu njegovog logičkog adresnog
+prostora.</li>
+</ul>
+</section>
+<section id="upotreba-kontinualnog-logičkog-adresnog-prostora"
+class="slide level2">
+<h2>Upotreba kontinualnog logičkog adresnog prostora</h2>
+<ul>
+<li>Kontinualni logički adresni prostor se koristi kada je logički
+adresni prostor svakog procesa manji od raspoloživog fizičkog adresnog
+prostora.</li>
+<li>Da bi translacija logičkih adresa u fizičke bila moguća, neophodno
+je da se u lokacije fizičke radne memorije smesti slika procesa.</li>
+<li>U ovom slučaju, translacija logičkih adresa u fizičke adrese
+odgovara dinamičkoj relokaciji i olakšava zamenu slika procesa
+(swapping).</li>
+<li>Pokušaj procesa da izađe iz svog adresnog prostora izaziva izuzetak
+(SEGFAULT) na koji reaguje operativni sistem, tako što uništi dotični
+proces.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Segmentacija (segmentirani logički adresni prostor) se koristi kada
+je važno racionalno korišćenje fizičke radne memorije.</li>
+<li>I ovde se pretpostavlja da je logički adresni prostor procesa manji
+od raspoloživog fizičkog adresnog prostora, kao i da smeštanje slike
+procesa u lokacije fizičke radne memorije prethodi translaciji logičkih
+adresa u fizičke.</li>
+<li>U ovom slučaju, segmenti logičkog adresnog prostora procesa sadrže
+delove njegove slike.</li>
+<li>Na primer, postoje segment za mašinske naredbe, segment za
+promenljive i segment za stek.</li>
+<li>Ako istovremeno postoji više procesa, nastalih na osnovu istog
+programa, tada oni mogu da dele iste mašinske naredbe.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-1"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>U ovom slučaju, tabele segmenata takvih procesa sadrže isti par
+granične i bazne adrese deljenog segmenta.</li>
+<li>Ovaj par omogućuje preslikavanje unutrašnjih adresa segmenta naredbi
+raznih procesa na iste fizičke adrese lokacija fizičke radne memorije sa
+deljenim mašinskim naredbama.</li>
+<li>Izdvajanje promenljivih i steka procesa u posebne segmente je
+korisno i zbog mogućnosti naknadnog proširenja ovih segmenata (kada to
+postane potrebno u toku aktivnosti procesa).</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-2"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Prednost, segmentacije je da ona ubrzava zamenu slika procesa
+(swapping), jer se segment naredbi ne mora izbacivati, ako je ranije već
+izbačen u masovnu memoriju, niti ubacivati, ako već postoji u fizičkoj
+radnoj memoriji.</li>
+<li>Jasno, rukovanje segmentima mora voditi posebnu evidenciju o
+segmentima, prisutnim u fizičkoj radnoj memoriji, da bi bilo moguće
+otkriti kada se isti segment može iskoristiti u slikama raznih
+procesa.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-3"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Ovakva evidencija obuhvata jednoznačnu oznaku segmenta, podatak o
+broju korisnika segmenta, dužinu segmenta, odnosno, njegovu graničnu i
+baznu adresu.</li>
+<li>Radi očuvanja konzistentnosti evidencije segmenata, operacije za
+rukovanje ovom evidencijom moraju obezbediti sinhronizaciju
+procesa.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-4"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Prethodno opisana (osnovna) segmentacija se razvija u punu
+segmentaciju, ako se dozvoli da svakom potprogramu ili promenljivoj
+odgovara poseban segment.</li>
+<li>To, na primer, dozvoljava deljenje potprograma između raznih
+procesa, ako se segment istog potprograma uključi u slike više
+procesa.</li>
+<li>U tom slučaju, stvaraju se uslovi za dinamičko linkovanje
+(povezivanje) potprograma za program.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-5"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Ono se ne dešava u toku pravljenja izvršne datoteke, nego u trenutku
+prvog poziva potprograma, kada se u fizičkoj radnoj memoriji pronalazi
+njegov segment ili se stvara ako ne postoji.</li>
+<li>Dinamičko linkovanje doprinosi racionalnom korišćenju masovne
+memorije, jer omogućava da se često korišćeni potprogrami ne
+multipliciraju u raznim izvršnim datotekama.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-6"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Puna segmentacija dozvoljava i deljenje promenljivih između raznih
+procesa, ako se segment iste promenljive uključi u slike više
+procesa.</li>
+<li>Jasno, ovakav način ostvarenja saradnje procesa zahteva njihovu
+sinhronizaciju, radi očuvanja konzistentnosti deljenih
+promenljivih.</li>
+<li>Za segmente sa deljenim promenljivima su važna i prava pristupa
+segmentu, jer nekim od procesa treba dozvoliti samo da čitaju deljenu
+promenljivu, a drugima treba dozvoliti i da pišu u deljenu
+promenljivu.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-7"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Zato se elementi tabele segmenata proširuju oznakom prava pristupa
+segmentu.</li>
+<li>U pogledu prava pristupa, segmenti se ne razlikuju od datoteka.</li>
+<li>Prema tome, prava pristupa segmentu obuhvataju pravo čitanja, pravo
+pisanja i pravo izvršavanja segmenta.</li>
+<li>Prva dva prava se primenjuju na segmente, koji sadrže promenljive, a
+treće pravo se primenjuje na segmente sa mašinskim naredbama programa
+ili potprograma.</li>
+</ul>
+</section>
+<section id="upotreba-segmentiranog-logičkog-adresnog-prostora-8"
+class="slide level2">
+<h2>Upotreba segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Na pokušaj narušavanja prava pristupa segmentu reaguje MMU,
+generisanjem prekida (izuzetka), što dovodi do uništenja aktivnog
+procesa (SEGFAULT).</li>
+<li>Rukovanje segmentima se obavlja posredstvom sistemskih programa, kao
+što su kompajler ili linker.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Stranični logički adresni prostor se koristi kada je logički adresni
+prostor tipičnog procesa veći od raspoloživog fizičkog adresnog
+prostora, pa slika procesa ne može da stane u fizičku radnu
+memoriju.</li>
+<li>Stranični logički adresni prostor se naziva i virtuelni adresni
+prostor.</li>
+<li>On pripada virtuelnoj memoriji i sadrži virtuelne adrese.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-1"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Stranice virtuelnog adresnog prostora sa slikom procesa se nalaze na
+masovnoj memoriji.</li>
+<li>Postoji posebna evidencija o tome gde se one tačno nalaze na
+masovnoj memoriji.</li>
+<li>Pošto je za izvršavanje mašinske naredbe neophodno da u fizičkoj
+radnoj memoriji budu samo bajti njenog mašinskog formata, kao i bajti
+njenih operanada, u fizičkoj radnoj memoriji moraju da se nalaze samo
+kopije virtuelnih stranica koje sadrže pomenute bajte.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-2"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Podrazumeva se da se kopije neophodnih virtuelnih stranica, kada
+zatreba, automatski prebacuju iz masovne memorije u fizičku radnu
+memoriju i obrnuto.</li>
+<li>Do prebacivanja u obrnutom smeru dolazi, kada je potrebno osloboditi
+lokacije fizičke radne memorije sa kopijama u međuvremenu izmenjenih
+virtuelnih stranica.</li>
+<li>Ovo prebacivanje se obavlja, da bi se oslobodila fizička radna
+memorija i, istovremeno, obezbedilo da masovna memorija uvek sadrži
+ažurnu sliku procesa.</li>
+<li>Da bi se znalo koja kopija virtuelne stranice je izmenjena,
+neophodno je automatski registrovati svaku izmenu svake od kopija
+virtuelnih stranica.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-3"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Fizička radna memorija sadrži kopije pojedinih virtuelnih stranica,
+pa je prirodno da i ona bude izdeljena u fizičke stranice u kojima se
+nalaze kopije virtuelnih stranica.</li>
+<li>To znači da se fizička adresa sastoji od adrese fizičke stranice (u
+značajnijim bitima fizičke adrese) i od unutrašnje adrese (u manje
+značajnim bitima fizičke adrese).</li>
+<li>Pošto su virtuelne i fizičke stranice iste veličine, unutrašnja
+adresa (manje značajni biti) virtuelne adrese se poklapa sa unutrašnjom
+adresom (manje značajnim bitima) fizičke adrese.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-4"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Zato je za translaciju virtuelne adrese u fizičku potrebno samo
+zameniti adresu virtuelne stranice adresom fizičke stranice.</li>
+<li>Zbog toga se u elementu tabele stranica (koga indeksira adresa
+virtuelne stranice) kao bazna adresa nalazi adresa fizičke stranice
+(koja sadrži kopiju dotične virtuelne stranice).</li>
+<li>Ako virtuelna stranica nije kopirana u neku fizičku stranicu, tada
+translacija njenih virtuelnih adresa u fizičke nije moguća.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-5"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>U tom slučaju, to mora biti registrovano u odgovarajućem elementu
+tabele stranica. Takvu ulogu ima bit prisustva.</li>
+<li>Uz bit prisustva, elementi tabele stranica sadrže i bit
+referenciranja (koji pokazuje da li je bilo pristupanja kopiji virtuelne
+stranice) i bit izmene (koji pokazuje da li je bilo izmena kopije
+virtuelne stranice).</li>
+<li>Poslednja dva bita se automatski postavljaju.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-6"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Kada pokušaj translacije virtuelne adrese bude neuspešan (jer bit
+prisustva ukaže da se kopija odgovarajuće virtuelne stranice ne nalazi u
+fizičkoj radnoj memoriji), MMU izaziva stranični prekid (page
+fault).</li>
+<li>U obradi straničnog prekida se prebaci kopija potrebne virtuelne
+stanice u neku fizičku stranicu.</li>
+<li>Adresa ove fizičke stranice postaje bazna adresa i smesti se u
+odgovarajući element tabele stranica.</li>
+<li>U ovom elementu se istovremeno postavi bit prisustva, a očiste se
+bit referenciranja i bit izmene.</li>
+<li>Nakon toga, ponavlja se neuspešna translacija virtuelne adrese.</li>
+</ul>
+</section>
+<section id="upotreba-straničnog-logičkog-adresnog-prostora-7"
+class="slide level2">
+<h2>Upotreba straničnog logičkog adresnog prostora</h2>
+<ul>
+<li>Važno je uočiti da se kopije virtuelnih stranica prebacuju na zahtev
+(demand paging), a ne unapred (prepaging), jer u opštem slučaju ne
+postoji način da se predvidi redosled korišćenja virtuelnih
+stranica.</li>
+<li>Praktična upotrebljivost virtuelne memorije se temelji na svojstvu
+lokalnosti izvršavanja programa.</li>
+<li>Zahvaljujući ovome svojstvu, za izvršavanje programa je dovoljno da
+u fizičkoj radnoj memoriji uvek bude samo deo progama.</li>
+</ul>
+</section>
+<section
+id="upotreba-stranično-segmentiranog-logičkog-adresnog-prostora"
+class="slide level2">
+<h2>Upotreba stranično segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Stranična segmentacija (stranično segmentirani logički adresni
+prostor) se koristi kada su segmenti potrebni radi racionalnog
+korišćenja fizičke radne memorije, a njihova veličina nadmašuje veličinu
+raspoložive fizičke radne memorije.</li>
+<li>U tom slučaju, svaki segment uvodi sopstveni virtuelni adresni
+prostor.</li>
+<li>Zahvaljujući tome, stranice virtuelnog adresnog prostora segmenta se
+nalaze u masovnoj memoriji, a u fizičkim stranicama se nalaze samo
+kopije neophodnih virtuelnih stranica segmenta.</li>
+</ul>
+</section>
+<section
+id="upotreba-stranično-segmentiranog-logičkog-adresnog-prostora-1"
+class="slide level2">
+<h2>Upotreba stranično segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Prednost stranične segmentacije je da ona omogućava dinamičko
+proširenje segmenata (dodavanjem novih stranica), što je važno za
+segmente promenljivih i steka.</li>
+<li>Stranična segmentacija može otvorenim datotekama dodeljivati posebne
+segmente i na taj način ponuditi koncept memorijski preslikane datoteke
+(memory mapped file).</li>
+<li>Pristup ovakvoj datoteci ne zahteva sistemske operacije za čitanje,
+pisanje ili pozicioniranje, jer se direktno pristupa lokacijama sa
+odgovarajućim sadržajem datoteke.</li>
+</ul>
+</section>
+<section
+id="upotreba-stranično-segmentiranog-logičkog-adresnog-prostora-2"
+class="slide level2">
+<h2>Upotreba stranično segmentiranog logičkog adresnog prostora</h2>
+<ul>
+<li>Mana koncepta memorijski preslikane datoteke je da se veličina
+datoteke izražava celim brojem stranica, jer nema načina da operativni
+sistem odredi koliko je popunjeno bajta iz poslednje stranice.</li>
+<li>Takođe, problem je i što virtuelni adresni prostor segmenta može
+biti suviše mali za pojedine datoteke.</li>
+</ul>
+</section>
+<section id="zadaci-sloja-za-rukovanje-fizičkom-radnom-memorijom"
+class="slide level2">
+<h2>Zadaci sloja za rukovanje fizičkom radnom memorijom</h2>
+<ul>
+<li>Zadatak sloja za rukovanje fizičkom radnom memorijom je da omogući
+zauzimanje zona susednih lokacija (sa uzastopnim adresama) slobodne
+fizičke radne memorije, kao i da omogući oslobađanje prethodno zauzetih
+zona fizičke radne memorije.</li>
+<li>Radi toga ovaj sloj nudi operacije zauzimanja i oslobađanja (fizičke
+radne memorije).</li>
+</ul>
+</section>
+<section id="zadaci-sloja-za-rukovanje-fizičkom-radnom-memorijom-1"
+class="slide level2">
+<h2>Zadaci sloja za rukovanje fizičkom radnom memorijom</h2>
+<ul>
+<li>Argument poziva operacije zauzimanja je dužina zauzimane zone (broj
+njenih lokacija), a povratna vrednost ovog poziva je adresa zauzete zone
+(adresa prve od njenih lokacija), ili indikacija da je operacija
+zauzimanja završena neuspešno.</li>
+<li>Argumenti poziva operacije oslobađanja su adresa oslobađane zone
+(adresa prve od njenih lokacija) i njena dužina (broj njenih
+lokacija).</li>
+</ul>
+</section>
+<section id="zadaci-sloja-za-rukovanje-fizičkom-radnom-memorijom-2"
+class="slide level2">
+<h2>Zadaci sloja za rukovanje fizičkom radnom memorijom</h2>
+<ul>
+<li>Uspešno obavljanje zadatka sloja za rukovanje fizičkom radnom
+memorijom se temelji na vođenju evidencije o slobodnoj fizičkoj radnoj
+memoriji.</li>
+<li>Kada podržava virtuelnu memoriju, ovaj sloj mora svakom procesu
+dodeliti dovoljan broj fizičkih stranica za kopije potrebnih virtuelnih
+stranica.</li>
+</ul>
+</section>
+<section id="raspodela-fizičke-radne-memorije" class="slide level2">
+<h2>Raspodela fizičke radne memorije</h2>
+<ul>
+<li>Fizička radna memorija se deli na lokacije koje stalno zauzima
+operativni sistem i na preostale slobodne lokacije koje su na
+raspolaganju za stvaranje procesa i za druge potrebe.</li>
+<li>Operativni sistem obično zauzima lokacije sa početka i, eventualno,
+sa kraja fizičkog adresnog prostora, a između njih se nalaze lokacije
+slobodne fizičke radne memorije.</li>
+<li>Na početku fizičkog adresnog prostora su, najčešće, lokacije,
+namenjene za tabelu prekida.</li>
+</ul>
+</section>
+<section id="raspodela-fizičke-radne-memorije-1" class="slide level2">
+<h2>Raspodela fizičke radne memorije</h2>
+<ul>
+<li>Iza njih slede lokacije sa naredbama i promenljivim operativnog
+sistema (koje obuhvataju i prostor za smeštanje deskriptora i sistemskih
+stekova procesa).</li>
+<li>Na kraju fizičkog adresnog prostora su, najčešće, lokacije, koje
+odgovaraju registrima kontrolera.</li>
+</ul>
+</section>
+<section id="raspodela-fizičke-radne-memorije-2" class="slide level2">
+<h2>Raspodela fizičke radne memorije</h2>
+<ul>
+<li>U slučaju da procesor podržava virtuelnu memoriju, praksa je da se
+samo donja polovina (sa nižim adresama) virtuelnog adresnog prostora
+stavi na raspolaganje svakom procesu, a da gornja polovina (sa višim
+adresama) virtuelnog adresnog prostora bude rezervisana za operativni
+sistem.</li>
+<li>Gornja polovina virtuelnog adresnog prostora se zato može nazvati
+sistemski virtuelni adresni prostor, a donja polovina virtuelnog
+adresnog prostora se može nazvati korisnički virtuelni adresni
+prostor.</li>
+</ul>
+</section>
+<section id="raspodela-fizičke-radne-memorije-3" class="slide level2">
+<h2>Raspodela fizičke radne memorije</h2>
+<ul>
+<li>Za virtuelne adrese iz prve polovine sistemskog virtuelnog adresnog
+prostora se ne vrši translacija (na primer, tako što se deo manje
+značajnih bita virtuelne adrese koristi kao fizička adresa) i
+podrazumeva se da se tu nalazi rezidentni deo operativnog sistema, koji
+je stalno prisutan u fizičkoj radnoj memoriji.</li>
+<li>Virtulene adrese iz druge polovine sistemskog virtuelnog adresnog
+prostora se transliraju na uobičajeni način i podrazumeva se da se one
+odnose na nerezidentni deo operativnog sistema, koji se po potrebi
+prebacuje u fizičku radnu memoriju.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Sloj za rukovanje fizičkom radnom memorijom obavezno vodi evidenciju
+o slobodnoj fizičkoj radnoj memoriji.</li>
+<li>Za potrebe kontinualnog ili segmentiranog logičkog adresnog prostora
+ova evidencija može da bude u obliku niza bita (bit map), u kome svaki
+bit odgovara grupi susednih lokacija. Podrazumeva se da je broj lokacija
+u ovakvoj grupi unapred zadan.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-1"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>On ujedno predstavlja jedinicu u kojoj se izražava dužina zauzimane
+i oslobađane zone fizičke radne memorije.</li>
+<li>Ako je grupa lokacija slobodna, njoj odgovarajući bit sadrži 1.
+Inače, on sadrži 0.</li>
+<li>Mana ovakve evidencije je da su i operacija zauzimanja i operacija
+oslobađanja dugotrajne, jer prva pretražuje evidenciju, radi
+pronalaženja dovoljno dugačkog niza jedinica, a druga postavlja takav
+niz jedinica u evidenciju.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-2"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Zato se češće evidencija slobodne fizičke radne memorije pravi u
+obliku liste slobodnih odsečaka fizičke radne memorije.</li>
+<li>Na početku rada operativnog sistema ovakva lista sadrži jedan
+odsečak, koji obuhvata celu fizičku slobodnu radnu memoriju.</li>
+<li>Ovakav odsečak se drobi u više kraćih odsečaka, kao rezultat
+višestrukog stvaranja i uništavanja procesa u slučajnom redosledu.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-3"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Novonastali kraći odsečci se nalaze na mestu slika uništenih
+procesa, a između njih su slike postojećih procesa.</li>
+<li>Na početku svakog odsečka su njegova dužina i adresa narednog
+odsečka.</li>
+<li>Broj lokacija, potrebnih za smeštanje dužine dotičnog odsečka i
+adrese narednog odesečka, određuje najmanju dužinu odsečka i može da
+predstavlja jedinicu u kojoj se izražavaju dužine odsečaka (odnosno,
+dužine zauzimanih i oslobađanih zona fizičke radne memorije).</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-4"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Odsečci su uređeni u rastućem redosledu adresa njihovih početnih
+lokacija. To, prilikom oslobađanja zone fizičke radne memorije, olakšava
+operaciji oslobađanja:</li>
+<li>da pronađe dva susedna odsečka, koji mogu da se spoje u jedan, kada
+se između njih ubaci oslobađana zona, ili</li>
+<li>da pronađe odsečak, kome može da se doda (spreda ili straga)
+oslobađana zona ili</li>
+<li>da pronađe mesto u listi u koje će oslobađana zona biti uključena
+kao poseban odsečak.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-5"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Listu slobodnih odsečaka pretražuje i operacija zauzimanja, radi
+pronalaženja dovoljno dugačkog odsečka.</li>
+<li>Pri tome se zauzima samo deo odsečka, koji je jednak zauzimanoj
+zoni, dok preostali deo odsečka ostaje u listi kao novi odsečak.</li>
+<li>Na ovaj način se odsečci dalje usitnjavaju. To dovodi do eksterne
+fragmentacije.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-6"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Ona posredno uzrokuje neupotrebljivost odsečaka, jer onemogućuje
+zauzimanje zone fizičke radne memorije, čija dužina je veća od dužine
+svakog od postojećih odsečaka, bez obzira na činjenicu da je suma dužina
+postojećih odsečaka veća od dužine zauzimane zone.</li>
+<li>Iskustvo pokazuje da se eksterna fragmentacija povećava, ako se,
+umesto traženja prvog dovoljno dugačkog odsečka (first fit), pokušava
+naći najmanji dovoljno dugačak odsečak (best fit), ili najveći dovoljno
+dugačak odsečak (worst fit).</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-7"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Poboljšanje ne nudi ni ideja da lista odsečaka bude ciklična i da se
+pretražuje ne od početka, nego od tačke u kojoj je zaustavljeno
+poslednje pretraživanje (next fit).</li>
+<li>Ideja da dužina zauzimanih zona bude uvek jednaka stepenu broja 2
+(quick fit) i da postoji posebna lista odsečaka za svaku od mogućih
+dužina takođe ima manu, jer, pored eksterne, uvode i internu
+fragmentaciju, pošto se na ovaj način u proseku zauzimaju duže zone od
+stvarno potrebnih, čime nastaje neupotrebljiva radna memorija.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-8"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Problem eksterne fragmentacije se može rešiti sabijanjem
+(compaction) slika procesa, čime se sve slike procesa pomeraju na jedan
+kraj fizičke radne memorije, tako da na drugom kraju bude slobodna
+fizička radna memorija.</li>
+<li>U toku sabijanja, moraju se menjati bazne adrese (segmenata)
+pojedinih procesa.</li>
+<li>Mana sabijanja je njegova dugotrajnost (sporost).</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-9"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Za potrebe virtuelnog adresnog prostora, evidencija slobodne fizičke
+radne memorije može da bude u obliku niza bita, u kome svaki bit
+odgovara slobodnoj fizičkoj stranici.</li>
+<li>Alternativa je da se slobodne fizičke stranice vežu u listu.</li>
+<li>Međutim, atraktivna je i evidencija o slobodnim odsečcima veličine
+jednake multiplu fizičke stranice (quick fit, buddy system), jer se u
+virtuelnom adresnom prostoru uvek zauzima celi broj stranica.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-10"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Važno je uočiti da rukovanje evidencijom sistemske slobodne radne
+memorije zahteva sinhronizaciju procesa, u toku čije aktivnosti se
+istovremeno obavljaju operacije zauzimanja i oslobađanja.</li>
+<li>Sinhronizacija treba da obezbedi međusobnu isključivost obavljanja
+ovih operacija, radi očuvanja konzistentnosti pomenute evidencije.</li>
+</ul>
+</section>
+<section id="evidencija-slobodne-fizičke-radne-memorije-11"
+class="slide level2">
+<h2>Evidencija slobodne fizičke radne memorije</h2>
+<ul>
+<li>Za virtuelnu memoriju je važno pitanje dužine stranice. Za dugačke
+stranice postaje izražen problem interne fragmentacije, jer sve stranice
+nisu uvek potpuno iskorišćene, pa se u njima javljaju neupotrebljive
+lokacije.</li>
+<li>Za kratke stranice postaje izražen problem veličine tabele stranica,
+jer tada virtuelni adresni prostor ima više stranica, pa zato i tabela
+stranica ima više elemenata.</li>
+<li>Praksa je veličinu stranice smestila između 512 i 8192 bajta.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>Za aktivnost procesa je potrebno da procesoru na raspolaganju budu
+kopije svih virtuelnih stranica koje su neophodne za izvršavanje
+pojedinih mašinskih naredbi.</li>
+<li>Za čuvanje kopija tih stranica procesu mora biti dodeljeno dovoljno
+fizičkih stranica koje obrazuju minimalan skup.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-1" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>Na primer, za procesor, čije naredbe imaju najviše dva operanda,
+minimalni skup sadrži šest fizičkih stranica, jer se, u ekstremnom
+slučaju, i bajti mašinske naredbe, kao i bajti oba njena operanda, mogu
+nalaziti u različitim susednim fizičkim stranicama.</li>
+<li>Pošto se naredba može izvršiti samo kada su u fizičkoj radnoj
+memoriji prisutni svi bajti njenog mašinskog formata i svi bajti njenih
+operanada, prethodno pomenuti ekstremni slučaj uslovljava da je
+pridruživanje minimalnog skupa procesu preduslov bilo kakve njegove
+aktivnosti.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-2" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>Kada se, u toku aktivnosti procesa, desi stranični prekid, koji
+zahteva prebacivanje kopije nove virtuelne stranice u radnu memoriju,
+pre zahtevanog prebacivanja neophodno je razrešiti dilemu da li uvećati
+skup fizičkih stranica procesa novom fizičkom stranicom i u nju smestiti
+kopiju nove virtuelne stranice, ili u postojećem skupu fizičih stranica
+procesa zameniti sadržaj neke od njih kopijom nove virtuelne
+stranice.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-3" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>Uvećanje skupa fizičkih stranica procesa ima smisla samo ako to
+dovodi do smanjivanja učestanosti straničnih prekida (njihovog prosečnog
+broja u jedinici vremena).</li>
+<li>Znači, kada je, u toku aktivnosti procesa, učestanost straničnih
+prekida iznad neke (iskustveno određene) gornje granice, tada ima smisla
+uvećanje skupa fizičih stranica procesa, da bi se učestanost straničnih
+prekida svela na prihvatljiv nivo.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-4" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>To je važno, jer obrada svakog prekida troši procesorsko vreme, pa
+veliki broj obrada straničnih prekida može u potpunosti da angažuje
+procesor i da tako vrlo uspori, ili potpuno spreči njegovu bilo kakvu
+korisnu aktivnost (trashing).</li>
+<li>Međutim, ako je učestanost straničnih prekida ispod neke (iskustveno
+određene) donje granice, tada ima smisla smanjenje skupa fizičkih
+stranica procesa, jer i sa manjim skupom fizičkih stranica učestanost
+straničnih prekida ostaje u prihvatljivom rasponu.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-5" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>U opštem slučaju učestanost straničnih prekida ne pada na nulu, ako
+sve kopije virtuelnih stranica procesa ne mogu stati u radnu
+memoriju.</li>
+<li>Smanjenje skupa fizičkih stranica procesa je važno, jer se tako
+omogućuje neophodni rast skupova stranica drugih procesa.</li>
+<li>U slučaju da je učestanost straničnih prekida između pomenute dve
+granice, tada nema potrebe za izmenom broja fizičkih stranica u skupu
+fizičkih stranica aktivnog procesa.</li>
+<li>U ovom slučaju skup fizičkih stranica (odnosno, njima odgovarajući
+skup virtuelnih stranica) obrazuje radni skup (working set).</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-6" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<p><img data-src="./img//d2f57f30-b856-4dfd-874c-f897e0ab2202.png" /> -
+Odnos učestanosti straničnih prekida i broja stranica u skupu fizičkih -
+stranica procesa</p>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-7" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>Radni skup procesa nije statičan.</li>
+<li>U proseku, on se sporo menja u toku aktivnosti procesa (iako su,
+povremeno, moguće značajne kratkotrajne varijacije radnog skupa).</li>
+<li>Važno je uočiti da se u toku aktivnosti procesa obavezno javlja
+trashing, kada njegov radni skup ne može da stane u radnu memoriju.</li>
+<li>U ovom slučaju pomaže izbacivanje (swapping) procesa, dok se ne
+oslobodi dovoljan broj fizičkih stranica.</li>
+<li>Ovaj pristup ima smisla samo ako je radni skup procesa manji od
+ukupne slobodne fizičke radne memorije.</li>
+</ul>
+</section>
+<section id="dodela-fizičkih-stranica-procesima-8" class="slide level2">
+<h2>Dodela fizičkih stranica procesima</h2>
+<ul>
+<li>Stepen multiprogramiranja kod virtuelne memorije zavisi od broja
+radnih skupova, koji se istovremeno mogu smestiti u raspoloživu fizičku
+radnu memoriju.</li>
+<li>Za uspeh koncepta virtuelne memorije važno je da se stalno prate
+radni skupovi istovremeno postojećih procesa i da se povremeno izbacuju
+procesi, čim fizička radna memorija postane pretesna za sve radne
+skupove (load control).</li>
+<li>Na ovaj način se oslobađaju fizičke stranice za preostale procese,
+neophodne za smeštanje njihovih radnih skupova.</li>
+<li>Prilikom kasnijeg ubacivanja procesa, uputno je ubacivati kopije
+svih virtuelnih stranica, koje obrazuju njegov radni skup.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Pad učestanosti straničnih prekida ispod donje granice ukazuje na
+mogućnost smanjenja radnog skupa.</li>
+<li>U ovoj situaciji je potrebno odlučiti koju virtuelnu stranicu
+izbaciti iz radnog skupa, odnosno osloboditi.</li>
+<li>Za oslobađanje kao kandidat se nameće virtuelna stranica, koja neće
+biti referencirana do kraja aktivnosti procesa, ili će biti
+referencirana iza svih ostalih virtuelnih stranica iz radnog skupa (pod
+referenciranjem se podrazumeva pristup bilo kojoj lokaciji stranice,
+radi preuzimanja ili izmene njenog sadržaja).</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-1"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Povećanje učestanosti straničnih prekida preko gornje granice
+ukazuje na potrebu proširenja radnog skupa.</li>
+<li>U ovom slučaju, potrebno je procesu pridružiti novu fizičku
+stranicu, da bi se u nju smestila kopija potrebne virtuelne
+stranice.</li>
+<li>Ako nema slobodnih fizičkih stranica, tada se oslobađa, kada je to
+moguće, fizička stranica, koja je pridružena nekom drugom procesu.</li>
+<li>Time se radni skup ovog drugog procesa smanjuje. U oslobođenoj
+fizičkoj stranici zatečenu kopiju zamenjuje (replacement) kopija
+potrebne virtuelne stranice.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-2"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Do zamene kopija virtuelnih stranica dolazi i kada se javi potreba
+za ubacivanjem kopije nove stranice, a učestanost straničnih prekida je
+između gornje i donje granice, pa se radni skup aktivnog procesa ne
+proširuje, nego se oslobađa jedna od fizičkih stranica iz njegovog
+radnog skupa.</li>
+<li>U oba prethodna slučaja kandidat za zamenu je fizička stranica, koja
+sadrži kopiju virtuelne stranice sa najstarijom referencom.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-3"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>I u slučaju pada učestanosti straničnih prekida ispod donje granice
+i u slučaju povećanja učestanosti straničnih prekida iznad gornje
+granice, kao i u slučaju kada je učestanost straničnih prekida između
+gornje i donje granice, javlja se potreba za oslobađanjem fizičkih
+stranica.</li>
+<li>Izbor fizičke stranice za oslobađanje se može vršiti na razne
+načine, po raznim algoritmima.</li>
+<li>Ovakvi algoritmi se nazivaju algoritmi zamene stranica (page
+replacement algorithms), jer se zatečeni sadržaj oslobađane fizičke
+stranice zamenjuje novim sadržajem.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-4"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Oslobađanje fizičkih stranica može biti zasnovano samo na upotrebi
+bita referenciranja i bita izmene.</li>
+<li>U ovom pristupu se pronalazi fizička stranica koja nije korišćena u
+nekom prethodnom periodu (Not Recently Used - NRU) tako što se posmatra
+dvobitni broj, čiji značajniji bit odgovara bitu referenciranja, a manje
+značajan bit odgovara bitu izmene (MMU ih postavlja) .</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-5"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Takođe se podrazumeva da se oba bita čiste i prilikom oslobađanja,
+odnosno prilikom zauzimanja fizičke stranice (prilikom zamene njenog
+sadržaja).</li>
+<li>Prema tome, pomenuti dvobitni broj sadrži 00, kada kopija virtuelne
+stranice nije korišćena nakon nekog od poslednjih vremenskih prekida
+(znači, niti referencirana niti izmenjena).</li>
+<li>Pomenuti dvobitni broj sadrži 01, kada kopija virtuelne stranice
+nije referencirana nakon nekog od poslednjih vremenskih prekida (ali je
+prethodno izmenjena).</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-6"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Ovaj broj sadrži 10, kada kopija virtuelne stranice nije izmenjena,
+ali je referencirana nakon poslednjeg vremenskog prekida.</li>
+<li>Pomenuti dvobitni broj sadrži 11, kada je kopija virtuelne stranice
+izmenjena i, uz to, referencirana nakon poslednjeg vremenskog
+prekida.</li>
+<li>Kandidati za zamenu su stranice, čiji dvobitni broj je
+najmanji.</li>
+<li>Prethodno opisani pristup oslobađanja fizičkih stranica je efikasan,
+ali nedovoljno precizno procenjuje koja fizička stranica će biti ubrzo
+referencirana.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-7"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>U opštem slučaju nema načina da se precizno ustanovi da li će i kada
+neka virtuelna stranica biti referencirana.</li>
+<li>Ipak, zahvaljujući lokalnosti referenciranja, odnosno zapažanju da
+se pristupi lokacijama sa bliskim adresama dešavaju u bliskim trenucima,
+moguće je sa priličnom pouzdanošću zaključivati o referenciranju
+stranica u neposrednoj budućnosti na osnovu njihovog referenciranja u
+neposrednoj prošlosti.</li>
+<li>Prema tome, najmanju verovatnoću da bude referencirana u neposrednoj
+budućnosti ima stranica, čije poslednje referenciranje je najstarije,
+odnosno prethodi referenciranju svih ostalih stranica iz radnog
+skupa.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-8"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Za pronalaženje najmanje korišćene fizičke stranice (Least Recently
+Used - LRU), odnosno stranice sa najstarijom referencom, neophodno je
+registrovanje starosti referenciranja.</li>
+<li>To je moguće, ako postoji brojač, koji se automatski uvećava za
+jedan nakon izvršavanja svake naredbe.</li>
+<li>Ako se njegova zatečena vrednost automatski pridružuje virtuelnoj
+stranici prilikom njenog svakog referenciranja, tada je stranici sa
+najstarijom referencom pridružena najmanja vrednost ovog brojača.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-9"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Opisani pristup ima samo teoretsko značenje, jer se oslanja na
+hardver, koji u opštem slučaju nije raspoloživ.</li>
+<li>Međutim, moguće je i softverski simulirati pronalaženje najmanje
+korišćene fizičke stranice (Not Frequently Used – NFU/aging).</li>
+<li>Ovakva simulacija se zasniva na korišćenju bita referenciranja svake
+virtuelne stranice i na uvođenju polja starosti referenci u elemente
+tabele stranica.</li>
+<li>Ovo polje sadrži n bita, po jedan bit za svaku od vrednosti bita
+referenciranja u poslednjih n trenutaka.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-10"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Polje starosti referenci se periodično ažurira, tako što se iz njega
+periodično izbacuje najstariji bit referenciranja.</li>
+<li>To je zadatak obrađivača vremenskog prekida koji:</li>
+<li>pomera u desno za jedan bit polje starosti referenci svake od
+virtuelnih stranica iz radnog skupa aktivnog procesa</li>
+<li>dodaje s leva, u upražnjenu bitnu poziciju ovog polja, zatečeni
+sadržaj bita referenciranja dotične virtuelne stranice</li>
+<li>zatim očisti bit referenciranja.</li>
+<li>Na ovaj način polje starosti referenci sadrži najmanju vrednost za
+virtuelnu stranicu, koja je najranije referencirana u prethodnih n
+trenutaka.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-11"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Polje starosti referenci se može iskoristiti i za određivanje radnog
+skupa.</li>
+<li>Kriterijum može biti postavljenost nekog od k najznačajnijih bita iz
+polja starosti referenci.</li>
+<li>Po tom kriterijumu radnom skupu pripadaju sve virtuelne stranice,
+koje imaju bar jedan bit postavljen u najznačajnijih k bita svog polja
+starosti referenci.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-12"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Prethodno opisani pristupi oslobađanja fizičkih stranica (NRU, LRU,
+NFU) obezbeđuju smanjenje učestanosti straničnih prekida nakon povećanja
+broja fizičkih stranica procesa.</li>
+<li>Znači, obavljanje liste istih zahteva za pristupe virtuelnim
+stranicama dovodi do pojave manje straničnih prekida nakon povećanja
+broja fizičkih stranica procesa, nego pre toga.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-13"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Ovo je važno istaći, jer svi pristupi oslobađanja fizičkih stranica
+ne dovode obavezno do smanjenja učestanosti straničnih prekida nakon
+povećanja broja fizičkih stranica procesa.</li>
+<li>To je karakteristično, na primer, za pristup, kod koga se oslobađa
+fizička stranica sa najstarijim sadržajem (First In First Out - FIFO),
+bez obzira da li je ona skoro referencirana.</li>
+<li>Ovaj pristup ima tendenciju da ne oslobađa fizičke stranice, čiji
+sadržaj je svežiji, čak i ako one neće biti uskoro referencirane.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-14"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Međutim, mana poslednje pomenutog pristupa se otklanja, ako se on
+modifikuje, tako da se za oslobađanje prvo traži fizička stranica sa
+najstarijim nereferenciranim sadržajem, a ako su sadržaji svih fizičkih
+stranica referencirani, tek tada se oslobađa fizička stranica sa
+najstarijim sadržajem (second chance i clock pristupi).</li>
+<li>U sva tri poslednje pomenuta pristupa (FIFO, second chance i clock)
+fizičke stranice procesa se uvezuju u listu.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-15"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Pri tome položaj u listi ukazuje na starost sadržaja fizičke
+stranice.</li>
+<li>U clock algoritmu zamene ovakva lista je kružna, a poseban
+pokazivač, kao kazaljka na satu, pokazuje na stranicu sa najstarijim
+sadržajem.</li>
+<li>Postoji i varijanta clock pristupa (wsclock) u kome se uz svaku
+fizičku stranicu iz liste čuva i podatak o trenutku poslednjeg
+referenciranja.</li>
+<li>Za sve fizičke stranice, za koje ovaj trenutak ispada iz unapred
+određenog vremenskog intervala (gledajući u prošlost), se smatra da ne
+spadaju u radni skup, pa su one kandidati za zamenu.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-16"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Pristup NFU/aging i pristup wsclock imaju najveću praktičnu
+važnost.</li>
+<li>Virtuelna memorija pokazuje najbolje rezultate, kada uvek ima
+slobodnih fizičkih stranica.</li>
+<li>To se može postići, ako se uvede poseban stranični sistemski proces,
+koji se periodično aktivira, da bi oslobodio izvestan broj fizičkih
+stranica.</li>
+<li>On, pri tome, odabira fizičke stranice za oslobađanje po nekom od
+prethodno opisanih algoritama zamene.</li>
+<li>Zadatak straničnog sistemskog procesa je i da u masovnu memoriju
+prebacuje izmenjene kopije virtuelnih stranica i da tako čuva ažurnost
+masovne memorije.</li>
+</ul>
+</section>
+<section id="oslobađanje-fizičkih-stranica-procesa-17"
+class="slide level2">
+<h2>Oslobađanje fizičkih stranica procesa</h2>
+<ul>
+<li>Opisani pristupi oslobađanja fizičkih stranica pokazuju da se u
+praksi ne prati učestanost straničnih prekida.</li>
+<li>Umesto toga, broj fizičkih stranica procesa varira između minimalnog
+skupa i iskustveno određenog maksimalnog skupa.</li>
+<li>Pri tome stranični prekidi izazivaju povećanje broja fizičkih
+stranica procesa do maksimalne veličine, a stranični sistemski proces se
+brine o njegovom smanjivanju.</li>
+</ul>
+</section>
+<section id="implementacija-upravljanja-virtuelnom-memorijom"
+class="slide level2">
+<h2>Implementacija upravljanja virtuelnom memorijom</h2>
+<ul>
+<li>Sloj za rukovanje virtuelnom memorijom podržava operacije zauzimanja
+i oslobađanja, a oslanja se na stranični sistemski proces i obrađivače
+vremenskog i straničnog prekida.</li>
+<li>Obrađivač straničnog prekida se aktivira, kada je referencirana
+virtuelna stranica, čija kopija nije prisutna u fizičkoj radnoj
+memoriji, odnosno, u nekoj od njenih fizičkih stranica.</li>
+<li>Ako je, greškom, referencirana virtuelna stranica, koja uopšte ne
+postoji u slici procesa, obrađivač straničnog prekida završava aktivnost
+prekinutog procesa (uz odgovarajuću poruku).</li>
+</ul>
+</section>
+<section id="implementacija-upravljanja-virtuelnom-memorijom-1"
+class="slide level2">
+<h2>Implementacija upravljanja virtuelnom memorijom</h2>
+<ul>
+<li>Inače, ovaj obrađivač odabira slobodnu fizičku stranicu i prema njoj
+usmerava prenos kopije potrebne virtuelne stranice sa masovne
+memorije.</li>
+<li>Kada se taj prenos završi, obrađivač straničnog prekida ažurira
+polja odgovarajućeg elementa tabele stranica i omogućuje nastavak
+aktivnosti prekinutog procesa.</li>
+<li>Kada nema slobodne fizičke stranice, ovaj obrađivač oslobađa neku od
+fizičkih stranica.</li>
+</ul>
+</section>
+<section id="implementacija-upravljanja-virtuelnom-memorijom-2"
+class="slide level2">
+<h2>Implementacija upravljanja virtuelnom memorijom</h2>
+<ul>
+<li>Ako ona sadrži izmenjenu kopiju virtuelne stranice, on pokreće
+prenos ove kopije u masovnu memoriju, radi ažuriranja odgovarajuće
+virtuelne stranice.</li>
+<li>Po završetku ovoga prenosa, obrađivač straničnog prekida usmerava ka
+oslobođenoj fizičkoj stranici prenos kopije potrebne virtuelne
+stranice.</li>
+<li>Nakon završetka ovog prenosa i ažuriranja polja odgovarajućih
+elemenata tabele stranica, on omogućava nastavak aktivnosti prekinutog
+procesa.</li>
+</ul>
+</section>
+<section id="implementacija-upravljanja-virtuelnom-memorijom-3"
+class="slide level2">
+<h2>Implementacija upravljanja virtuelnom memorijom</h2>
+<ul>
+<li>Za uspešno obavljanje posla, obrađivaču straničnog prekida je
+potrebna evidencija o položaju virtuelnih stranica u masovnoj
+memoriji.</li>
+<li>On takođe, koristi i evidenciju slobodnih fizičkih stranica.</li>
+<li>Nju koriste i operacija zauzimanja i operacija oslobađanja, pa
+rukovanje ovom evidencijom mora obezbediti sinhronizaciju procesa, i to
+onemogućenjem prekida.</li>
+<li>Operacija zauzimanja omogućuje zauzimanje bar minimalnog skupa, radi
+stvaranja procesa, a operacija oslobađanja oslobađa sve fizičke stranice
+iz radnog skupa unišavanog procesa.</li>
+</ul>
+</section>
+<section id="osnova-sloja-za-rukovanje-virtuelnom-memorijom"
+class="slide level2">
+<h2>Osnova sloja za rukovanje virtuelnom memorijom</h2>
+<ul>
+<li>Sloj za rukovanje virtuelnom memorijom se oslanja na operacije sloja
+za rukovanje kontrolerima, da bi obezbedio prenos kopija virtuelnih
+blokova na relaciji masovna i radna memorija i da bi smestio adrese
+svojih obrađivača prekida u odgovarajuće elemente tabele prekida.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
