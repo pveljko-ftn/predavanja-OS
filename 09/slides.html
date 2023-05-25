@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Procesor</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Procesor</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">2023-05</p>
+</section>
+
+<section>
+<section id="sloj-za-rukovanje-procesorom"
+class="title-slide slide level1">
+<h1>Sloj za rukovanje procesorom</h1>
+
+</section>
+<section id="raspoređivanje" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Osnovni zadatak rukovanja procesorom je preključivanje procesora sa
+aktivnog procesa na neki od spremnih procesa.</li>
+<li>O izboru spremnog procesa, na koga se preključuje procesor, brine
+raspoređivanje (scheduling).</li>
+<li>Ovaj izbor zavisi od cilja raspoređivanja.</li>
+</ul>
+</section>
+<section id="raspoređivanje-1" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Tipični ciljevi raspoređivanja su, na primer:</li>
+<li>poboljšanje iskorišćenja procesorskog vremena,</li>
+<li>ravnomerna raspodela procesorskog vremena</li>
+<li>što kraći odziv na korisničku akciju ili neki drugi oblik postizanja
+potrebnog kvaliteta usluge (Quality of Service, QoS), kao što je
+rezervisanje procesorskog vremena radi obezbeđenja kvalitetne
+reprodukcije zvuka ili videa kod multimedijalnih aplikacija.</li>
+<li>Ovakvi ciljevi nisu saglasni, pa se ne mogu istovremeno
+ostvariti.</li>
+</ul>
+</section>
+<section id="raspoređivanje-2" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Za neinteraktivno korišćenje računara cilj raspoređivanja je
+poboljšanje iskorišćenja procesorskog vremena.</li>
+<li>Ovakav cilj se ostvaruje minimiziranjem preključivanja na neophodan
+broj (samo nakon pozivanja blokirajućih sistemskih operacija ili nakon
+kraja aktivnosti procesa).</li>
+</ul>
+</section>
+<section id="raspoređivanje-3" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Za interaktivno korišćenje računara (u višekorisničkom režimu rada)
+ciljevi raspoređivanja su ravnomerna raspodela procesorskog vremena
+između istovremeno postojećih procesa, odnosno, između njihovih vlasnika
+(korisnika, koji istovremeno koriste računar) i što kraći odziv na
+korisničku akciju.</li>
+<li>Ovakvi ciljevi se ostvaruju kružnim raspoređivanjem (round robin
+scheduling), koje svakom od istovremeno postojećih procesa dodeljuje
+isti vremenski interval, nazvan kvantum.</li>
+<li>Po isticanju kvantuma, aktivni proces prepušta procesor spremnom
+procesu, koji najduže čeka na svoj kvantum.</li>
+</ul>
+</section>
+<section id="raspoređivanje-4" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Neophodan preduslov za primenu kružnog raspoređivanja je da se
+preključivanje vezuje za trenutak u kome se završava tekući
+kvantum.</li>
+<li>Zato je neophodno da se preključivanje poziva neposredno nakon
+obrade prekida sata (pre nastavka prekinutog procesa).</li>
+</ul>
+</section>
+<section id="raspoređivanje-5" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Kružno raspoređivanje se uspešno primenjuje i u situaciji kada
+hitnost svih procesa nije ista, pa se, zbog toga, procesima dodeljuju
+razni prioriteti.</li>
+<li>Pri tome se podrazumeva da kružno raspoređivanje važi u okviru grupe
+procesa sa istim prioritetom.</li>
+<li>Procesor se preključuje na procese sa nižim prioritetom samo kada se
+završi (zaustavi) aktivnost i poslednjeg od procesa sa višim
+prioritetom.</li>
+<li>Procesor se preključuje na proces sa višim prioritetom odmah po
+pojavi ovakvog procesa (preemptive scheduling), odnosno odmah po
+omogućavanju nastavka aktivnosti prioritetnijeg procesa.</li>
+</ul>
+</section>
+<section id="raspoređivanje-6" class="slide level2">
+<h2>Raspoređivanje</h2>
+<p><img
+data-src="./img//08b391d4-29f4-4b3d-951e-eaeaf15319e4.png" /></p>
+</section>
+<section id="raspoređivanje-7" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Izvor:
+https://doc.micrium.com/display/osiiidoc/Round-Robin+Scheduling</li>
+</ul>
+</section>
+<section id="raspoređivanje-8" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Dinamička izmena prioriteta procesa doprinosi ravnomernosti
+raspodele procesorskog vremena između procesa, ako se uspostavi obrnuta
+proporcionalnost između prioriteta procesa i obima u kome je on
+iskoristio poslednji kvantum.</li>
+<li>Pri tome se periodično proverava iskorišćenje poslednjeg kvantuma
+svakog od procesa i, u skladu s tim, procesima se dodeljuju novi
+prioriteti.</li>
+</ul>
+</section>
+<section id="raspoređivanje-9" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Takođe, dinamička izmena prioriteta procesa doprinosi ravnomernosti
+raspodele procesorskog vremena između korisnika, ako se uspostavi
+obrnuta proporcionalnost između prioriteta procesa, koji pripadaju nekom
+korisniku, i ukupnog udela u procesorskom vremenu tog korisnika u toku
+njegove interakcije sa računarom.</li>
+<li>Znači, što je ukupan udeo korisnika više ispod željenog proseka, to
+prioritet njegovih procesa više raste.</li>
+</ul>
+</section>
+<section id="raspoređivanje-10" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Ravnomerna raspodela procesorskog vremena se može postići i bez
+izmena prioriteta, ako se uvede lutrijsko raspoređivanje (lottery
+scheduling).</li>
+<li>Ono se zasniva na dodeli procesima lutrijskih lozova.</li>
+<li>Nakon svakog kvantuma na slučajan način se izvlači broj loza, a
+procesor se preključuje na proces koji poseduje izvučeni loz.</li>
+<li>Tako, ako ukupno ima m lozova, proces, koji poseduje n od m lozova
+(n &lt; m), u proseku koristi n/m kvantuma procesorskog vremena.</li>
+</ul>
+</section>
+<section id="raspoređivanje-11" class="slide level2">
+<h2>Raspoređivanje</h2>
+<p><img
+data-src="./img//d28a8693-38f0-4dbf-908e-b96ff8aa91b7.png" /></p>
+</section>
+<section id="raspoređivanje-12" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Izvor: Christo Wilson Lecture 6: Process Scheduling</li>
+</ul>
+</section>
+<section id="raspoređivanje-13" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Za multimedijalne aplikacije, koje zahtevaju visoku propusnost
+podataka i njihovu isporuku sa pravilnim periodom, cilj raspoređivanja
+je garantovanje procesima potrebnog broja kvantuma u pravilnim
+vremenskim razmacima.</li>
+</ul>
+</section>
+<section id="raspoređivanje-14" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Ostvarenje raznih ciljeva raspoređivanja se može zasnovati na istim
+mehanizmima raspoređivanja.</li>
+<li>U tom slučaju razni načini primene tih mehanizama ili razne politike
+raspoređivanja dovode do ostvarenja raznih ciljeva raspoređivanja.</li>
+<li>Razdvajanje mehanizama raspoređivanja od politike raspoređivanja je
+važno zbog fleksibilnosti.</li>
+<li>Mehanizmi (mogućnosti) raspoređivanja omogućuju uticanje na dužinu
+kvantuma i na nivo prioriteta, a politika raspoređivanja (iskorišćenje
+neke od mogućnosti) određuje dužinu kvantuma i nivo prioriteta.</li>
+</ul>
+</section>
+<section id="raspoređivanje-15" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Uticanje na dužinu kvantuma je važno, jer od dužine kvantuma zavisi
+iskorišćenje procesora, ali i odziv računara, odnosno brzina kojom on
+reaguje na korisničku akciju sa terminala.</li>
+<li>Pri tome, skraćenje (do određene granice) kvantuma doprinosi
+poboljšanju odziva, ali i smanjenju iskorišćenja procesora, jer povećava
+broj preključivanja koja troše procesorsko vreme.</li>
+</ul>
+</section>
+<section id="raspoređivanje-16" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Suviše kratak kvantum počinje da ugrožava i odziv, kada se prevelik
+procenat procesorskog vremena počne da troši na preključivanje.</li>
+<li>Sa stanovišta iskorišćenja procesora prihvatljiva su samo neophodna
+preključivanja (kada nije moguć nastavak aktivnosti procesa), odnosno,
+značajno smanjivanje učestanosti preključivanja.</li>
+</ul>
+</section>
+<section id="raspoređivanje-17" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>S tom idejom na umu moguće je iskoristiti dinamičku izmenu
+prioriteta procesa za:</li>
+<li>održavanje dobrog odziva za procese, koji su u interakciji sa
+korisnicima</li>
+<li>održavanje dobrog iskorišćenja procesora za pozadinske (background)
+procese, koji nisu u (čestoj) interakciji sa korisnicima.</li>
+<li>Pri tome se interaktivnim procesima dodeljuje najviši prioritet i
+najkraći kvantum.</li>
+</ul>
+</section>
+<section id="raspoređivanje-18" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Pozadinskim procesima, koji su vrlo dugo aktivni bez ikakve
+interakcije sa korisnikom, se dodeljuje najniži prioritet i najduži
+kvantum.</li>
+<li>Procesu automatski opada prioritet i produžava se kvantum što je on
+duže aktivan i ima manju interakciju sa korisnikom.</li>
+<li>Povećanje interakcije sa korisnikom dovodi do porasta prioriteta
+procesa i smanjenja njegovog kvantuma.</li>
+</ul>
+</section>
+<section id="raspoređivanje-19" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Dinamička izmena prioriteta se obavlja periodično i nalazi se u
+nadležnosti politike raspoređivanja, koja je zadužena i za vezivanje
+odgovarajućih dužina kvantuma za odgovarajuće prioritete.</li>
+<li>Za operacije sloja za rukovanje procesorom je zajedničko da se
+obavljaju pod onemogućenim prekidima, što je prihvatljivo, jer je reč o
+kratkotrajnim operacijama.</li>
+</ul>
+</section>
+<section id="raspoređivanje-20" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>To je naročito značajno za operacije koje rukuju deskriptorima
+procesa, jer jedino onemogućenje prekida osigurava ispravnost rukovanja
+listama u koje se uključuju i iz kojih se isključuju deskriptori procesa
+u toku ovih operacija (odnosno, osigurava konzistentnost ovih
+listi).</li>
+<li>Pod onemogućenim prekidima se obavljaju i operacija preključivanja
+(sa operacijom raspoređivanja), sistemska operacija za izmenu prioriteta
+procesa, kao i sistemske operacije za sinhronizaciju procesa.</li>
+</ul>
+</section>
+<section id="raspoređivanje-21" class="slide level2">
+<h2>Raspoređivanje</h2>
+<ul>
+<li>Operacija raspoređivanja obuhvata bar dve radnje.</li>
+<li>Jedna ubacuje proces među spremne procese, tako što njegov
+deskriptor uvezuje na kraj liste deskriptora spremnih procesa, koja
+odgovara prioritetu dotičnog procesa.</li>
+<li>U ovom slučaju se podrazumeva da za svaki prioritet postoji posebna
+lista deskriptora spremnih procesa, na koju se primenjuje kružno
+raspoređivanje.</li>
+<li>Druga od ove dve radnje izvezuje iz listi deskriptora spremnih
+procesa deskriptor najprioritetnijeg spremnog procesa.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
