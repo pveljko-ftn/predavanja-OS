@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Klasifikacija Operativnih Sistema</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Klasifikacija Operativnih Sistema</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">2023-05</p>
+</section>
+
+<section>
+<section id="klasifikacija-operativnih-sistema"
+class="title-slide slide level1">
+<h1>Klasifikacija Operativnih Sistema</h1>
+
+</section>
+<section id="kriterijum-klasifikacije-os" class="slide level2">
+<h2>Kriterijum klasifikacije OS</h2>
+<ul>
+<li>Jedan od mogućih kriterijuma za klasifikaciju operativnih sistema je
+vrsta računara kojim operativni sistem upravlja. Po tom kriteriju mogu
+se izdvojiti:</li>
+<li>operativni sistemi realnog vremena (RTOS)</li>
+<li>distribuirani operativni sistemi</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Operativni sistemi realnog vremena (real time operating system) su
+namenjeni za primene računara u kojima je neophodno obezbediti reakciju
+na spoljni događaj u unapred zadanom vremenu.</li>
+<li>Ovakvi operativni sistemi su, zbog toga, podređeni ostvarenju što
+veće brzine izvršavanja korisničkih programa.</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-1" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Za operativne sisteme realnog vremena je tipično da su, zajedno sa
+računarom, ugrađeni (embedded) u sistem, čije ponašanje se ili samo
+prati, ili čijim ponašanjem se upravlja.</li>
+<li>Zadatak operativnih sistema realnog vremena je da samo stvore
+okruženje za korisničke programe, jer komunikaciju sa krajnjim
+korisnikom obavljaju korisnički programi.</li>
+<li>Zato se operativni sistemi realnog vremena obično koriste samo na
+programskom nivou.</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-2" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Modul za rukovanje procesima je podređen potrebi brzog stvaranja i
+uništenja procesa, njihove brze i lake saradnje, kao i brzog
+preključivanja procesora sa procesa na proces.</li>
+<li>Zato obično svi procesi dele isti fizički adresni prostor.</li>
+<li>To je moguće, jer ne postoji potreba za međusobnom zaštitom procesa,
+pošto oni imaju istog autora, ili njihovi autori pripadaju istom
+timu.</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-3" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Modul za rukovanje datotekama nije obavezni deo operativnog sistema
+realnog vremena, jer sve primene realnog vremena ne zahtevaju masovnu
+memoriju.</li>
+<li>Kada rukovanje datotekama postoji, ono obično podržava kontinuirane
+datoteke, zbog brzine pristupa podacima.</li>
+<li>Mane kontinuiranih datoteka se ovde ne ispoljavaju, jer su unapred
+poznati svi zahtevi primene.</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-4" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Modul za rukovanje radnom memorijom obično podržava efikasno
+zauzimanje memorijskih zona sa unapred određenom veličinom, da bi se
+izbegla ili umanjila eksterna fragmentacija.</li>
+<li>Modul za rukovanje kontrolerima podržava tipične ulazne i izlazne
+uređaje i, uz to, omogućava jednostavno uključivanje novih drajvera za
+specifične uređaje.</li>
+<li>Pri tome se nude blokirajuće i neblokirajuće sistemske operacije,
+ali i vremenski ograničene blokirajuće sistemske operacije.</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-5" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Zahvaljujući neblokirajućim sistemskim operacijama, moguće je
+vremenski preklopiti aktivnosti procesora i kontrolera.</li>
+<li>Vremenski ograničene blokirajuće sistemske operacije omogućuju
+reakciju u zadanom vremenskom intervalu na izostanak željenog događaja,
+odnosno, na izostanak obavljanja pozvane sistemske operacije.</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-6" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Modul za rukovanje procesorom mora da obezbedi efikasno rukovanje
+vremenom.</li>
+<li>Za to se često koriste posebni satovi - tajmeri.</li>
+<li>U sklopu toga, mora se obezbediti da aktivnost procesa bude završena
+do graničnog trenutka (deadline scheduling).</li>
+<li>To se postiže sortiranjem deskriptora spremnih procesa po dužini
+preostalog vremena do graničnog trenutka (earliest deadline first -
+EDF).</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-7" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Podrazumeva se da ovo sortiranje dovodi na prvo mesto deskriptor
+procesa sa najkraćim preostalim vremenom do graničnog trenutka, tako da
+je njegov proces prvi na redu za aktiviranje.</li>
+<li>Ako je aktivnost procesa periodična sa unapred određenim i
+nepromenljivim trajanjem aktivnosti u svakom periodu, tada se procesima
+mogu dodeliti prioriteti jednaki broju njihovih perioda u jedinici
+vremena (rate monotonic scheduling).</li>
+</ul>
+</section>
+<section id="operativni-sistemi-realnog-vremena-8" class="slide level2">
+<h2>Operativni sistemi realnog vremena</h2>
+<ul>
+<li>Tako se može obezbediti da aktivnost procesa bude obavljena pre
+kraja svakog od njegovih perioda.</li>
+<li>U svakom slučaju, postavljeni cilj raspoređivanja može da se ostvari
+samo ako ima dovoljno procesorskog vremena za sve procese.</li>
+<li>Modul za rukovanje procesorom operativnog sistema realnog vremena
+obično podržava mehanizam semafora, jer je on jednostavan za korišćenje,
+brz i jer ne zahteva izmene kompajlera.</li>
+</ul>
+</section></section>
+<section>
+<section id="distribuirani-os" class="title-slide slide level1">
+<h1>Distribuirani OS</h1>
+
+</section>
+<section id="distribuirani-os-1" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Distribuirani operativni sistemi upravljaju međusobno povezanim
+računarima, koji su prostorno udaljeni.</li>
+<li>Potrebu za povezivanjem prostorno udaljenih (distribuiranih)
+računara nameće praksa.</li>
+<li>S jedne strane, prirodno je da računari budu na mestima svojih
+primena, na primer, uz korisnike ili uz delove industrijskih
+postrojenja, koje opslužuju.</li>
+<li>Na taj način računari mogu biti potpuno posvećeni lokalnim
+poslovima, koji su vezani za mesta njihove primene, pa mogu efikasno
+obavljati ovakve poslove.</li>
+</ul>
+</section>
+<section id="distribuirani-os-2" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>S druge strane, neophodno je omogućiti saradnju između prostorno
+udaljenih korisnika, odnosno obezbediti usaglašeni rad prostorno
+udaljenih delova istog industrijskog postrojenja.</li>
+<li>Za to je potrebno obezbediti razmenu podataka između računara,
+posvećenih pomenutim korisnicima, odnosno posvećenih pomenutim delovima
+industrijskog postrojenja.</li>
+</ul>
+</section>
+<section id="distribuirani-os-3" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Za to je potrebno obezbediti razmenu podataka između računara,
+posvećenih pomenutim korisnicima, odnosno posvećenih pomenutim delovima
+industrijskog postrojenja.</li>
+<li>Radi toga, ovakvi, prostorno udaljeni računari se povezuju
+komunikacionim linijama, koje omogućuju prenos (razmenu) podataka,
+organizovanih u poruke.</li>
+<li>Na ovaj način nastaje distribuirani računarski sistem (distributed
+computer system).</li>
+</ul>
+</section>
+<section id="distribuirani-os-4" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Za svaki od računara, povezanih u distribuirani računarski sistem,
+je neophodno da sadrže procesor, radnu memoriju i mrežni kontroler.</li>
+<li>Prisustvo masovne memorije i raznih ulaznih i izlaznih uređaja u
+sastavu ovakvih računara zavisi od mesta njihove primene i, u opštem
+slučaju, nije obavezno.</li>
+</ul>
+</section>
+<section id="distribuirani-os-5" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Zato nema ni potrebe da ih podržava operativni sistem, prisutan na
+računarima iz distribuiranog računarskog sistema.</li>
+<li>Ovakav operativni sistem ima smanjenu funkcionalnost u odnosu na
+“običan” operativni sistem, pa se naziva mikrokernel (microkernel).</li>
+</ul>
+</section>
+<section id="distribuirani-os-6" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Hijerarhijska struktura mikrokernela je prikazana na slici: <img
+data-src="./img/03fcdff6-eb96-43cf-ad57-6e1e38482814.png" /></li>
+</ul>
+</section>
+<section id="distribuirani-os-7" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Mikrokernel ne sadrži modul za rukovanje datotekama, jer on nije
+potreban za svaki od računara iz distribuiranog računarskog
+sistema.</li>
+<li>Zato se ovaj modul prebacuje u korisnički sloj (iznad mikrokernela),
+koji je predviđen za korisničke procese.</li>
+</ul>
+</section>
+<section id="distribuirani-os-8" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Modul za rukovanje procesima se oslanja na modul za razmenu poruka,
+da bi pristupio izvršnoj datoteci koja je locirana na nekom drugom
+računaru.</li>
+<li>Modul za razmenu poruka se oslanja na modul za rukovanje radnom
+memorijom, radi dinamičkog zauzimanja i oslobađanja bafera, namenjenih
+za privremeno smeštanje poruka.</li>
+</ul>
+</section>
+<section id="distribuirani-os-9" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Modul za razmenu poruka se oslanja i na modul za rukovanje
+kontrolerima, u kome se nalazi drajver mrežnog kontrolera, posredstvom
+koga se fizički razmenjuju poruke.</li>
+<li>Na kraju, modul za razmenu poruka se oslanja i na modul za rukovanje
+procesorom.</li>
+<li>Ovo je potrebno, da bi se, na primer, privremeno zaustavila
+aktivnost procesa do prijema poruke, bez koje nastavak aktivnosti nije
+moguć, ali i da bi se moglo reagovati na dugotrajni izostanak očekivanog
+prijema poruke.</li>
+</ul>
+</section>
+<section id="distribuirani-os-10" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Modul za razmenu poruka nije samo na raspolaganju modulu za
+rukovanje procesima.</li>
+<li>On sadrži sistemske operacije, koje omogućuju razmenu poruka,
+odnosno saradnju između procesa, aktivnih na raznim računarima, kao i
+saradnju između procesa, aktivnih na istom računaru.</li>
+<li>Tipičan oblik saradnje procesa je da jedan proces traži uslugu od
+drugog procesa.</li>
+</ul>
+</section>
+<section id="distribuirani-os-11" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>To je potrebno, na primer, kada jedan proces želi da na svom
+računaru, koji je bez masovne memorije, stvori novi proces.</li>
+<li>On se, tada, posredstvom modula za rukovanje procesima, obraća
+drugom procesu, aktivnom na računaru sa masovnom memorijom, zahtevajući
+od njega, kao uslugu, da mu pošalje sadržaj odgovarajuće izvršne
+datoteke.</li>
+</ul>
+</section>
+<section id="distribuirani-os-12" class="slide level2">
+<h2>Distribuirani OS</h2>
+<ul>
+<li>Uobičajeni način traženja i dobijanja usluge se sastoji od pozivanja
+operacije, čije obavljanje dovodi do pružanja tražene usluge.</li>
+<li>Ako pozivana operacija ne odgovara potprogramu koji se lokalno
+izvršava u okviru aktivnosti procesa pozivaoca, nego odgovara
+potprogramu koji se izvršava u okviru aktivnosti drugog, udaljenog
+procesa, aktivnog na udaljenom računaru, reč je o pozivu udaljene
+operacije (Remote Procedure Call - RPC).</li>
+<li>Proces, koji poziva udaljenu operaciju, se nalazi u ulozi klijenta
+(primaoca usluge), a proces, koji obavlja udaljenu operaciju, se nalazi
+u ulozi servera (davaoca usluge).</li>
+</ul>
+</section>
+<section id="poziv-udaljene-operacije-rpc" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<ul>
+<li>Poziv udaljene operacije liči na poziv (lokalne) operacije.</li>
+<li>Znači, on ima oblik poziva potprograma, u kome se navode oznaka
+(ime) operacije i njeni argumenti.</li>
+<li>Ovakav potprogram se naziva klijentski potprogram (client stub), jer
+je klijent njegov jedini pozivalac.</li>
+<li>U klijentskom potprogramu je sakriven niz koraka, koji se obavljaju,
+radi dobijanja zahtevane usluge.</li>
+</ul>
+</section>
+<section id="poziv-udaljene-operacije-rpc-1" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<ul>
+<li>U ove korake spadaju:</li>
+<li>pronalaženje procesa servera, koji pruža zahtevanu uslugu</li>
+<li>pakovanje (marshalling) argumenata (navedenih u pozivu klijentskog
+potprograma) u poruku zahteva</li>
+<li>slanje serveru ove poruke zahteva</li>
+<li>prijem od servera poruke odgovora sa rezultatom pružanja zahtevane
+usluge</li>
+<li>raspakivanje prispele poruke odgovora</li>
+<li>isporuka rezultata pružanja zahtevane usluge pozivaocu klijentskog
+potprograma</li>
+</ul>
+</section>
+<section id="poziv-udaljene-operacije-rpc-2" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<ul>
+<li>Simetrično klijentskom potprogramu postoje dva serverska potprograma
+(server stub).</li>
+<li>Njih poziva jedino server, a oni kriju više koraka, koji se
+obavljaju, radi pružanja zahtevane usluge.</li>
+<li>Prvi od serverskih potprograma obuhvata:</li>
+<li>prijem poruke zahteva</li>
+<li>raspakivanje argumenata iz ove poruke</li>
+</ul>
+</section>
+<section id="poziv-udaljene-operacije-rpc-3" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<ul>
+<li>Drugi od serverskih potprograma obuhvata:</li>
+<li>pakovanje rezultata usluge (koju je pružio server) u poruku
+odgovora</li>
+<li>slanje klijentu ove poruke odgovora.</li>
+<li>Između poziva ova dva serverska potprograma se nalazi lokalni poziv
+operacije, koja odgovara zahtevanoj usluzi, odnosno, programski tekst,
+koji opisuje aktivnost servera na pružanju zahtevane usluge.</li>
+</ul>
+</section>
+<section id="poziv-udaljene-operacije-rpc-4" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<ul>
+<li>Slika prikazuje redosled koraka klijenta i servera tokom poziva
+udaljene operacije (kk1 do kk4 označavaju sekvencu koraka klijenta, a
+ks1 do ks9 označavaju sekvencu koraka servera).</li>
+</ul>
+</section>
+<section id="poziv-udaljene-operacije-rpc-5" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<p><img data-src="./img/eff94732-748b-4eea-9450-e20a8be91625.png" /></p>
+</section>
+<section id="poziv-udaljene-operacije-rpc-6" class="slide level2">
+<h2>Poziv udaljene operacije (RPC)</h2>
+<ul>
+<li>Oslanjanje na poziv udaljene operacije olakšava posao programeru,
+jer od njega krije, na prethodno opisani način, detalje saradnje
+klijenta i servera.</li>
+<li>Pri tome, klijentski potprogram pripada biblioteci udaljenih
+operacija.</li>
+<li>Ova biblioteka sadrži po jedan klijentski potprogram za svaku od
+postojećih udaljenih operacija.</li>
+<li>Klijentski potprogram se generiše, zajedno sa serverskim
+potprogramima, prilikom prevođenja programa, koji odgovara serveru.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Uprkos nastojanju da što više liči na poziv lokalne operacije, poziv
+udaljene operacije se značajno razlikuje od svog uzora.</li>
+<li>Te razlike su posledica koraka, sakrivenih u pozivu udaljene
+operacije, koji uzrokuju da se u toku poziva udaljene operacije mogu da
+pojave problemi, čija pojava nije moguća kod poziva lokalne
+operacije.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-1"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Tako je moguće:</li>
+<li>da se ne pronađe server, koji pruža zahtevanu uslugu</li>
+<li>da se, u toku prenosa, izgube ili poruka zahteva ili poruka
+odgovora</li>
+<li>da dođe do otkaza ili servera, ili klijenta u toku njihovog
+rada</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-2"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Ako nema servera, tada nije moguće pružanje tražene usluge.</li>
+<li>To je nemoguća situacija kod poziva lokalne operacije.</li>
+<li>Do istog rezultata dovode smetnje na komunikacionim linijama, koje
+onemogućuju prenos bilo poruke zahteva, bilo poruke odgovora.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-3"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Kada u očekivanom vremenu izostane prijem poruke odgovora, bilo zbog
+gubljenja poruke zahteva, bilo zbog gubljenja poruke odgovora, jedino
+što se na strani klijenta može uraditi je da se ponovo pošalje
+(retransmituje) poruka zahteva.</li>
+<li>Pri tome je broj retransmisija ograničen.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-4"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Ako je izgubljena poruka zahteva, njenom retransmisijom se stvara
+mogućnost da ona stigne do servera i da on pruži traženu uslugu.</li>
+<li>Međutim, ako je izgubljena poruka odgovora, tada treba sprečiti da,
+po prijemu retransmitovane poruke zahteva, server ponovi pružanje već
+pružene usluge.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-5"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Da bi server razlikovao retransmitovanu poruku od originalne,
+dovoljno je da svaka originalna poruka ima jedinstven redni broj i da
+server za svakog klijenta pamti redni broj poslednje primljene poruke
+zahteva od tog klijenta.</li>
+<li>Prijem poruke sa zapamćenim rednim brojem ukazuje na retransmitovanu
+poruku, koja je već primljena.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-6"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Otkaz servera, izazvan kvarom računara, je neprijatan zbog teškoća
+da se ustanovi da li je do otkaza došlo pre, u toku, ili posle pružanja
+usluge.</li>
+<li>Zato je problematično da poziv udaljene operacije garantuje da će
+zahtevana usluga biti pružena samo jednom, kao kod poziva lokalne
+operacije.</li>
+<li>Na primer, na strani klijenta otkaz servera se ispoljava kao
+izostajanje poruke odgovora.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-7"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Tada retransmisija poruke zahteva može navesti ponovo pokrenutog
+servera da još jednom pruži već pruženu uslugu, jer je, u ovom slučaju,
+server izgubio, zbog otkaza, evidenciju o rednim brojevima poslednje
+primljenih poruka zahteva od klijenata.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-8"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Kod poziva lokalne operacije ovo se ne može desiti, jer otkaz
+računara znači i kraj izvršavanja celog programa, bez pokušaja njegovog
+automatskog oporavka.</li>
+<li>Garantovanje da će server pružiti zahtevanu uslugu samo jednom
+podrazumeva upotrebu stabilne memorije (stable storage) koja je ima
+visoku pouzdanost, pa može ispravno funkcionisati i u okolnostima otkaza
+servera.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-9"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Otkaz klijenta znači da server uzaludno pruža zahtevanu uslugu.</li>
+<li>Ovo se izbegava tako što server obustavlja pružanje usluga
+klijentima, za koje ustanovi da su doživeli otkaz.</li>
+<li>To klijenti sami mogu da jave serveru, nakon svog ponovnog
+pokretanja, ili to server može sam da otkrije, periodičnom proverom
+stanja klijenata, koje opslužuje.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-10"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Poziv udaljene operacije praktično dozvoljava da argumenti budu samo
+vrednosti, a ne i adrese, odnosno pokazivači, zbog problema kopiranja
+pokazanih vrednosti sa klijentovog računara na računar servera i u
+obrnutom smeru.</li>
+<li>Pored toga, ako su ovi računari različiti, javlja se i problem
+konverzije vrednosti, jer se, na primer, predstava realnih brojeva
+razlikuje od računara do računara.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-11"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Činjenica da se u okviru klijentskog potprograma javlja potreba za
+pronalaženjem servera, ukazuje da u vreme pravljenja izvršnog oblika
+klijentskog programa nije poznato koji server će usluživati
+klijenta.</li>
+<li>U opštem slučaju, može biti više servera iste vrste i svaki od njih
+može istom klijentu da pruži zatraženu uslugu.</li>
+</ul>
+</section>
+<section id="problemi-poziva-udaljene-operacije-rpc-12"
+class="slide level2">
+<h2>Problemi poziva udaljene operacije (RPC)</h2>
+<ul>
+<li>Radi toga se uvodi poseban server imena (name server, binder).</li>
+<li>Njemu se, na početku svoje aktivnosti, obraćaju svi serveri i
+ostavljaju podatke o sebi, kao što je, na primer, podatak o vrsti usluge
+koje pružaju.</li>
+<li>Serveru imena se obraćaju i klijenti, radi pronalaženja servera,
+koji pruža zahtevanu uslugu.</li>
+<li>Na ovaj način se ostvaruje dinamičko linkovanje (dynamic binding)
+klijenta, koji zahteva uslugu, i servera, koji pruža zahtevanu
+uslugu.</li>
+</ul>
+</section>
+<section id="razmena-poruka" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Klijentski i serverski potprogrami, koji omogućuju poziv udaljene
+operacije, se oslanjaju na sistemske operacije modula za razmenu
+poruka.</li>
+<li>Prva od ovih operacija je sistemska operacija zahtevanja usluge, a
+druge dve su sistemske operacije prijema zahteva i slanja odgovora.</li>
+<li>Sistemska operacija zahtevanja usluge je namenjena klijentu i poziva
+se iz njegovog potpograma.</li>
+<li>Ona omogućuje slanje poruke zahteva i prijem poruke odgovora.</li>
+</ul>
+</section>
+<section id="razmena-poruka-1" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Sistemske operacije prijema zahteva i slanja odgovora su namenjene
+serveru i omogućuju prijem poruke zahteva i slanje poruke odgovora.</li>
+<li>Sistemska operacija prijema zahteva se poziva iz prvog serverskog
+potprograma, a sistemska operacija slanja odgovora se poziva iz drugog
+serverskog potprograma.</li>
+<li>Ove tri sistemske operacije ostvaruju poseban protokol razmene
+poruka (request reply protocol), koji je prilagođen potrebama poziva
+udaljene operacije.</li>
+</ul>
+</section>
+<section id="razmena-poruka-2" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Sistemske operacije zahtevanja usluge, prijema zahteva i slanja
+odgovora su blokirajuće.</li>
+<li>Prva zaustavlja aktivnost klijenta do stizanja odgovora, ili do
+isticanja zadanog vremenskog perioda.</li>
+<li>Druga zaustavlja aktivnost servera do stizanja zahteva, a treća
+zaustavlja aktivnost servera do isporuke odgovora ili do isticanja
+zadanog vremenskog intervala.</li>
+</ul>
+</section>
+<section id="razmena-poruka-3" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Ove tri sistemske operacije su zadužene za prenos poruka.</li>
+<li>Pored slanja i prijema poruka, one:</li>
+<li>potvrđuju prijem poruka</li>
+<li>retransmituju poruke, čiji prijem nije potvrđen</li>
+<li>šalju upravljačke poruke, kojima se proverava i potvrđuje aktivnost
+servera (čime se omogućuje otkrivanje njegovog otkaza) i slično.</li>
+</ul>
+</section>
+<section id="razmena-poruka-4" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>U nadležnosti ovih operacija je i rastavljanje poruka u pakete, koji
+se prenose preko komunikacionih linija, sastavljanje poruka od paketa,
+pristiglih preko komunikacionih linija, potvrda prijema paketa i
+retransmisija paketa čiji prijem nije potvrđen, kao i prilagođavanje
+brzine slanja paketa brzini kojom oni mogu biti primani (flow
+control).</li>
+</ul>
+</section>
+<section id="razmena-poruka-5" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Pomenute tri sistemske operacije koriste usluge drajvera sata, radi
+reagovanja na isticanje zadanih vremenskih intervala, nakon kojih je, na
+primer, potrebno ili retransmitovati poruku, ili poslati poruku
+potvrde.</li>
+<li>One pozivaju i (neblokirajuće) operacije gornjeg dela drajvera
+mrežnog kontrolera, radi fizičkog prenosa i prijema paketa.</li>
+<li>U donjem delu ovog drajvera se nalaze obrađivači prekida, zaduženi
+za registrovanje uspešnog slanja i uspešnog prijema paketa.</li>
+</ul>
+</section>
+<section id="razmena-poruka-6" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Sistemske operacije modula za razmenu poruka se brinu o baferima,
+namenjenim za (privremeno) smeštanje poruka.</li>
+<li>Na primer, ako server nije pozvao sistemsku operaciju prijema
+zahteva, jer je aktivan na usluživanju prethodno primljenog zahteva od
+jednog klijenta, a pristigla je poruka zahteva od drugog klijenta, ova
+poruka se smešta u slobodan bafer, da bi bila sačuvana i kasnije
+isporučena serveru.</li>
+<li>Ako ne postoji slobodan bafer, poruka zahteva se odbacuje, uz,
+eventualno, slanje odgovarajuće upravljačke poruke drugom klijentu.</li>
+</ul>
+</section>
+<section id="razmena-poruka-7" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Svaka od poruka, koje se razmenjuju između procesa, se sastoji:</li>
+<li>od upravljačkog dela poruke</li>
+<li>od sadržaja poruke.</li>
+<li>Upravljački deo poruke obuhvata:</li>
+<li>adresu odredišnog procesa (kome se poruka upućuje)</li>
+<li>adresu izvorišnog procesa (od koga poruka kreće, a kome se,
+eventualno, kasnije upućuje odgovor)</li>
+<li>opis poruke (njenu vrstu, njen redni broj i slično)</li>
+</ul>
+</section>
+<section id="razmena-poruka-8" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>Adresa (odredišnog ili izvorišnog) procesa sadrži jedinstven redni
+broj računara, kome proces pripada (a po kome se razlikuju svi
+računari), kao i port (jedinstven redni broj po kome se razlikuju
+procesi, koji pripadaju istom računaru).</li>
+<li>Na osnovu rednog broja računara, mrežni kontroler utvrđuje da li
+prihvata ili propušta poruku, a na osnovu porta se određuje proces, kome
+se poruka isporučuje.</li>
+</ul>
+</section>
+<section id="razmena-poruka-9" class="slide level2">
+<h2>Razmena poruka</h2>
+<ul>
+<li>U toku programiranja, zgodnije je, umesto ovih rednih brojeva,
+koristiti imena za označavanje i računara i procesa.</li>
+<li>Korespondenciju između imena i rednih brojeva uspostavlja već
+pomenuti server imena.</li>
+<li>Ove podatke o sebi ostavljaju svi serveri, kada se, na početku svoje
+aktivnosti, obrate serveru imena.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Slaba tačka razmene poruka je sigurnost, jer su komunikacione linije
+pristupačne svim korisnicima, pa je svaki od njih u poziciji da preuzima
+tuđe poruke i da šalje poruke u tuđe ime.</li>
+<li>Sprečavanje preuzimanja tuđih poruka se zasniva na kriptovanju
+(encryption) poruka, a sprečavanje slanja poruka u tuđe ime se zasniva
+na nedvosmislenoj međusobnoj identifikaciji procesa
+(authentication).</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-1" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>U slučaju simetrične kriptografije, da bi klijent i server mogli da
+razmenjuju poruke sa kriptovanim sadržajima, oba moraju da znaju i
+algoritam kriptovanja i zajednički interni ključ kriptovanja.</li>
+<li>Pod pretpostavkom da je algoritam poznat svim procesima, a da
+interni ključ kriptovanja treba da znaju samo klijent i server, koji
+razmenjuju poruke, javlja se problem kako dostaviti interni ključ
+kriptovanja samo pomenutom klijentu i serveru.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-2" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>U tome može da pomogne poseban server, u koga svi procesi imaju
+poverenje i koji se, zato, naziva poverenik.</li>
+<li>Pri tome se podrazumeva da poverenik poseduje unapred dogovoren
+poseban ključ kriptovanja za komunikaciju sa svakim procesom.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-3" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Zahvaljujući tome, klijent može da pošalje povereniku poruku, koja
+sadrži ime klijenta i ime servera sa kojim klijent želi da ostvari
+sigurnu komunikaciju.</li>
+<li>Sadržaj ove poruke je kriptovan ključem, koji je poznat samo
+klijentu i povereniku, tako da je razumljiv samo za poverenika, a on, na
+osnovu adrese izvorišnog procesa iz upravljačkog dela ove poruke, može
+da pronađe ključ za dekriptovanje njenog sadržaja.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-4" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Sadržaj ove poruke je kriptovan ključem, koji je poznat samo
+povereniku i serveru, tako da je razumljiv samo za servera.</li>
+<li>Takođe, poverenik šalje poruku i klijentu, koja sadrži interni ključ
+kriptovanja i ime servera.</li>
+<li>Sadržaj ove poruke je kriptovan ključem, koji znaju samo poverenik i
+klijent, tako da je razumljiv samo za klijenta.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-5" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Na ovaj način, samo klijent i samo server dobiju interni ključ
+kriptovanja za sigurnu međusobnu komunikaciju i ujedno se obavi njihova
+međusobna identifikacija, tako da se drugi procesi ne mogu neprimećeno
+umešati u njihovu komunikaciju.</li>
+<li>Opisano ponašanje klijenta i servera predstavlja oblik sigurnosnog
+protokola (security protocol, cryptographic protocol, encryption
+protocol).</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-6" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<p><img data-src="./img/cb6ef7a4-4a83-48b7-b1b1-fe90d8b6af9e.png" /></p>
+</section>
+<section id="problemi-razmene-poruka-7" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Ako se sigurna razmena poruka zasniva na asimetričnoj kriptografiji,
+tada je uloga poverenika da čuva javne ključeve i tako osigura međusobnu
+identifikaciju procesa.</li>
+<li>Znači, kada je potrebno ostvariti sigurnu komunikaciju između dva
+procesa, oni se obraćaju povereniku, da bi dobili javni ključ svog
+komunikacionog partnera.</li>
+<li>Za komunikaciju sa poverenikom ovi procesi koriste unapred
+dogovoreni javni ključ poverenika, a za komunikaciju sa njima poverenik
+koristi njihove unapred dogovorene javne ključeve.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-8" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Asimetrična kriptografija, sa komutativnim algoritmima kriptovanja i
+dekriptovanja, omogućuje i digitalno potpisivanje poruka, radi
+neopozivog pripisivanja poruke njenom pošiljaocu.</li>
+<li>Digitalni potpis (digital signature) se šalje uz poruku.</li>
+<li>On sadrži podatke koji jednoznačno reprezentuju poruku, pa
+predstavljaju otisak prsta poruke (fingerprint, cryptographic
+checksum).</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-9" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Otisak prsta poruke formiraju jednosmerne funkcije (one-way
+functions) na osnovu sadržaja poruke.</li>
+<li>Digitalni potpis nastane kada se otisak prsta poruke dekriptuje
+(transformiše) primenom algoritma dekriptovanja i privatnog ključa.</li>
+<li>Primalac poruke kriptuje (retransformiše) digitalni potpis primenom
+algoritma kriptovanja i javnog ključa.</li>
+<li>Ako se rezultat kriptovanja digitalnog potpisa poklapa sa otiskom
+prsta primljene poruke, tada je poruka nedvosmisleno stigla od
+pošiljaoca.</li>
+</ul>
+</section>
+<section id="problemi-razmene-poruka-10" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<p><img data-src="./img/3b3ce966-a57d-4bcd-be29-180ffc165ec6.png" /></p>
+</section>
+<section id="problemi-razmene-poruka-11" class="slide level2">
+<h2>Problemi razmene poruka</h2>
+<ul>
+<li>Sigurnu komunikaciju klijenta i servera mogu ometati drugi procesi
+zlonamernim retransmisijama starih poruka, ili izmenom sadržaja
+poruka.</li>
+<li>Ugrađivanjem u sadržaj poruke njenog rednog broja, mogu se otkriti
+retransmisije starih poruka, a ugrađivanjem u sadržaj poruke kodova za
+otkrivanje i oporavak od izmena sadržaja, mogu se otkriti, pa i
+ispraviti izmene sadržaja poruka.</li>
+</ul>
+</section>
+<section id="razlika-klijenata-i-servera" class="slide level2">
+<h2>Razlika klijenata i servera</h2>
+<ul>
+<li>Različita uloga, koju klijent i server imaju u toku međusobne
+komunikacije (saradnje), je prirodna posledica njihove namene.</li>
+<li>Iz toga proizlaze i razlike u njihovoj internoj organizaciji.</li>
+<li>Dok je za klijenta prihvatljivo da njegova aktivnost bude strogo
+sekvencijalna, za servera stroga sekvencijalnost njegove aktivnosti
+znači manju propusnost i sporije pružanje usluga.</li>
+</ul>
+</section>
+<section id="razlika-klijenata-i-servera-1" class="slide level2">
+<h2>Razlika klijenata i servera</h2>
+<ul>
+<li>To je najlakše ilustrovati na primeru servera datoteka, zaduženog za
+pružanje usluga, kao što je čitanje ili pisanje datoteke.</li>
+<li>Strogo sekvencijalna aktivnost ovoga servera bi izazvala
+zaustavljanje njegove aktivnosti, radi usluživanja jednog klijenta, dok
+kontroler ne prenese blok sa sadržajem datoteke između masovne i radne
+memorije.</li>
+</ul>
+</section>
+<section id="razlika-klijenata-i-servera-2" class="slide level2">
+<h2>Razlika klijenata i servera</h2>
+<ul>
+<li>U međuvremenu ne bi bilo usluživanja drugih klijenata, čak i ako bi
+se njihovi zahtevi odnosili na blokove datoteka, prisutne u baferima
+radne memorije.</li>
+<li>Ovakva sekvencijalnost nije prisutna kod tradicionalnih operativnih
+sistema, jer nakon zaustavljanja aktivnosti jednog procesa u modulu za
+rukovanje datotekama, drugi proces može nastaviti aktivnost u istom
+modulu.</li>
+<li>Zato je za servere potrebno obezbediti više niti.</li>
+</ul>
+</section>
+<section id="razlika-klijenata-i-servera-3" class="slide level2">
+<h2>Razlika klijenata i servera</h2>
+<ul>
+<li>Pri tome, svaka od niti, u okviru istog servera, opslužuje
+različitog klijenta, a broj ovih niti zavisi od broja postavljanih
+zahteva i menja se u vremenu.</li>
+<li>Postojanje više niti zahteva njihovu sinhronizaciju, dok pristupaju
+globalnim (statičkim) promenljivim servera.</li>
+<li>Iako je primena više niti tipična za servere, ona ima svoje
+opravdanje i kod klijenata, jer može poboljšati njihovo ponašanje.</li>
+</ul>
+</section>
+<section id="poziv-operacije-udaljenog-objekta" class="slide level2">
+<h2>Poziv operacije udaljenog objekta</h2>
+<ul>
+<li>Poziv udaljene operacije ima kao alternativu poziv operacije
+udaljenog objekta (Remote Method Invocation - RMI).</li>
+<li>Za poziv operacija nekog objekta je potrebno raspolagati njegovom
+referencom i poznavati operacije koje su za njega definisane.</li>
+</ul>
+</section>
+<section id="poziv-operacije-udaljenog-objekta-1" class="slide level2">
+<h2>Poziv operacije udaljenog objekta</h2>
+<ul>
+<li>Pri tome ne smeta ako je objekat udaljen, odnosno ako se ne nalazi
+na istoj mašini kao i proces koji poziva operaciju dotičnog
+objekta.</li>
+<li>Dobijanje reference udaljenog objekta, postupak poziva njegove
+operacije i dobijanje rezultata izvršavanja pozvane operacije se
+suštinski ne razlikuju od rešavanja sličnih problema kod poziva udaljene
+operacije.</li>
+</ul>
+</section></section>
+<section>
+<section id="distribuirani-sistem-datoteka"
+class="title-slide slide level1">
+<h1>Distribuirani sistem datoteka</h1>
+
+</section>
+<section id="distribuirani-sistem-datoteka-1" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Distribuirani sistem datoteka obuhvata hijerarhijsku organizaciju
+datoteka čiji delovi se nalaze na raznim računarima.</li>
+<li>Ovakav distribuirani sistem datoteka se može oslanjati na više
+servera imenika i na više servera datoteka.</li>
+<li>Serveri imenika podržavaju hijerarhijsku organizaciju datoteka, a
+serveri datoteka podržavaju pristup sadržaju (običnih) datoteka.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-2" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>U imenicima, kojima rukuju serveri imenika, uz imena datoteka,
+odnosno uz imena imenika, ne stoje samo redni brojevi deskriptora
+datoteka, nego i redni brojevi servera datoteka, odnosno servera
+imenika, kojima pripadaju pomenuti deskriptori.</li>
+<li>U distribuiranom sistemu datoteka pristup datoteci podrazumeva
+konsultovanje servera imena, radi pronalaženja servera imenika, od koga
+kreće pretraživanje imenika.</li>
+<li>Pretraživanje imenika može zahtevati kontaktiranje različitih
+servera imenika, dok se ne stigne do servera datoteka sa traženom
+datotekom.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-3" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Serveri imenika i datoteka mogu da ubrzaju pružanje usluga, ako
+kopiju često korišćenih podataka čuvaju u radnoj memoriji.</li>
+<li>Ubrzanju pružanja usluga doprinosi i repliciranje datoteka, da bi
+one bile fizički bliže korisnicima.</li>
+<li>Međutim, to stvara probleme, kada razni korisnici istovremeno
+menjaju razne kopije iste datoteke, jer se tada postavlja pitanje koja
+od izmena je važeća.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-4" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Za distribuirani sistem datoteka zaštitu datoteka je primerenije
+zasnovati na dozvolama (capability), nego na pravima pristupa.</li>
+<li>To znači da u okviru deskriptora datoteka, odnosno imenika, ne
+postoje navedena prava pristupa za pojedine grupe korisnika, nego se za
+svaku datoteku, odnosno imenik, generišu različite dozvole.</li>
+<li>One omogućuju razne vrste pristupa datoteci, odnosno imeniku.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-5" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Da bi klijent dobio neku uslugu, on mora da poseduje odgovarajuću
+dozvolu, koju prosleđuje serveru u okviru zahteva za uslugom. Dozvola
+sadrži:</li>
+<li>redni broj servera,</li>
+<li>redni broj deskriptora datoteke (odnosno, deskriptora imenika)</li>
+<li>oznaku vrste usluge</li>
+<li>oznaku ispravnosti dozvole</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-6" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Sadržaj dozvole je zaštićen kriptovanjem, tako da nije moguće,
+izmenom oznake vrste usluge prepraviti dozvolu.</li>
+<li>Pre pružanja usluge, server dekriptuje sadržaj dozvole, i proverava
+da li je ona ispravna i da li se njena oznaka vrste usluge podudara sa
+zatraženom uslugom.</li>
+<li>Dozvole deli server na zahtev klijenata, koji ih čuvaju i po potrebi
+prosleđuju jedan drugom.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-7" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Pri tome se podrazumeva da klijent, stvaralac datoteke, po njenom
+stvaranju automatski dobije dozvolu za sve vrste usluga, koja uključuje
+i uslugu stvaranja drugih, restriktivnijih dozvola.</li>
+<li>Kada želi da poništi određenu dozvolu, server samo proglasi njenu
+oznaku ispravnosti nevažećom.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-8" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Prednost zasnivanja zaštite datoteka na dozvolama umesto na pravima
+pristupa je u tome da prvi pristup ne zahteva razlikovanje korisnika,
+niti njihovo označavanje.</li>
+<li>To je važno, jer rukovanje jedinstvenim i neponovljivim oznakama
+korisnika u distribuiranom računarskom sistemu nije jednostavno.</li>
+<li>Sem toga, dozvole omogućuju veću selektivnost, jer grupišu korisnike
+po kriterijumu posedovanja dozvole određene vrste, a ne na osnovu
+njihovih unapred uvedenih (numeričih) oznaka.</li>
+</ul>
+</section>
+<section id="distribuirani-sistem-datoteka-9" class="slide level2">
+<h2>Distribuirani sistem datoteka</h2>
+<ul>
+<li>Komercijalni distribuirani sistem datoteka nastaje spajanjem
+lokalnog i udaljenog sistema datoteka.</li>
+<li>Osnovu za stvaranje komercijalnog distribuiranog sistema datoteka
+nudi, na primer, NFS (Sun Microsystem’s Network File Service).</li>
+<li>Pristup udaljenom sistemu datoteka podrazumeva mrežnu komunikaciju
+lokalnog klijenta i udaljenog mrežnog servera datoteka, o čijim
+detaljima korisnik ne mora da vodi računa.</li>
+</ul>
+</section>
+<section
+id="raspoređivanje-procesa-u-distribuiranom-računarskom-sistemu"
+class="slide level2">
+<h2>Raspoređivanje procesa u distribuiranom računarskom sistemu</h2>
+<ul>
+<li>Cilj raspoređivanja procesa u distribuiranom računarskom sistemu je
+ostvarenje najboljeg iskorišćenja računara, ili ostvarenje najkraćeg
+vremena odziva, odnosno, najbržeg usluživanja korisnika.</li>
+<li>Zadatak raspoređivanja komplikuju razlike između računara, jer u
+opštem slučaju svaki računar ne može da prihvati svaki izvršni oblik
+programa, pošto su izvršni oblici programa vezani za procesor, za
+raspoloživu radnu memoriju i slično.</li>
+</ul>
+</section>
+<section
+id="raspoređivanje-procesa-u-distribuiranom-računarskom-sistemu-1"
+class="slide level2">
+<h2>Raspoređivanje procesa u distribuiranom računarskom sistemu</h2>
+<ul>
+<li>Raspoređivanje komplikuje i zahtev za omogućavanje migracije procesa
+sa računara na računar, da bi se prezaposlen računar rasteretio, a
+nezaposlen zaposlio.</li>
+<li>Raspoređivanje je olakšano, ako su unapred poznate karakteristike
+opterećenja računara, odnosno vrsta i broj njihovih procesa.</li>
+<li>Kod raspoređivanja procesa po računarima, važno je voditi računa o
+saradnji procesa i procese, koji tesno međusobno sarađuju, raspoređivati
+na isti računar.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Saradnja procesa, aktivnih na raznim računarima, zatheva njihovu
+sinhronizaciju, što se ostvaruje razmenom poruka.</li>
+<li>Pri tome, najjednostavniji način za ostvarenje sinhronizacije se
+zasniva na uvođenju procesa koordinatora.</li>
+<li>Njemu se obraćaju svi procesi, zainteresovani za sinhronizaciju, a
+koordinator donosi odluke o njihovoj sinhronizaciji.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-1" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Tako, ako je potrebno, na primer, ostvariti međusobnu isključivost
+procesa u pristupu istoj datoteci, svi procesi traže od koordinatora
+dozvolu za pristup, a on dozvoljava uvek samo jednom procesu da pristupi
+datoteci.</li>
+<li>Na sličan način se može ostvariti i uslovna sinhronizacija.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-2" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Za razliku od ovakvog centralizovanog algoritma sinhronizacije, koji
+se zasniva na uvođenju koordinatora, postoje i distribuirani algoritmi
+sinhronizacije, koji se zasnivaju na međusobnom dogovaranju procesa,
+zainteresovanih za sinhronizaciju.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-3" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Distribuirani algoritmi sinhronizacije zahtevaju sredstva za grupnu
+komunikaciju procesa, odnosno, efikasna sredstva koja omogućuju da jedan
+proces pošalje poruke svim ostalim procesima iz grupe procesa,
+zainteresovanih za sinhronizaciju, i da od njih primi odgovore.</li>
+<li>Pored veće razmene poruka, distribuirani algoritmi sinhronizacije su
+komplikovaniji od centralizovanih algoritama, a pri tome ne nude
+prednosti, tako da je njihov razvoj više od principijelnog, nego od
+praktičnog značaja.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-4" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Za distribuirane operativne sisteme nije samo bitno da omoguće
+efikasnu sinhronizaciju procesa, nego i da podrže poseban oblik
+sinhronizacije procesa, koji obezbeđuje da se obave ili sve operacije iz
+nekog niza pojedinačnih operacija, ili ni jedna od njih.</li>
+<li>Ovakav niz operacija se naziva transakcija, a transakcije, koje
+imaju svojstvo da se obave u celosti ili nikako, se nazivaju atomske
+transakcije (atomic transaction).</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-5" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Primer niza operacija, za koje je neophodno da obrazuju atomsku
+transakciju, je prebacivanje nekog iznosa sa računa jedne banke na račun
+druge banke.</li>
+<li>Pri tome, proces klijent, koji u ime korisnika obavlja ovo
+prebacivanje, kontaktira dva servera, koji reprezentuju dve banke, da bi
+obavio transfer iznosa sa jednog na drugi račun.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-6" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Transfer se mora obaviti tako, da drugi klijenti mogu videti oba
+računa samo u stanju ili pre, ili posle transakcije.</li>
+<li>Znači, za atomske transakcije je neophodno da budu međusobno
+isključive, ako pristupaju istim podacima, ali i da njihovi rezultati
+budu trajni, da se jednom napravljena izmena ne može izgubiti.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-7" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Saradnja procesa, aktivnih na raznim procesorima, otvara mogućnost
+pojave mrtve petlje.</li>
+<li>Pri tome, u uslovima distribuiranog računarskog sistema, algoritmi
+za izbegavanje pojave mrtve petlje, odnosno za otkrivanje i za oporavak
+od pojave mtrve petlje su još neefikasniji i sa još manjim praktičnim
+značajem, nego u slučaju centralizovanog (jednoprocesorskog)
+računara.</li>
+</ul>
+</section>
+<section id="distribuirana-sinhronizacija-8" class="slide level2">
+<h2>Distribuirana sinhronizacija</h2>
+<ul>
+<li>Zato, u uslovima distribuiranog računarskog sistema, kada nije
+prihvatljiv pristup ignorisanja problema mrtve petlje, preostaje da se
+spreči njena pojava, na primer, sprečavanjem ispunjenja uslova,
+neophodnih za pojavu mrtve petlje.</li>
+</ul>
+</section>
+<section id="svojstva-distribuiranog-računarskog-sistema"
+class="slide level2">
+<h2>Svojstva distribuiranog računarskog sistema</h2>
+<ul>
+<li>Distribuirani računarski sistem je zamišljen tako da integriše
+mnoštvo računara u moćan multiračunarski sistem.</li>
+<li>Na taj način je moguće od više jeftinih i malih računara napraviti
+moćan multiračunarski sistem povoljne cene.</li>
+<li>Ovakav multiračunarski sistem, uz to, nudi i veću pouzdanost, jer
+kvar pojedinačnog računara nije fatalan za ceo sistem, kao i mogućnost
+proširenja, jer je moguće naknadno dodavanje računara u sistem.</li>
+</ul>
+</section>
+<section id="svojstva-distribuiranog-računarskog-sistema-1"
+class="slide level2">
+<h2>Svojstva distribuiranog računarskog sistema</h2>
+<ul>
+<li>Pored integrisanja pojedinačnih računara u multiračunarski sistem,
+distribuirani računarski sistem omogućuje i deljenje skupih resursa
+ovakvog multiračunarskog sistema između više korisnika, a nudi i
+prilagodljivost zahtevima korisnika, željenu raspoloživost i
+predvidivost odziva, pa, čak, i veću sigurnost, jer korisnici mogu da
+čuvaju poverljive podatke na svom računaru, koga fizički štite i čije
+korišćenje mogu da kontrolišu.</li>
+</ul>
+</section>
+<section id="implementacija-distribuiranog-os" class="slide level2">
+<h2>Implementacija distribuiranog OS</h2>
+<ul>
+<li>Zadatak distribuiranog operativnog sistema je da objedini sve
+računare distribuiranog računarskog sistema, tako da korisnik ne vidi
+pojedine računare, nego jedinstven sistem, koji pruža usaglašene
+usluge.</li>
+<li>Sve ovakve usluge se pružaju na uniforman način, koji zanemaruje
+mesto i druge specifičnosti pružanja usluge.</li>
+</ul>
+</section>
+<section id="implementacija-distribuiranog-os-1" class="slide level2">
+<h2>Implementacija distribuiranog OS</h2>
+<ul>
+<li>Uniforman način pružanja usluga podrazumeva sakrivanje različitosti
+(heterogenosti) računara od kojih je obrazovan distribuirani računarski
+sistem.</li>
+<li>To se može postići, ako se iznad raznorodnih operativnih sistema
+pojedinih računara distribuiranog računarskog sistema napravi posebna
+distribuirana softverska platforma (middleware) za razvoj distribuiranih
+softverskih sistema.</li>
+</ul>
+</section>
+<section id="implementacija-distribuiranog-os-2" class="slide level2">
+<h2>Implementacija distribuiranog OS</h2>
+<ul>
+<li>Ona ima ulogu distribuiranog operativnog sistema.</li>
+<li>Distribuirana softverska platforma je obično specijalizovana tako da
+nudi konzistentan skup operacija, koje omogućuju razvoj željene vrste
+distribuiranih softverskih sistema.</li>
+<li>Ovakav skup operacija podržava saradnju komponenti koje obrazuju
+distribuirani softverski sistem.</li>
+</ul>
+</section>
+<section id="implementacija-distribuiranog-os-3" class="slide level2">
+<h2>Implementacija distribuiranog OS</h2>
+<ul>
+<li>U tom pogledu se može govoriti o raznim distribuiranim softverskim
+platformama, poput one namenjene za podršku distribuiranih dokumenata
+(World Wide Web), ili one namenjene za podršku distribuiranom objektno
+orijentisanom programiranju (CORBA, Java middleware, .NET).</li>
+<li>U osnovi ovakvih sistema se krije klijent-server model.</li>
+</ul>
+</section>
+<section id="implementacija-distribuiranog-os-4" class="slide level2">
+<h2>Implementacija distribuiranog OS</h2>
+<ul>
+<li>Server se nalazi na strani rukovaoca distribuiranim dokumentima (web
+site) ili rukovaoca objektima, a klijent se nalazi na strani korisnika
+distribuiranih dokumenata (web browser) ili pozivaoca operacija
+udaljenih objekata (pri čemu je pozivanje ovih operacija zasnovano na
+RPC mehanizmima).</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
