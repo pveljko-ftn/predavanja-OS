@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Komunikacija sa Operativnim Sistemom</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Komunikacija sa Operativnim Sistemom</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">2023-06</p>
+</section>
+
+<section>
+<section
+id="kratka-nekompletna-istorija-ključnih-momenata-u-interfejsima"
+class="title-slide slide level1">
+<h1>Kratka, nekompletna istorija ključnih momenata u interfejsima</h1>
+
+</section>
+<section id="početak" class="slide level2">
+<h2>Početak</h2>
+<p><img data-src="img/punchcard.png" /> (Izvor: Pete Birkinshaw
+CC-Generic-Attribution 2.0)</p>
+</section>
+<section id="računari-bez-interfejsa" class="slide level2">
+<h2>Računari bez interfejsa</h2>
+<ul>
+<li>Prvobitni računari nisu ni imali interfejs u klasičnom značenju</li>
+<li>Bili su mašine koje transformišu podatke iz jedne forme u drugu: a
+podaci su ulazili (i verovatno izlazili) na apsolutno isti način, kao
+bušene kartice</li>
+<li>Bušene kartice su znatno starije od računara: najraniji poznat
+primer jesu kartice korišćene za ‘programiranje’ automatizovanih
+razboja, tkzv. Žakardove kartice</li>
+</ul>
+</section>
+<section id="bušene-kartice" class="slide level2">
+<h2>Bušene kartice</h2>
+<ul>
+<li>Semjon Korsakov i Čarls Bebidž su predložili da se bušene kartice
+mogu interpretirati kao univerzalan način za čuvanje informacija.</li>
+<li>Prva osoba koja je to uradila praktično je Herman Holerit koji je
+iskoristio kartice ne bi li automatizovao analizu podataka popisa
+stanovništva 1890 u SAD.</li>
+<li>Ovo je dovelo do čitave gomile mašina koje su uzimale kartice i
+sortirale ih ili pak ih prebrojavale po raznim kategorijama kroz
+tabulaciju, sumiranje, i slične aktivnosti.</li>
+<li>Ovo su bile poznate kao ‘biznis mašine’ koje opstaju još samo kao
+lingvistički fosil u imenu IBM: International Business Machines.</li>
+</ul>
+</section>
+<section id="uloga-ranih-računara" class="slide level2">
+<h2>Uloga ranih računara</h2>
+<ul>
+<li>Računari su, dakle, smatrani samo naročito bistrim biznis mašinama
+koji se mogu navesti da rade kompleksnije operacije i to operacije koje
+se mogu promeniti</li>
+<li>Nije bilo ni <em>pokušaja</em> da se njima da ikakav smislen
+interfejs tokom prvih godina njihove primene.</li>
+</ul>
+</section>
+<section id="prvi-interaktivni-računari" class="slide level2">
+<h2>Prvi interaktivni računari</h2>
+<ul>
+<li>Svi računari su podržavali minimalan stepen interaktivnosti zbog
+debagovanja i testiranja</li>
+<li>Verovatno prvi računar koji bi mogli opisati kao donekle
+interaktivan je bio SSEM (small scale experimental machine) koji je
+konstruisan u Mančesteru 1948.</li>
+<li>SSEM je imao mehaničke prekidače koji su mogli da utiču na ponašanje
+računara i ekran… donekle.</li>
+<li>Ekran je bio više slučajnost: sistem je koristio Viljems-Kilburn tip
+memorije koji je, bizarno, bio katodna cev.</li>
+</ul>
+</section>
+<section id="ssem" class="slide level2">
+<h2>SSEM</h2>
+<p><img data-src="img/ssem.jpg" /></p>
+</section>
+<section id="prvi-interaktivni-računari-1" class="slide level2">
+<h2>Prvi interaktivni računari</h2>
+<ul>
+<li>U zavisnosti da li se prikaže jedan vizuelni oblik ili drugi,
+katodna cev je naelektrisana pozitivno ili negativno.</li>
+<li>Efektivno na lokacijama na ekranu sistem je prikazivao tačke ili
+crtice i onda pomoću detektorske ploče je hvatao pozizivan ili negativan
+naboj i tako očitavao memoriju.</li>
+<li>Prikaz na ekranu je trajao samo oko 200ms, ali je automatski proces
+mogao da ‘osveži’ memoriju tako da ona traje.</li>
+<li>Ovo je omogućilo gigantskih 1024 bita memorije.</li>
+</ul>
+</section>
+<section id="prvi-interaktivni-računari-2" class="slide level2">
+<h2>Prvi interaktivni računari</h2>
+<ul>
+<li>Budući da je već koristio vizuelni displej za svoju memoriju nije
+ništa ‘koštalo’ da se taj signal pošalje i na običan displej i time da
+viezuelni uvid u stanje cele memorije</li>
+<li>Stoga, iako je ovo bio <em>tehnički</em> ekran, nije bio ekran u
+današenjem smislu.</li>
+</ul>
+</section>
+<section id="prvi-interaktivni-računari-3" class="slide level2">
+<h2>Prvi interaktivni računari</h2>
+<ul>
+<li>Među prvim interaktivnim računarima (naročito onima koji su dobro
+dokumentovani) je TX-0 računar, razvijen na Linkoln laboratoriji 1955/6
+i kasnije modifikovan u okviru RLE na MIT-u.</li>
+<li>Svrha interaktivnih osobina je bila verovatno zato što je računar
+napravljen da bude test za mnogo veći računarski sistem (Whirlwind)
+koji, zbog svoje vojne primene, je morao da bude interaktivan.</li>
+<li>Bilo kako bilo, sistem je imao način da se izdaju komande direktno
+računaru (preko teleprinterske tastature) i čak i ekran efektivne
+rezolucije 512x512.</li>
+<li>Valja napomenuti da je ekran bio, efektivno, osciloskop, te
+vektorski displej tako da je informacija o rezolucji malo
+neprecizna.</li>
+</ul>
+</section>
+<section id="tx-0" class="slide level2">
+<h2>TX-0</h2>
+<p><img data-src="img/tx0.jpg" /> (Izvor: Muzej Računarske Istorije,
+https://www.computerhistory.org/pdp-1/2e1b209cb40237b91228cdf26a60e3f8/)</p>
+</section>
+<section id="pdp-1" class="slide level2">
+<h2>PDP-1</h2>
+<ul>
+<li>Jako bitan za razvoj interfejsa je bio PDP-1, računar koji je nastao
+1959 kao direktan naslednik TX-0 mašine i koji je od početka dizajniran
+kao visoko interaktivna mašina.</li>
+<li>Posedovao je CRT ekran, teleprinter ‘tastaturu,’ čitačke bušenih
+papirnih traka (što je bila zamena za disk, diskete, i svaki drugi način
+čuvanja podataka) i čak analogni ulaz preko ‘svetlosne olovke.’</li>
+<li>Ovo je rana preteča miševa bazirana na tome da katodne cevi osim što
+proizvode svetlost takođe ‘cure’ beta zračenje</li>
+<li>Svetlosna olovka je detektor takvog značenja: na osnovu tajminga
+elektronskog topa katodne cevi i vremena kada ta olovka detektuje impuls
+zračenja moguće je precizno odrediti gde se nalazi na ekranu.</li>
+</ul>
+</section>
+<section id="pdp-1-1" class="slide level2">
+<h2>PDP-1</h2>
+<p><img data-src="img/pdp1.jpg" /> (Izvor: Aleksej Komarov,
+CC-AttributionShareAlike 4.0)</p>
+</section>
+<section id="pionirski-interaktivni-programi" class="slide level2">
+<h2>Pionirski interaktivni programi</h2>
+<ul>
+<li>PDP-1 i TX-0 su bili mesto gde su razvijeni razni bitni rani
+programi za interaktivan rad</li>
+<li>Colossal Typewriter koji je bio prvi tekst editor opšte namene</li>
+<li>TECO koji je bio verovatno prvi programerski tekst editor: jako
+kompleksan jezik za transformaciju teksta sa papirne trake.
+Isprogramirali bi sekvencu TECO komandi i onda pustili da ona izmeni
+tekst i onda ga snimila na drugu traku. TECO je direktan predak modernog
+Emacs editora.</li>
+<li>Naravno, ima jedan interaktivni komad softvera prvo razvijen za
+PDP-1 koji je znantno bitniji od svih ostalih.</li>
+</ul>
+</section>
+<section id="spacewar" class="slide level2">
+<h2>Spacewar!</h2>
+<p><img data-src="img/spacewar.jpg" /> (Spacewar! – Jedan od kandidata
+za prvu računarsku igru (1962))</p>
+</section>
+<section id="jedan-veliki-problem" class="slide level2">
+<h2>Jedan veliki problem</h2>
+<ul>
+<li>Ništa od ovoga nije slučaj interakcije sa <em>operativnim
+sistemom.</em></li>
+<li>Svi ovi interfejsi pričaju sa mašinom vrlo neposredno i pristupaju
+hardveru sasvim direktno.</li>
+<li>Programi koji imaju civilizovaniji interfejs i dalje pričaju sa
+hardverom direktno i zauzimaju kontrolu nad računarom u potpunosti.</li>
+<li>Operativni sistemi su neraskidivo vezani za problem višestruke
+upotrebe jednog računarskog sistema, tkzv. “time-sharing.” Operativni
+sistemi su postojali i ranije, ali nisu imali isti značaj.</li>
+</ul>
+</section>
+<section id="interfejs-multiprogramskih-operativnih-sistema"
+class="slide level2">
+<h2>Interfejs multiprogramskih operativnih sistema</h2>
+<ul>
+<li>Ako delite hardver sa drugim korisnicima očigledno je da neko mora
+da stoji između vas i hardvera i sprečava ekskluzivan pristup: to je
+bila tada i ostala danas uloga operativnog sistema.</li>
+<li>Ovo pak znači da je neophodno pričati sa operativnim sistemom i
+‘zamoliti’ ga da radi stvari ili kroz sistemske podprograme (programski
+nivo komunikacije - danas poznato kao sistemski pozivi) ili kroz
+izdavanje nekakvih komandi kao korisnik (korisnički nivo pristupa).</li>
+<li>Ovo je u igru uvelo koncept <em>shell</em> programa.</li>
+</ul>
+</section>
+<section id="shell" class="slide level2">
+<h2>Shell</h2>
+<ul>
+<li>Shell možete zamisliti kao poseban program (ili u ranim sistemima
+direktan deo operativnog sistema) koji vam omogućava da nekako zadajete
+komande koje će shell pretvoriti u operacije operativnog sistema.</li>
+<li>Prvi operativni sistemi su, bez izuzetka, imali takozvani interfejs
+komandne linije gde se komande kucaju ili direktno ili kroz nešto više
+softisticiran komandni jezik koji omogućava da se više komandi
+kombinuje.</li>
+<li>Računari i danas podržavaju istu stvar to su cmd i PowerShell u
+Windows-u, odnosno sh, bash, zsh, fish, xonsh… na POSIX sistemima.</li>
+</ul>
+</section>
+<section id="rana-upotreba-grafike---plato-sistem" class="slide level2">
+<h2>Rana upotreba grafike - PLATO sistem</h2>
+<ul>
+<li>PLATO je bio sistem razvijan na Stanfordu od ranih šezdesetih do
+sredine sedamdesetih</li>
+<li>Bio to sistem specijalne namene, specifično, bio je namenjen
+interaktivnom učenju uz pomoć računara.</li>
+<li>PLATO je imao, za svoje vreme, nezapamćeno veliki broj korisnika i
+veliku interaktivnost.</li>
+<li>Takođe je imao veoma neobičnu formu displeja gde se mogao mešati
+displej koji ima i bitmap i vektorske elemente.</li>
+</ul>
+</section>
+<section id="plato" class="slide level2">
+<h2>PLATO</h2>
+<p><img data-src="img/plato.jpg" /> (Izvoj: Džejson Skot, CC SA-Attr-3.0
+US)</p>
+</section>
+<section id="rana-upotreba-grafike---nls-i-majka-svih-demoa"
+class="slide level2">
+<h2>Rana upotreba grafike - NLS i Majka Svih Demoa</h2>
+<ul>
+<li>Većina ideja čiji će razvoj obeležiti 90-te i rane 2000-te su bile u
+opticaju mnogo ranije.</li>
+<li>Dramatičan primer ovoga je računarski sistem (i njegova
+demonstracija poznata, po svom izuzetnom uticaiju, kao ‘Majka Svih
+Demoa’) poznat kao NLS (oNLine System).</li>
+<li>NLS je demonstrirao njegov tvorac, Daglas Engelbart 1968 i
+dramatično promenio razvoj računarskih interfejsa.</li>
+</ul>
+</section>
+<section id="nls" class="slide level2">
+<h2>NLS</h2>
+<ul>
+<li>Demonstracija NLS-a je publici, po prvi put, prikazala sledeće
+stvari
+<ul>
+<li>Računarski miš</li>
+<li>Grafički editor teksta sa više procesa i mogućnosti interaktivnog
+editovanja sa više učesnika.</li>
+<li>Video pozivi kombinovani sa kolaborativnim editovanjem</li>
+<li>Računarski hipertekst</li>
+</ul></li>
+</ul>
+</section>
+<section id="nls-1" class="slide level2">
+<h2>NLS</h2>
+<ul>
+<li>Kao pokušaj futurološkog predviđanja budućnosti, NLS je možda
+najveći zabeleženi uspeh, budući da ono što je NLS demonstrirao je,
+efektivno, tipična kancelarija cca 2010.</li>
+<li>Naravno, sam NLS nije bio ekonomski moguć: demo je samo mogao biti
+rezultat guranja tehnologije do samih granica.</li>
+<li>Uprkos tome ideje koje su tu prezentovane su se raširile po celom
+svetu i dovele vremenom do prvih komercijalno mogućih grafičkih
+računarskih interfejsa.</li>
+</ul>
+</section>
+<section id="nastavak-rada-na-nls" class="slide level2">
+<h2>Nastavak rada na NLS</h2>
+<ul>
+<li>Tim koji je radio na NLS sistemu je uglavnom završio u kompaniji
+Ziroks (Xerox) gde su razvili eksperimentalni Xerox Alto računar (1973)
+koji je verovatno prvi lični računar napravljen da ima grafički
+korisnički interfejs.</li>
+<li>Nikada nije komercijalnizovan, ali je imao veliki uticaj na dalji
+rad.</li>
+</ul>
+</section>
+<section id="xerox-star" class="slide level2">
+<h2>Xerox Star</h2>
+<ul>
+<li>Nešto kao što je NLS bio predviđanje budućnosti, tako je i Xerox
+Star bio daleko ispred svog vremena</li>
+<li>To je bio računar koji je izašao 1981 (iste godine kao i IBM PC)
+koji je imao grafički korisnički interfejs (sa ikonama, prozorima, i
+dekstop metaforom), na ekranu za svoje doba <em>izuzetno</em> visoke
+rezolucije (1024x808).</li>
+<li>Takođe je podržavao Ethernet mrežu, servere za deljenje fajlova,
+štampača, i slanje elektronske pošte.</li>
+<li>Softver je mogao da se piše koristeći objektno orijentisan
+programski jezik.</li>
+</ul>
+</section>
+<section id="xerox-star-1" class="slide level2">
+<h2>Xerox Star</h2>
+<p><img data-src="img/xerox_star.jpg" /> (Preuzeto sa
+https://en.wikipedia.org/wiki/File:Xerox_Star_8010_workstations.jpg,
+nejasno je čiji je copyright)</p>
+</section>
+<section id="xerox-star-2" class="slide level2">
+<h2>Xerox Star</h2>
+<ul>
+<li>Ovaj računar je, dakle, efektivno nudio mogućnosti kancalarijskog
+računara iz sredine devedesetih.</li>
+<li>Zašto niste (verovatno) čuli za njega?</li>
+<li>Pa, prvo, koštao je oko $50 000 u modernom novcu.</li>
+<li>Drugo, kao i bilo koja tehnologija koja je tek izmišljena postojali
+su razni bagovi uključujući i spektakularno spori fajl sistem.</li>
+</ul>
+</section>
+<section id="efekti-xerox-star-a" class="slide level2">
+<h2>Efekti Xerox Star-a</h2>
+<ul>
+<li>Možda nije slučajnost da pošto je linija propala na tržištu, ključni
+ljudi koji su radili na ovom sistemu su promenili poslodavca i počeili
+da rade u malim, opskurnim softverskim firmama kao što je Microsoft i
+Apple.</li>
+<li>Ideje koje su razvijene preko NLS, Alta, i Star-a su se raširile
+kroz industriju i moderni koncept grafičkog korisničkog interfejsa
+baziranog na prozorima, ikonama, i nekim sredstvom za pokazivanje (miš,
+ekran osetljiv na dodir…) duguje jako puno ovom ranom poslu.</li>
+</ul>
+</section></section>
+<section>
+<section id="sistematizacija-komunikacija-sa-operativnim-sistemom"
+class="title-slide slide level1">
+<h1>Sistematizacija Komunikacija sa Operativnim Sistemom</h1>
+
+</section>
+<section id="programski-nivo-komunikacije-sa-os" class="slide level2">
+<h2>Programski nivo komunikacije sa OS</h2>
+<ul>
+<li>Komunikacija sa operativnim sistemom na programskom nivou se
+ostvaruje pozivanjem sistemskih operacija.</li>
+<li>Znači da bi se u toku izvršavanja korisničkog programa dobila neka
+usluga od operativnog sistema, potrebno je pozvati odgovarajuću
+sistemsku operaciju.</li>
+<li>Na primer, da bi se preuzeo znak sa tastature, u korisničkom
+programu je neophodno navesti poziv odgovarajuće sistemske
+operacije.</li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os---cli"
+class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS - CLI</h2>
+<ul>
+<li>Interaktivni nivo korišćenja operativnog sistema se ostvaruje pomoću
+komandi komandnog jezika.</li>
+<li>One, na primer, omogućuju rukovanje datotekama i procesima.</li>
+<li>Najjednostavniju komandu komandnog jezika predstavlja putanja
+izvršne datoteke.</li>
+<li>Kao operand ovakve komande se može, opet, javiti putanja datoteke,
+ako je komanda namenjena za rukovanje datotekama.</li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os---cli-1"
+class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS - CLI</h2>
+<ul>
+<li>Prema tome, na prethodni način oblikovana komanda započinje
+operatorom u obliku putanje izvršne datoteke, koja opisuje rukovanje, a
+završava operandom (ili operandima) u obliku putanja datoteka, kojima se
+rukuje. Tako:</li>
+<li><code>kopiraj godina1.txt godina2.txt</code></li>
+<li>Ili u slučaju Linux okruženja kroz bash
+<code>cp godina1.txt godina2.txt</code></li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os---cli-2"
+class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS - CLI</h2>
+<ul>
+<li>U ovom primeru se pretpostavlja da <strong>radni imenik</strong>
+obuhvata izvršnu datoteku sa imenom <code>kopiraj</code> i tekst
+datoteku <code>godina1.txt</code>.</li>
+<li>Rani imenik je nešto što je kombinacija programske i interaktivne
+interakcije: svaki proces mora da u svakom trenutku ima svoj radni
+imenik, i korisnik koji koristi računar preko komandnog interfejsa se
+uvek nalazi u nekom direktorijumu koji predstavlja kontekst naših
+operacija nad fajlovima.</li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os" class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS</h2>
+<ul>
+<li>Prethodno opisani način zadavanja komandi odgovara znakovnom
+komandnom jeziku.</li>
+<li>Komandni jezik može olakšati zadavanje komandi, ako omogući
+korisniku da operator komande bira u spisku operatora (menu), umesto da
+ga pamti i u celosti navodi.</li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os-1"
+class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS</h2>
+<ul>
+<li>Spisak operatora se prikazuje na ekranu, a izbor operatora se vrši
+pomoću namenskih dirki tastature ili miša.</li>
+<li>Nakon izbora operatora sledi, po potrebi, dijalog u kome korisnik
+navodi (ili opet bira) operand (operande) komande.</li>
+<li>Ovakvi komandni jezici se nazivaju grafički komandni jezici (menu
+driven user interface, graphical user interface - GUI).</li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os-2"
+class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS</h2>
+<ul>
+<li>Oni još više pojednostavljuju zadavanje komandi, ako korisniku
+omogućuju da ne bira operator, nego samo operande komandi.</li>
+<li>U ovom slučaju, izbor operanda se svodi na izbor nekog od imena
+datoteka, prikazanih na ekranu, a operator se podrazumeva ili na osnovu
+tipa odabrane datoteke, ili, eventualno, na osnovu upotrebljene namenske
+dirke.</li>
+</ul>
+</section>
+<section id="važnost-gui-ja-i-metafore" class="slide level2">
+<h2>Važnost GUI-ja i metafore</h2>
+<ul>
+<li>Svaki GUI mora nužno operisati sa nekakvom metaforom: grafičkim i
+konceptualnim jezikom koji mapira ponašanje računara na nekakve simbole
+kojima se grafički manipuliše.</li>
+<li>Ako ste ikada ‘prevukli’ fajl sa mesta na mesto, to znači da ste
+uspešno konceptualizovali računar preko metafore: grafička ikona menja
+fajl, ‘prozori’ interfejsa menjaju kontekste rada (različita mesta na
+računaru), a akt držanja pristinutog tastera miša (ili prsta na ekranu)
+je gest premeštanja.</li>
+</ul>
+</section>
+<section id="interaktivni-nivo-komunikacije-sa-os-3"
+class="slide level2">
+<h2>Interaktivni nivo komunikacije sa OS</h2>
+<ul>
+<li>U svakom slučaju, zadatak komandnog jezika je da omogući korisniku
+da zada komandu, koja precizno određuje i vrstu rukovanja i objekat
+rukovanja, a zadatak interpretiranja komande je da pokrene proces, u
+okviru čije aktivnosti usledi rukovanje, zatraženo komandom.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Izgled, način rada i mogućnosti interpretera znakovnog komandnog
+jezika (command language interpreter, shell) zavise od ciljeva, koje
+komandni jezik treba da ostvari.</li>
+<li>Ciljevi znakovnih komandnih jezika obuhvataju:
+<ul>
+<li>omogućavanje izvršavanja pojedinih (korisničkih) programa</li>
+<li>omogućavanje kombinovanja izvršavanja više (korisničkih)
+programa</li>
+<li>omogućavanje pravljenja komandnih datoteka (command file, shell
+script).</li>
+</ul></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-1" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Interpreter znakovnog komandnog jezika ostvaruje prethodne ciljeve
+tako što sa standardnog ulaza prima niz znakova, koji obrazuju komandu,
+prepoznaje u tom nizu znakova operator komande (i, eventualno, njene
+operande) i preduzima zahtevanu akciju.</li>
+<li>Rezultat svoje akcije ovaj interpreter prikazuje na standardnom
+izlazu.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-2" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Prilikom preduzimanja zahtevane akcije, interpreter znakovnog
+komandnog jezika se oslanja na sistemske operacije.</li>
+<li>Pri tome, on koristi delove komandi, odnosno njen operator i njene
+operande, kao argumente sistemskih operacija.</li>
+<li>Na primer, do izvršavanja pojedinih korisničkih programa dolazi tako
+što interpreter znakovnog komandnog jezika poziva sistemsku operaciju
+stvaranja procesa, a kao njene argumente upotrebi operator i operande
+komande, odnosno putanju izvršne datoteke i putanje datoteka sa
+obrađivanim podacima.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-3" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Ovi argumenti su namenjeni stvaranom procesu.</li>
+<li>Tako, na primer, kod programskog jezika C parametri funkcije main()
+omogućuju preuzimanje broja argumenata (argc) iz komandne linije, kao i
+stringova pojedinih argumenata (argv), jer su ovi smešteni na stek
+procesa prilikom njegovog stvaranja.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-4" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Interpreter znakovnog komandnog jezika obavlja obradu znakova
+komande,pre nego što ih iskoristi kao argumente neke sistemske
+operacije.</li>
+<li>Zahvaljujući tome, u okviru operanada komandi se mogu javiti
+specijalni znakovi(magic character, wild cards), kao što je, na primer,
+znak *.Njegova upotreba je vezana, pre svega, za imena datoteka i
+namenjena je za skraćeno označavanje grupa datoteka.</li>
+<li>Tako na primer: <code>*.obj</code> označava sve objektne datoteke u
+radnom imeniku a <code>d*1.txt</code> označava sve tekst datoteke u
+radnom imeniku, čiji prvi deo imena započinju znakom d, a završava
+cifrom 1.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-5" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Zahvaljujući obradi znakova komande, moguće je interpreteru
+znakovnog komandnog jezika saopštiti i da preusmeri (redirect)
+standardni ulaz i standardni izlaz sa tastature i ekrana na proizvoljno
+odabrane datoteke.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-6" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Ovo je važno za pozadinske procese, koji nisu u interakciji sa
+korisnikom.</li>
+<li>Zahvaljujući preusmeravanju, pozadinski proces ne ometa interaktivni
+rad korisnika, jer, umesto tastature i ekrana, koristi odabrane
+datoteke.</li>
+<li>Međutim, da bi se korisnik upozorio na greške u toku aktivnosti
+pozadinskog procesa, uz standardni izlaz se uvodi i standardni izlaz
+greške.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-7" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Pošto je standardni izlaz greške namenjen, pre svega, za
+prikazivanje poruka o greškama, kao podrazumevajući standardni izlaz
+greške služi specijalna datoteka, koja odgovara ekranu.</li>
+<li>Ova datoteka se otvara za vreme stvaranja procesa, a kao njen indeks
+za tabelu otvorenih datoteka može da služi vrednost 2.</li>
+<li>I standardni izlaz greške se može preusmeriti na proizvoljnu
+datoteku, čiji sadržaj tada ukazuje na eventualne greške u toku
+aktivnosti pozadinskog procesa.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-8" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Izvor:
+https://upload.wikimedia.org/wikipedia/commons/7/70/Stdstreams-notitle.svg
+<img data-src="./img//b00490d1-c10a-4a61-8e01-ff1263432042.png" /></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-9" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Uobičajeno je da preusmeravanje standardnog ulaza najavljuje znak
+&lt;, a da preusmeravanje standardnog izlaza (kao i standardnog izlaza
+greške) najavljuje znak &gt;. Tako, na primer, komanda:</li>
+<li><code>kompiliraj &lt; program.c &gt; program.obj</code></li>
+<li>saopštava interpreteru znakovnog komandnog jezika da stvori proces
+na osnovu izvršne datoteke kompiliraj.bin, pri čemu kao standardni ulaz
+procesa služi datoteka program.c, a kao njegov standardni izlaz datoteka
+program.obj.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-10" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>U ovom primeru ekran i dalje služi kao standardni izlaz greške.</li>
+<li>Izvršavanje prethodne komande omogućuje kompilaciju C programa,
+sadržanog u datoteci program.c.</li>
+<li>Rezultat kompilacije se smešta u datoteku program.obj, a eventualne
+poruke o greškama kompilacije se prikazuju na ekranu.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-11" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Preusmeravanje standardnog ulaza i izlaza predstavlja osnovu za
+kombinovanje izvršavanja više korisničkih programa.</li>
+<li>Važnost pomenutog kombinovanja se može pokazati na primeru
+uređivanja (sortiranja) reči iz nekog rečnika po kriterijumu
+rimovanja.</li>
+<li>Nakon sortiranja reči po ovom kriterijumu, sve reči, koje se rimuju,
+nalaze se jedna uz drugu.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-12" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Umesto pravljenja posebnog programa za sortiranje reči po
+kriterijumu rimovanja, jednostavnije je napraviti program za obrtanje
+redosleda znakova u rečima (tako da prvi i poslednji znak zamene svoja
+mesta u reči, da drugi i pretposlednji znak zamene svoja mesta u reči i
+tako redom) i kombinovati izvršavanje ovog programa sa izvršavanjem
+postojećeg programa za sortiranje:</li>
+<li><code>obrni &lt; recnik.txt &gt; obrnuti_recnik.txt</code></li>
+<li><code>sortiraj &lt; obrnuti_recnik.txt &gt; sortirani_obrnuti_recnik.txt</code></li>
+<li><code>obrni &lt; sortirani_obrnuti_recnik.txt &gt; rime.txt</code></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-13" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Umesto preusmeravanja standardnog ulaza i standardnog izlaza, moguće
+je nadovezati standardni izlaz jednog procesa na standardni ulaz drugog
+procesa i tako obrazovati tok procesa(pipe)</li>
+<li>Nadovezivanje u tok se označava pomoću znaka <code>|</code>.</li>
+<li>Za prethodni primer ovakav tok bi izgledao
+<code>obrni&lt;recnik.txt | sortiraj | obrni&gt; rime.txt</code></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-14" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Razmena podataka između dva procesa, koji su povezani u tok, se
+ostvaruje posredstvom posebne specijalne datoteke.</li>
+<li>Njoj odgovara bafer u radnoj memoriji.</li>
+<li>Ova baferovana specijalna datoteka služi prvom od ovih procesa kao
+standardni izlaz, a drugom od njih kao standardni ulaz.</li>
+<li>Znači, prvi proces samo piše u ovu datoteku, a drugi samo čita iz
+nje.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-15" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Prilikom obrazovanja toka procesa, interpreter znakovnog komandnog
+jezika stvara procese, koji se povezuju u tok.</li>
+<li>Pri tome on koristi istu posebnu specijalnu datoteku kao standardni
+izlaz i ulaz za svaki od parova ovih procesa.</li>
+<li>Zatim interpreter znakovnog komandnog jezika čeka na kraj aktivnosti
+poslednjeg od ovih procesa.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-16" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Pozadinski procesi se razlikuju od običnih (interaktivnih) procesa
+po tome što interpreter znakovnog komandnog jezika, nakon stvaranja
+pozadinskog procesa, ne čeka kraj njegove aktivnosti, nego nastavlja
+interakciju sa korisnikom.</li>
+<li>Zato su pozadinski procesi u principu neinteraktivni.</li>
+<li>Na primer, komanda:</li>
+<li><code>kompiliraj &lt; program.c &gt; program.obj &amp;</code></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-17" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Omogućuje stvaranje pozadinskog procesa, koji obavlja kompilaciju
+programa, sadržanog u datoteci program.c, i rezultat kompilacije smešta
+u datoteku program.obj, a eventualne greške u kompilaciji prikazuje na
+ekranu.</li>
+<li>U prethodnom primeru znak &amp; sa kraja komande je naveo
+interpreter znakovnog komandnog jezika na stvaranje pozadinskog
+procesa.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-18" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Svaka komanda, upućena interpreteru znakovnog komandnog jezika, ne
+dovodi do stvaranja procesa.</li>
+<li>Komande, koje se često koriste, pa je važno da budu brzo obavljene,
+interpreter znakovnog komandnog jezika obavlja sam.</li>
+<li>Za ostale komande, za koje se stvaraju procesi, interpreter
+znakovnog komandnog jezika čeka kraj aktivnosti stvorenog procesa da bi
+od njega dobio, kao povratnu informaciju, završno stanje stvorenog
+procesa.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-19" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Ovo stanje se obično kodira celim brojem.</li>
+<li>Ako interpreter znakovnog komandnog jezika protumači ovaj broj kao
+logičku vrednost (0 - tačno, različito od 0 - netačno), tada on može da
+podrži uslovno izvršavanje programa.</li>
+<li>Ovo znači da bilo koja komanda može da se tretira kao logički uslov
+i da se koristi u logičkim izlazima (recimo kroz &amp;&amp; ili ||) ili
+kao uslov komande <code>if</code> za uslovno izvršavanje komandi.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-20" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Pored prethodno opisane komande za uslovno izvršavanje programa,
+interpreteri znakovnih komandnih jezika podržavaju komandu za
+ponavljanje izvršavanja programa, ali i druge komande, tipične za
+procedurne programske jezike, koje omogućuju rukovanje promenljivim,
+konstantama, ulazom, izlazom i slično.</li>
+<li>To dozvoljava pravljenje komandnih datoteka (shell scripts) čija su
+preteče <code>runcom</code> fajlovi iz grubo govoreći najstarijeg
+time-share operativnog sistema.</li>
+<li>One opisuju okolnosti pod kojima se izvršavaju korisnički programi,
+a sadržaj komandne datoteke preuzima na interpretiranje interpreter
+znakovnog komandnog jezika.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-21" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Zato komandne datoteke imaju poseban tip, da bi ih interpreter
+znakovnog komandnog jezika mogao prepoznati.</li>
+<li>Zahvaljujući tome, ime svake komandne datoteke, uostalom, kao i ime
+svake izvršne datoteke, predstavlja ispravnu komandu znakovnog komandnog
+jezika.</li>
+<li>Iako broj i vrste ovakvih komandi nisu ograničeni, jer zavise samo
+od kreativnosti i potreba korisnika, ipak je moguće napraviti njihovu
+klasifikaciju i navesti neke neizbežne grupe komandi.</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-22" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Najgrublja podela komandi je na:
+<ul>
+<li>korisničke komande</li>
+<li>administratorske komande</li>
+</ul></li>
+<li>Korisničke komande, između ostalog, omogućuju:
+<ul>
+<li>rukovanje datotekama</li>
+<li>rukovanje imenicima</li>
+<li>rukovanje procesima</li>
+<li>razmenu poruka između korisnika</li>
+</ul></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-23" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Standardne komande za rukovanje datotekama omogućuju:</li>
+<li>izmenu imena, atributa datoteke i pomeranje (<code>mv</code>)</li>
+<li>poređenje sadržaja datoteka (<code>diff</code>)</li>
+<li>kopiranje datoteka (<code>cp</code>)</li>
+<li>uništenje datoteka (<code>rm</code>)</li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-24" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>U komande za rukovanje imenicima spadaju:
+<ul>
+<li>komande za stvaranje i uništenje imenika (<code>mkdir</code>)</li>
+<li>komanda za promenu radnog imenika (<code>cd</code>)</li>
+<li>komanda za pregledanje sadržaja imenika (imena datoteka i imena
+imenika, sadržanih u njemu) (<code>ls</code>)</li>
+<li>komande za izmenu imena, lokacije i ostalih atributa imenika.
+(<code>mv</code>)</li>
+</ul></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-25" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>Administratorske komande omogućuju:
+<ul>
+<li>pokretanje i zaustavljanje rada računara,</li>
+<li>spašavanje (backup) i vraćanje (restore) datoteka rukovanje
+vremenom</li>
+<li>rukovanje vremenom</li>
+<li>sabijanje (compaction) datoteka</li>
+<li>ažuriranje podataka o korisnicima računara i njihovim pravima</li>
+<li>generisanje izveštaja o korišćenju računara (o korišćenju
+procesorskog vremena ili o korišćenju prostora na disku)</li>
+</ul></li>
+</ul>
+</section>
+<section id="znakovni-komandni-jezici-26" class="slide level2">
+<h2>Znakovni komandni jezici</h2>
+<ul>
+<li>rukovanje konfiguracijom računara (određivanje načina rada uređaja i
+programa koji ulaze u njegov sastav</li>
+<li>proveru ispravnosti rada računara</li>
+<li>pripremu diskova za korišćenje (ovo obuhvata pronalaženje oštećenih
+blokova i njihovo isključivanje iz upotrebe, pronalaženje izgubljenih
+blokova i njihovo uključivanje u evidenciju slobodnih blokova,
+formiranje skupa datoteka na disku i njegovo uključivanje u skup
+datoteka računara).</li>
+</ul>
+</section></section>
+<section>
+<section id="pitanja" class="title-slide slide level1">
+<h1>Pitanja</h1>
+
+</section>
+<section id="pitanja-1" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Od čega se sastoje komande znakovnog komandnog jezika?</li>
+<li>Kako se zadaju komande grafičkih komandnih jezika?</li>
+<li>Šta su ciljevi znakovnih komandnih jezika?</li>
+<li>Šta omogućuju znakovni komandni jezici?</li>
+<li>Šta omogućuje preusmeravanje?</li>
+<li>Čemu služi pipe?</li>
+</ul>
+</section>
+<section id="pitanja-2" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Čemu služi baferovana specijalna datoteka?</li>
+<li>Šta karakteriše pozadinske procese?</li>
+<li>Šta karakteriše komandne datoteke?</li>
+<li>Šta omogućuju korisničke komande?</li>
+<li>Šta omogućuju administratorske komande?</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

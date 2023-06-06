@@ -1,0 +1,8 @@
+.reveal h1 { font-size: 1.8em;}
+.reveal h2 { font-size: 1.2em; }
+.reveal p { font-size: 0.85em;}
+.reveal ul { font-size: 0.75em;}
+.reveal ol { font-size: 0.75em;}
+.reveal td { font-size: 0.6em !important;}
+.reveal img { max-width: 70vw !important; max-height: 70vh !important;}
+.reveal .sourceCode {min-width: 65vw !important; overflow: visible;}
