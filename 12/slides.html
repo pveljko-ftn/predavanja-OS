@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Veljko Petrović">
+  <title>Procesi</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="slides.css"/>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Procesi</h1>
+  <p class="author">Veljko Petrović</p>
+  <p class="date">2023-06</p>
+</section>
+
+<section>
+<section id="sloj-za-rukovanje-procesima"
+class="title-slide slide level1">
+<h1>Sloj za Rukovanje Procesima</h1>
+
+</section>
+<section id="o-prezentaciji" class="slide level2">
+<h2>O prezentaciji</h2>
+<ul>
+<li>Ovo je već pređeno kroz druga predavanja, ali ovo služi kao obnova i
+sistemarizacija već pređenog</li>
+<li>Tematika jesu procesi u operativnom sistemu: budući da smo ih
+pomenuli stotinama puta i da smo ih i pravili od nule, sve bi ovo
+trebalo da bude poznato</li>
+</ul>
+</section>
+<section id="sloj-os-za-rukovanje-procesima" class="slide level2">
+<h2>Sloj OS za rukovanje procesima</h2>
+<ul>
+<li>Osnovni zadaci sloja za rukovanje procesima su:
+<ul>
+<li>stvaranje procesa</li>
+<li>uništenje procesa.</li>
+</ul></li>
+<li>Stvaranje procesa obuhvata:
+<ul>
+<li>stvaranje slike procesa</li>
+<li>stvaranje deskriptora procesa</li>
+<li>pokretanje aktivnosti procesa</li>
+</ul></li>
+<li>Uništenje procesa obuhvata:
+<ul>
+<li>zaustavljanje aktivnosti procesa</li>
+<li>uništenje slike procesa</li>
+<li>uništenje deskriptora procesa</li>
+</ul></li>
+</ul>
+</section>
+<section id="osnovni-zadaci-sloja-za-rukovanje-procesima"
+class="slide level2">
+<h2>Osnovni zadaci sloja za rukovanje procesima</h2>
+<ul>
+<li>Pored sistemskih operacija stvaranja i uništenja procesa, potrebne
+su i sistemske operacije za izmenu atributa procesa, na primer, za
+izmenu radnog imenika (direktorijuma) procesa.</li>
+<li>Slika procesa obuhvata niz lokacija radne memorije sa uzastopnim
+(logičkim) adresama. Ona sadrži:
+<ul>
+<li>izvršavane mašinske naredbe</li>
+<li>promenljive</li>
+<li>stek</li>
+</ul></li>
+</ul>
+</section>
+<section id="šema-rasporeda-u-memoriji" class="slide level2">
+<h2>Šema rasporeda u memoriji</h2>
+<p><img
+data-src="./img//d3683ee0-1e8e-493b-86af-2829add6ad8b.png" /></p>
+</section>
+<section id="raspored-u-memoriji" class="slide level2">
+<h2>Raspored u memoriji</h2>
+<ul>
+<li>Slika procesa počinje od lokacije radne memorije sa najnižom adresom
+→ mašinske naredbe, a završava na lokaciji radne memorije sa najvišom
+adresom - stek se puni u smeru nižih adresa</li>
+<li>Iza mašinskih naredbi dolaze statičke promenljive (inicijalizovane,
+pa neinicijalizovane).</li>
+<li>Između ovih promenljivih i steka se nalazi slobodna radna memorija
+procesa.</li>
+</ul>
+</section>
+<section id="osnovni-zadaci-sloja-za-rukovanje-procesima-1"
+class="slide level2">
+<h2>Osnovni zadaci sloja za rukovanje procesima</h2>
+<ul>
+<li>Radna memorija procesa je na raspolaganju procesu za:
+<ul>
+<li>širenje (punjenje) steka</li>
+<li>za stvaranje dinamičkih promenljivih (heap)</li>
+</ul></li>
+<li>Svi dinamički zahtevi za zauzimanjem radne memorije, postavljeni u
+toku aktivnosti procesa, se zadovoljavaju samo na račun slobodne radne
+memorije procesa.</li>
+<li>Ovakva organizacija slike procesa uslovljava da proces prvo ugrozi
+svoju aktivnost, kada njegovi zahtevi za radnom memorijom nadmaše
+njegovu raspoloživu slobodnu radnu memoriju (preklapanja steka i
+promenljvih dovodi do fatalnog ishoda po aktivnost procesa)</li>
+</ul>
+</section>
+<section id="osnovni-zadaci-sloja-za-rukovanje-procesima-2"
+class="slide level2">
+<h2>Osnovni zadaci sloja za rukovanje procesima</h2>
+<ul>
+<li>Pored slike, za aktivnost procesa je važan i deskriptor procesa,
+koji sadrži atribute procesa.</li>
+<li>Ovi atributi karakterišu aktivnost procesa. Oni obuhvataju:
+<ul>
+<li>stanje procesa (“spreman”, “aktivan”, “čeka”)</li>
+<li>sadržaje procesorskih registara (zatečene u njima pre poslednjeg
+preključivanja procesora sa procesa)</li>
+<li>numeričku oznaku vlasnika procesa</li>
+<li>oznaku procesa stvaraoca</li>
+<li>trenutak pokretanja aktivnosti procesa</li>
+</ul></li>
+</ul>
+</section>
+<section id="osnovni-zadaci-sloja-za-rukovanje-procesima-3"
+class="slide level2">
+<h2>Osnovni zadaci sloja za rukovanje procesima</h2>
+<ul>
+<li>ukupno trajanje aktivnosti procesa (odnosno, ukupno vreme
+angažovanja procesora)</li>
+<li>podatke o slici procesa (njenoj veličini i njenom položaju u radnoj
+i masovnoj memoriji)</li>
+<li>podatke o datotekama koje proces koristi</li>
+<li>podatak o radnom imeniku procesa</li>
+<li>razne podatke neophodne za upravljanje aktivnošću procesa (poput
+prioriteta procesa ili položaja sistemskog steka procesa, koga koristi
+operativni sistem u toku obavljanja sistemskih operacija).</li>
+</ul>
+</section>
+<section id="sistemske-operacije-za-stvaranje-i-uništenje-procesa"
+class="slide level2">
+<h2>Sistemske operacije za stvaranje i uništenje procesa</h2>
+<ul>
+<li>Za stvaranje procesa potrebno je pristupiti odgovarajućoj izvršnoj
+datoteci sa inicijalnom slikom procesa. Ona sadrži:
+<ul>
+<li>mašinske naredbe</li>
+<li>početne vrednosti statičkih promenljivih</li>
+<li>podatak o veličini delova slike procesa.</li>
+</ul></li>
+<li>Takođe, potrebno je zauzeti deskriptor procesa, kao i dovoljno
+veliku zonu radne memorije za sliku procesa.</li>
+<li>Sve ovo spada u nadležnost sistemske operacije stvaranja procesa
+(<code>fork()</code> i <code>exec()</code>).</li>
+<li>Ovu operaciju poziva proces stvaralac i ona se obavlja u toku
+njegove aktivnosti.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-za-stvaranje-i-uništenje-procesa-1"
+class="slide level2">
+<h2>Sistemske operacije za stvaranje i uništenje procesa</h2>
+<ul>
+<li>U okviru poziva sistemske operacije stvaranja procesa kao argument
+se navodi putanja odgovarajuće izvršne datoteke.</li>
+<li>Svi atributi stvaranog procesa ne moraju biti navedeni u okviru
+poziva sistemske operacije stvaranja procesa, jer se jedan njihov deo
+nasleđuje iz deskriptora procesa stvaraoca:
+<ul>
+<li>numerička oznaka vlasnika procesa</li>
+<li>podatak o radnom imeniku procesa</li>
+<li>njegov prioritet</li>
+</ul></li>
+</ul>
+</section>
+<section id="sistemske-operacije-za-stvaranje-i-uništenje-procesa-2"
+class="slide level2">
+<h2>Sistemske operacije za stvaranje i uništenje procesa</h2>
+<ul>
+<li>Za uništenje procesa potrebno je osloboditi njegov deskriptor i zonu
+radne memorije sa njegovom slikom što spada u nadležnost sistemske
+operacije uništenja procesa (<code>exit()</code>).</li>
+<li>Nju automatski poziva proces na kraju svoje aktivnosti, čime izaziva
+svoje samouništenje.</li>
+<li>Uništenje procesa se završava preključivanjem procesora sa
+uništavanog na neki od spremnih procesa.</li>
+</ul>
+</section>
+<section id="sistemske-operacije-za-stvaranje-i-uništenje-procesa-3"
+class="slide level2">
+<h2>Sistemske operacije za stvaranje i uništenje procesa</h2>
+<ul>
+<li>U okviru operacije uništenja procesa uputno je predvideti argument
+kojim proces saopštava svoje završno stanje, odnosno informaciju da li
+je aktivnost uništavanog procesa bila uspešna ili ne.</li>
+<li>Da bi proces stvaralac mogao iskoristiti ovakvu povratnu informaciju
+od stvorenog procesa, on mora pozivom posebne sistemske operacije
+(<code>wait()</code>) da zatraži zaustavljanje svoje aktivnosti i tako
+omogući preključivanje procesora na stvarani proces.</li>
+</ul>
+</section>
+<section id="zamena-slika-procesa" class="slide level2">
+<h2>Zamena slika procesa</h2>
+<ul>
+<li>Swapovanje procesa je procedura gde se (delovi) nekog procesa koji
+je pokrenut izbacuju iz fizičke memorije zato što se ne smatra da će
+biti pomenuti: dosta smo o ovome pričali kada smo pričali o
+<em>paging</em> tehnici i virtuelnoj memoriji.</li>
+<li>U nadležnosti ove operacije zamene (swap) je dugoročno
+raspoređivanje (long term scheduling), u okviru koga se odabiraju
+stranice koje se izbacuju i potencijalno (prefetch) ubacuju.</li>
+<li>Važno je uočiti da se dugoročno raspoređivanje razlikuje od običnog
+ili kratkoročnog raspoređivanja (short term scheduling), koje među
+spremnim procesima odabira proces na koga se preključuje procesor.</li>
+</ul>
+</section>
+<section id="rukovanje-nitima" class="slide level2">
+<h2>Rukovanje nitima</h2>
+<ul>
+<li>Rukovanje nitima može, ali i ne mora, biti u nadležnosti sloja za
+rukovanje procesima.</li>
+<li>Kada je rukovanje nitima povereno sloju za rukovanje procesima, tada
+operativni sistem nudi sistemske operacije za rukovanje nitima, koje
+omogućuju stvaranje, uništavanje i sinhronizaciju niti.</li>
+<li>U ovom slučaju, deskriptori i sistemski stek niti se nalaze u
+sistemskom prostoru, dok se sopstveni stek niti nalazi u korisničkom
+prostoru (unutar slike procesa).</li>
+</ul>
+</section>
+<section id="rukovanje-nitima-1" class="slide level2">
+<h2>Rukovanje nitima</h2>
+<ul>
+<li>U slučaju kada rukovanje nitima nije u nadležnosti operativnog
+sistema, brigu o nitima potpuno preuzima konkurentna biblioteka.</li>
+<li>Pošto ona pripada slici procesa, rukovanje nitima u ovom slučaju se
+potpuno odvija u korisničkom prostoru, u kome se nalaze i deskriptori
+niti, kao i stekovi niti.</li>
+<li>Osnovna prednost rukovanja nitima van operativnog sistema (ovo se
+još zovu i “zelene niti”) je efikasnost, jer su pozivi potprograma
+konkurentne biblioteke brži (kraći) od poziva sistemskih operacija.</li>
+</ul>
+</section>
+<section id="rukovanje-nitima-2" class="slide level2">
+<h2>Rukovanje nitima</h2>
+<ul>
+<li>Ove niti se ne <em>izvršavaju</em> brže, štaviše tipično se
+izvršavaju <em>sporije</em></li>
+<li>Ono što ih čini bržim jeste to što njihovo stvaranje, uništavanje,
+itd. zahteva manje vremena i memorije</li>
+<li>Generalno pravilo jeste da se sistemske niti koriste kada želite
+paralelizam, a ne-sistemske preferiraju kada je u pitanju asinhron
+proces koji obrađuje ulaz i izlaz.</li>
+</ul>
+</section>
+<section id="rukovanje-nitima-3" class="slide level2">
+<h2>Rukovanje nitima</h2>
+<ul>
+<li>Ali, kada operativni sistem ne rukuje nitima, tada poziv blokirajuće
+sistemske operacije iz jedne niti dovodi do zaustavljanja aktivnosti
+procesa kome ta nit pripada, jer operativni sistem pripisuje sve pozive
+sistemskih operacija samo procesima, pošto ne registruje postojanje
+niti.</li>
+<li>Na taj način se sprečava konkurentnost unutar procesa, jer
+zaustavljanje aktivnosti procesa sprečava aktivnost njegovih spremnih
+niti.</li>
+<li>Zato savremeni operativni sistemi podržavaju rukovanje nitima. Tako,
+u okviru POSIX (Portable Operating System Interface) standarda (IEEE
+1003 ili ISO/IEC 9945) postoji deo pthread (POSIX threads) koji je
+posvećen nitima.</li>
+<li>Ako ipak želimo ne-sistemsko rukovanje onda okruženje koje se
+koristi mora vrlo pažljivo koristiti (ispod haube) isključivo
+ne-blokirajuće operacije i uspostavljati preključivanje među nitima koje
+je efektno.</li>
+</ul>
+</section>
+<section id="osnove-komunikacije-između-procesa" class="slide level2">
+<h2>Osnove komunikacije između procesa</h2>
+<ul>
+<li>Komunikacija između procesa može biti, kroz POSIX:</li>
+<li>Signal</li>
+<li>Baferi (Pipe, FIFO, Message Queue)</li>
+<li>Deljena memorija</li>
+<li>Semafori</li>
+</ul>
+</section>
+<section id="signali" class="slide level2">
+<h2>Signali</h2>
+<ul>
+<li>Signali su softverski prekidi koji označavaju da se u sistemu desio
+nekakav događaj.</li>
+<li>Ponekad ih generišu drugi procesi, ponekad sam operativni sistem, a
+ponekad korisnik direktno.</li>
+<li>Signali imaju različito značenje</li>
+<li>Može se dobiti kompletna lista iz operativnog sistema</li>
+</ul>
+</section>
+<section id="signali-1" class="slide level2">
+<h2>Signali</h2>
+<p><img data-src="img/signali.png" /></p>
+</section>
+<section id="reakcija-na-signale" class="slide level2">
+<h2>Reakcija na signale</h2>
+<ul>
+<li>Svaki tip signala ima jednu podrazumevanu akciju iz sledećeg skupa:
+<ul>
+<li><strong>Term</strong>
+<ul>
+<li>Proces koji dobija signal se terminira.</li>
+</ul></li>
+<li><strong>Ign</strong>
+<ul>
+<li>Proces koji dobija signal ga ignoriše.</li>
+</ul></li>
+<li><strong>Core</strong>
+<ul>
+<li>Podrazumevana akcija jeste da se terminira proces i da se u fajl
+izbaci sva memorija procesa.</li>
+</ul></li>
+<li><strong>Stop</strong>
+<ul>
+<li>Proces se pauzira.</li>
+</ul></li>
+<li><strong>Cont</strong>
+<ul>
+<li>Proces se nastavi ako je pauziran.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="namena-signala" class="slide level2">
+<h2>Namena signala</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Ime signala</th>
+<th>Broj signala</th>
+<th>Reakcija</th>
+<th>Svrha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SIGTERM</td>
+<td>15</td>
+<td>Term</td>
+<td>Signal za terminaciju</td>
+</tr>
+<tr class="even">
+<td>SIGUSR1</td>
+<td>10</td>
+<td>Term</td>
+<td>Rezervisan za korisnika.</td>
+</tr>
+<tr class="odd">
+<td>SIGUSR2</td>
+<td>12</td>
+<td>Term</td>
+<td>Rezervisan za korisnika.</td>
+</tr>
+<tr class="even">
+<td>SIGCHLD</td>
+<td>17</td>
+<td>Ign</td>
+<td>Dete-proces je prekinut.</td>
+</tr>
+<tr class="odd">
+<td>SIGCONT</td>
+<td>18</td>
+<td>Cont</td>
+<td>Nastavi izvršavanje.</td>
+</tr>
+<tr class="even">
+<td>SIGSTOP</td>
+<td>19</td>
+<td>Stop</td>
+<td>Pauziraj izvršavanje.</td>
+</tr>
+<tr class="odd">
+<td>SIGSTP</td>
+<td>20</td>
+<td>Stop</td>
+<td>Pauziraj izvršavanje (pokrenut sa terminala)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="namena-signala-1" class="slide level2">
+<h2>Namena signala</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Ime signala</th>
+<th>Broj signala</th>
+<th>Reakcija</th>
+<th>Svrha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SIGBUS</td>
+<td>7</td>
+<td>Core</td>
+<td>Greška magistrale</td>
+</tr>
+<tr class="even">
+<td>SIGPOLL</td>
+<td>29</td>
+<td>Term</td>
+<td>Sinonim za SIGIO</td>
+</tr>
+<tr class="odd">
+<td>SIGPROF</td>
+<td>27</td>
+<td>Term</td>
+<td>Tajmer za profiliranje je istekao</td>
+</tr>
+<tr class="even">
+<td>SIGSYS</td>
+<td>31</td>
+<td>Core</td>
+<td>Greška u sistemskom pozivu.</td>
+</tr>
+<tr class="odd">
+<td>SIGTRAP</td>
+<td>5</td>
+<td>Core</td>
+<td>Breakpoint dostignut.</td>
+</tr>
+<tr class="even">
+<td>SIGURG</td>
+<td>23</td>
+<td>Ign</td>
+<td>Hitna reakcija na socket-u.</td>
+</tr>
+<tr class="odd">
+<td>ISGVTALRM</td>
+<td>26</td>
+<td>Term</td>
+<td>Virtualni alarm</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="namena-signala-2" class="slide level2">
+<h2>Namena signala</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Ime signala</th>
+<th>Broj signala</th>
+<th>Reakcija</th>
+<th>Svrha</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SIGIOT</td>
+<td>6</td>
+<td>Core</td>
+<td>Isto što i SIGABRT.</td>
+</tr>
+<tr class="even">
+<td>SIGIO</td>
+<td>29</td>
+<td>Term</td>
+<td>I/O sada moguć.</td>
+</tr>
+<tr class="odd">
+<td>SIGPWR</td>
+<td>30</td>
+<td>Term</td>
+<td>Greška sa napajanjem.</td>
+</tr>
+<tr class="even">
+<td>SIGTTIN</td>
+<td>21</td>
+<td>Stop</td>
+<td>Komunikacija sa terminalom za poz. proces</td>
+</tr>
+<tr class="odd">
+<td>SIGTTOU</td>
+<td>22</td>
+<td>Stop</td>
+<td>Komunikacija sa terminalom za poz. proces</td>
+</tr>
+<tr class="even">
+<td>SIGXCPU</td>
+<td>24</td>
+<td>Core</td>
+<td>Potrošeno svo CPU vreme.</td>
+</tr>
+<tr class="odd">
+<td>SIGXFSZ</td>
+<td>25</td>
+<td>Core</td>
+<td>Potrošeno ograničenje veličine fajla.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="slanje-signala" class="slide level2">
+<h2>Slanje signala</h2>
+<p><img
+data-src="./img//7bbc2667-6718-43cc-a541-1158454ecf63.png" /></p>
+</section>
+<section id="slanje-signala-1" class="slide level2">
+<h2>Slanje signala</h2>
+<p><img
+data-src="./img//20178449-3382-4784-8ce1-b03e1de11ff7.png" /></p>
+</section>
+<section id="slanje-signala-2" class="slide level2">
+<h2>Slanje signala</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;signal.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">999999999</span><span class="op">;</span> i<span class="op">++</span> <span class="op">){</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span><span class="op">(</span>i <span class="op">==</span> <span class="dv">4817</span><span class="op">)</span> kill<span class="op">(</span>getpid<span class="op">(),</span> SIGTERM<span class="op">);</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="reagovanje-na-signal" class="slide level2">
+<h2>Reagovanje na signal</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;signal.h&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> signalCallback<span class="op">(</span><span class="dt">int</span> sig<span class="op">){</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Blokiram TERM: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> sig<span class="op">);</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="reagovanje-na-signal-1" class="slide level2">
+<h2>Reagovanje na signal</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">()</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    signal<span class="op">(</span>SIGTERM<span class="op">,</span> signalCallback<span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">999999999</span><span class="op">;</span> i<span class="op">++</span> <span class="op">){</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span><span class="op">(</span>i <span class="op">==</span> <span class="dv">4817</span><span class="op">)</span> kill<span class="op">(</span>getpid<span class="op">(),</span> SIGTERM<span class="op">);</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span><span class="op">(</span>i <span class="op">==</span> <span class="dv">9044</span><span class="op">)</span> kill<span class="op">(</span>getpid<span class="op">(),</span> SIGKILL<span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="baferi" class="slide level2">
+<h2>Baferi</h2>
+<ul>
+<li>Bafer je opšte ime za nekoliko metoda za komunikaciju.</li>
+<li>Ovde ćemo pogledati malo bolje ‘pipe’ i ‘fifo’ mehanizam koji
+funkcioniše kao fajl koji, kad se napravi, ima dva deskriptora: iz
+jednog se čita, a u drugi piše.</li>
+<li>Više procesa može da deli ove, sa tim da ako jedan piše, drugi ne
+može. To se rešava tako što svaki proces zatvori ono što nije
+neophodno.</li>
+<li>Pipe živi koliko i jedan proces, FIFO je permanentan i ima ime.</li>
+</ul>
+</section>
+<section id="pipeinclude" class="slide level2">
+<h2>Pipe—Include</h2>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;sys/types.h&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;cstring&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std</span></code></pre></div>
+</section>
+<section id="pipe-main" class="slide level2">
+<h2>Pipe Main</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> pipeD<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> pipeR<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">pid_t</span> pid<span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> inbuf<span class="op">[</span><span class="dv">256</span><span class="op">];</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> outbuf<span class="op">[</span><span class="dv">256</span><span class="op">];</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> pipe<span class="op">(</span>pipeD<span class="op">);</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>status <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">){</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="st">&quot;Baffer nije napravljen.&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pipe-main-1" class="slide level2">
+<h2>Pipe Main</h2>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>    status <span class="op">=</span> pipe<span class="op">(</span>pipeR<span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>status <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">){</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="st">&quot;Baffer nije napravljen.&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    pid <span class="op">=</span> fork<span class="op">();</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>pid <span class="op">==</span> <span class="dv">0</span><span class="op">){</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">//dete proces</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span><span class="cf">else</span><span class="op">{</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">//roditelj proces</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="pipedete-proces" class="slide level2">
+<h2>Pipe—Dete proces</h2>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>pid <span class="op">==</span> <span class="dv">0</span><span class="op">){</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    close<span class="op">(</span>pipeR<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    close<span class="op">(</span>pipeD<span class="op">[</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    read<span class="op">(</span>pipeR<span class="op">[</span><span class="dv">0</span><span class="op">],</span> inbuff<span class="op">,</span> <span class="dv">256</span><span class="op">);</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;[DETE] Dobio sam: &quot;</span> <span class="op">&lt;&lt;</span> inbuff <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    strcpy<span class="op">(</span>outbuff<span class="op">,</span> <span class="st">&quot;Test 123&quot;</span><span class="op">);</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;[DETE] Saljem: &quot;</span> <span class="op">&lt;&lt;</span> outbuff <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    write<span class="op">(</span>pipeD<span class="op">[</span><span class="dv">1</span><span class="op">],</span> outbuff<span class="op">,</span> strlen<span class="op">(</span>outbuff<span class="op">)</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;[DETE] Poslato!&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="piperoditelj-proces" class="slide level2">
+<h2>Pipe—Roditelj proces</h2>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span><span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    close<span class="op">(</span>pipeR<span class="op">[</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    close<span class="op">(</span>pipeD<span class="op">[</span><span class="dv">1</span><span class="op">]);</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    strcpy<span class="op">(</span>outbuff<span class="op">,</span> <span class="st">&quot;Test 321&quot;</span><span class="op">);</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;[RODITELJ] Saljem: &quot;</span> <span class="op">&lt;&lt;</span> outbuff <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    write<span class="op">(</span>pipeR<span class="op">[</span><span class="dv">1</span><span class="op">],</span> outbuff<span class="op">,</span> strlen<span class="op">(</span>outbuff<span class="op">)</span> <span class="op">+</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;[RODITELJ] Poslato!&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    read<span class="op">(</span>pipeD<span class="op">[</span><span class="dv">0</span><span class="op">],</span> inbuff<span class="op">,</span> <span class="dv">256</span><span class="op">);</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;[RODITELJ] Dobio sam: &quot;</span> <span class="op">&lt;&lt;</span> inbuff <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="fifo" class="slide level2">
+<h2>FIFO</h2>
+<ul>
+<li>FIFO je apsolutno identičan Pipe mehanizmu sa tom razlikom da ima
+ime i postojanje koje je nezavisno u odnosu na proces koji ga
+stvara.</li>
+<li>FIFO uvek postoji negde na disku, tj. ima putanju. Mora se napraviti
+tako što se otkuca <code>mknod IME p</code></li>
+</ul>
+</section>
+<section id="deljena-memorija" class="slide level2">
+<h2>Deljena memorija</h2>
+<ul>
+<li>Deljenu memoriju više proučavamo kroz kod, ali ideja je jednostavna:
+definišemo region memorije koji dele dva procesa, i komuniciramo kroz
+njega.</li>
+<li>Jako je brzo, ali su problemi sinhronizacije poprilični.</li>
+</ul>
+</section></section>
+<section>
+<section id="sistemski-procesi" class="title-slide slide level1">
+<h1>Sistemski Procesi</h1>
+
+</section>
+<section id="sistemski-procesi-nulti-proces" class="slide level2">
+<h2>Sistemski procesi – nulti proces</h2>
+<ul>
+<li>Nulti proces je kao baš i nulta nit: služi da bi uvek bilo nešto što
+može da se izvrši, večno ili aktivno ili spremno.</li>
+<li>Njegov prioritet je niži od prioriteta svih ostalih procesa, a on
+postoji za sve vreme aktivnosti operativnog sistema.</li>
+</ul>
+</section>
+<section id="sistemski-procesi-dugoročni-raspoređivač"
+class="slide level2">
+<h2>Sistemski procesi – dugoročni raspoređivač</h2>
+<ul>
+<li>Drugi primer sistemskog procesa je proces dugoročni raspoređivač,
+koji se brine o tome koje su stranice u radnoj memoriji</li>
+<li>On se periodično aktivira</li>
+<li>Da bi se proces uspavao, odnosno da bi se njegova aktivnost
+zaustavila do nastupanja zadanog trenutka, on poziva odgovarajuću
+sistemsku operaciju.</li>
+<li>Ona pripada sloju za rukovanje kontrolerima, jer proticanje vremena
+registruje drajver sata.</li>
+<li>I proces dugoročni raspoređivač postoji za sve vreme aktivnosti
+operativnog sistema (jasno, ako ima potrebe za dugoročnim
+raspoređivanjem).</li>
+</ul>
+</section>
+<section id="sistemski-procesi-procesi-identifikator-i-komunikator"
+class="slide level2">
+<h2>Sistemski procesi – procesi identifikator i komunikator</h2>
+<ul>
+<li>U sistemske procese spada i proces identifikator (login process),
+koji podržava predstavljanje korisnika.</li>
+<li>Proces identifikator koristi terminal, da bi posredstvom njega
+stupio u interakciju sa korisnikom u toku predstavljanja, radi
+preuzimanja imena i lozinke korisnika.</li>
+<li>Po preuzimanju imena i lozinke, proces identifikator proverava
+njihovu ispravnost i, ako je prepoznao korisnika, tada stvara proces
+komunikator, koji nastavlja interakciju sa korisnikom.</li>
+</ul>
+</section>
+<section id="identifikator-i-komunikator" class="slide level2">
+<h2>Identifikator i komunikator</h2>
+<ul>
+<li>Moderni računari imaju proces identifikator koji je grafički i radi
+dodatne poslove, rečimo pokreće grafički shell, ali je princip isti:
+mora se ustanoviti identitet korisnika.</li>
+<li>Proces komunikator je, naravno, shell: nešto što zahteve korisnika
+pretvori u operacije operativnog sistema.</li>
+</ul>
+</section>
+<section id="sistemski-procesi-procesi-identifikator-i-komunikator-1"
+class="slide level2">
+<h2>Sistemski procesi – procesi identifikator i komunikator</h2>
+<ul>
+<li>Za proveru ispravnosti imena i lozinke korisnika, neophodno je
+raspolagati spiskovima imena i lozinki registrovanih korisnika.</li>
+<li>Ovi spiskovi se čuvaju u posebnoj datoteci lozinki (password
+file).</li>
+<li>Svaki slog ove datoteke sadrži:
+<ul>
+<li>ime i lozinku korisnika</li>
+<li>numeričku oznaku korisnika</li>
+<li>putanju radnog imenika korisnika</li>
+<li>putanju izvršne datoteke, sa inicijalnom slikom korisničkog procesa
+komunikatora</li>
+<li>Nekada se lozinke korisnika čuvaju u posebnoj datoteci (shadow
+file).</li>
+</ul></li>
+</ul>
+</section>
+<section id="etcpasswd" class="slide level2">
+<h2>/etc/passwd</h2>
+<p><img data-src="img/passwd.png" /></p>
+</section>
+<section id="etcpasswd-1" class="slide level2">
+<h2>/etc/passwd</h2>
+<p><img data-src="img/passwd1.png" /></p>
+</section>
+<section id="sistemski-procesi-procesi-identifikator-i-komunikator-2"
+class="slide level2">
+<h2>Sistemski procesi – procesi identifikator i komunikator</h2>
+<ul>
+<li>Za zaštitu datoteka ključno je onemogućiti neovlaštene pristupe
+datoteci lozinki.</li>
+<li>Prirodno je da njen vlasnik bude administrator i da jedino sebi
+dodeli pravo čitanja i pisanja ove datoteke.</li>
+<li>Pošto su procesi identifikatori sistemski procesi, koji nastaju pri
+pokretanju operativnog sistema, nema prepreke da njihov vlasnik bude
+administrator.</li>
+<li>Iako na taj način procesi identifikatori dobijaju i pravo čitanja i
+pravo pisanja datoteke lozinki, to pravo korisnici ne mogu da
+zloupotrebe, jer, posredstvom procesa identifikatora, jedino mogu
+proveriti da li su registrovani u datoteci lozinki.</li>
+<li>Pri tome je bitno da svoja prava proces identifikator ne prenosi na
+proces komunikator. Zato proces komunikator ne nasleđuje numeričku
+oznaku vlasnika od svog stvaraoca procesa identifikatora.</li>
+</ul>
+</section>
+<section id="sistemski-procesi-procesi-identifikator-i-komunikator-3"
+class="slide level2">
+<h2>Sistemski procesi – procesi identifikator i komunikator</h2>
+<ul>
+<li>Administrator bez problema pristupa datoteci lozinki, radi izmene
+njenog sadržaja, jer je on vlasnik svih procesa, koje je stvorio i
+pokrenuo da bi izvršili njegove komande.</li>
+<li>Pošto korisnici nemaju načina da pristupe datoteci lozinki, javlja
+se problem kako omogućiti korisniku da sam izmeni svoju lozinku.</li>
+<li>Taj problem se može rešiti po uzoru na proces identifikator, koga
+koriste svi korisnici, iako nisu njegovi vlasnici.</li>
+<li>Prema tome, ako je administrator vlasnik izvršne datoteke sa
+inicijalnom slikom procesa za izmenu lozinki, dovoljno je naznačiti da
+on treba da bude vlasnik i procesa nastalog na osnovu ove izvršne
+datoteke (SUID - Switch User IDentification program).</li>
+</ul>
+</section>
+<section id="sistemski-procesi-procesi-identifikator-i-komunikator-4"
+class="slide level2">
+<h2>Sistemski procesi – procesi identifikator i komunikator</h2>
+<ul>
+<li>Datoteka lozinki je dodatno zaštićena, ako su lozinke u nju upisane
+u izmenjenom, odnosno u kriptovanom (encrypted) obliku, jer tada
+administrator može da posmatra sadržaj datoteke lozinki na ekranu, ili
+da ga štampa, bez straha da to može biti zloupotrebljeno.</li>
+<li>Da bi se sprečilo pogađanje tuđih lozinki, proces identifikator
+treba da reaguje na više uzastopnih neuspešnih pokušaja predstavljanja,
+obaveštavajući o tome administratora, ili odbijajući neko vreme da
+prihvati nove pokušaje predstavljanja.</li>
+<li>Takođe, korisnici moraju biti oprezni da sami ne odaju svoju lozinku
+lažnom procesu identifikatoru. To se može desiti, ako se njihov
+prethodnik ne odjavi, nego ostavi svoj proces da opslužuje terminal,
+oponašajući proces identifikator.</li>
+</ul>
+</section></section>
+<section>
+<section id="kriptografija" class="title-slide slide level1">
+<h1>Kriptografija</h1>
+<p>Umetnost primenjene paranoje</p>
+</section>
+<section id="istorija-kriptografije" class="slide level2">
+<h2>Istorija kriptografije</h2>
+<ul>
+<li>Od starogrčkog: κρυπτός (skrivena) i λόγος (reč)</li>
+<li>Sa tim je povezan i termin ‘šifra’ odn. engleski ‘cypher’ ili
+‘cipher’</li>
+<li>Cipher/šifra dolaze od arapskog ‘al sifr’ što znači nula.</li>
+<li>Zašto? Zato što su srednjevekovni Evropljani imali sujeveran strah
+od nule kao koncepta.</li>
+</ul>
+</section>
+<section id="istorija-kriptografije-1" class="slide level2">
+<h2>Istorija kriptografije</h2>
+<ul>
+<li>Najranije forme su stvari kao što je Cezarova šifra čiji je moderan
+ekvivalent rot13.</li>
+<li>Šta je problem? Ako znam algoritam, znam da provalim šta je šifra.
+Jedini parametar cezarove šifre je za koliko mesta pomeramo azbuku,
+budući da je to 26 mogućih vrednosti odn. ni 5 bita bezbednosti za
+brute-force, to i nije nekakva zaštita.</li>
+</ul>
+</section>
+<section id="istorija-kriptografije-2" class="slide level2">
+<h2>Istorija kriptografije</h2>
+<ul>
+<li>Možemo to i bolje, uzmite Polibijev Kvadrat.</li>
+<li>To je već 25! mogućih varijacija, odn. 15511210043330985984000000
+mogućih ključeva. To je skoro 84 bita bezbednosti. Mnogo bolje.</li>
+<li>Uprkos tome, mogli bi ste da potpuno razbijete bilo koji Polibijev
+Kvadrat bez puno napora.</li>
+<li>Zašto? Informacije cure kroz distribuciju slova, u engleskom, na
+primer, najčešćih prvih 12 slova su, redom, ETAOIN SHRDLU. Ovo je
+osobina koju Polibijev kvadrat uopšte ne krije.</li>
+</ul>
+</section>
+<section id="šenonovi-kriterijumi-i-šta-čini-dobar-metod-šifrovanja"
+class="slide level2">
+<h2>Šenonovi kriterijumi i šta čini dobar metod šifrovanja</h2>
+<ul>
+<li>Konfuzija
+<ul>
+<li>Svaki bit šifrovanog izlaza mora zavisiti od više bitova ključa</li>
+</ul></li>
+<li>Difuzija
+<ul>
+<li>Izmena od jednog bita ulatnog, nešifrovanog teksta, bi trebalo da
+ima matematičko očekivanje da će se izmeniti pola bitova šifrovanog
+izlaza.</li>
+</ul></li>
+</ul>
+</section>
+<section id="istorijski-ovo-nam-i-nije-najbolje-išlo"
+class="slide level2">
+<h2>Istorijski, ovo nam i nije najbolje išlo</h2>
+<ul>
+<li>Prvi pokušaj da se to ispravi jesu polialfabetske šifre: prvo slovo
+menjamo po prvoj azbuci zamene, drugo po drugoj itd. Nije baš radilo
+zbog <strong>napada preko dekompozicije.</strong></li>
+<li>Drugi pokušaj? Kontinualno kližuća azbuka preko rotora.</li>
+<li>Ovo može da bude prilično bezbedno, čak i danas. RC4 je rotorska
+šifra. Čak postoje moderno-bezbedni algoritmi koji se mogu raditi rukom
+kao što je Šajnerov ‘pasijans’ algoritam.</li>
+<li>No, lako je napraviti grešku — primer Enigme.</li>
+</ul>
+</section>
+<section id="da-li-postoji-savršena-šifra" class="slide level2">
+<h2>Da li postoji savršena šifra?</h2>
+<ul>
+<li>Da! Od 1882, štaviše!</li>
+<li>U pitanju je tkzv ‘jednostruka zamena’ odn. ‘one-time pad’</li>
+<li>Problem?</li>
+<li>Trebaju nam stvarno slučajni brojevi</li>
+<li>Treba nam razmena ključa velikog koliko i poruka sa savršenom
+bezbednošću. To je… problematično, jer ako već imao sigurni kanal
+komunikacije, što šifrovati?</li>
+</ul>
+</section>
+<section id="o-slučajnim-brojevima" class="slide level2">
+<h2>O slučajnim brojevima</h2>
+<ul>
+<li>Generacija slučajnih brojeva je apsolutno ključna za efektnu
+kriptografiju, ne samo za jednostruke zamene.</li>
+<li>Da stvar bude zanimljivija, to je funkcionalnost koju baš očekujemo
+od operativnog sistema.</li>
+<li>Ipak, to su samo slučajni brojevi… koliko teško to može biti?</li>
+</ul>
+</section>
+<section class="slide level2">
+
+<h3 id="veoma">Veoma</h3>
+</section>
+<section id="o-slučajnim-brojevima-1" class="slide level2">
+<h2>O slučajnim brojevima</h2>
+<p><strong>Anyone who considered arithmetical methods of producing
+random digits is, of course, in a state of sin.</strong> —John von
+Neumann, General-Purpose Genius</p>
+</section>
+<section id="o-slučajnim-brojevima-2" class="slide level2">
+<h2>O slučajnim brojevima</h2>
+<p><strong>Random number generation is too important to be left to
+chance.</strong> —Robert Coveyou, Oak Ridge National Laboratory</p>
+</section>
+<section id="pseudo-slučajni-brojevi" class="slide level2">
+<h2>Pseudo-slučajni brojevi</h2>
+<ul>
+<li>Računari su determinističke mašine. Kao takve ne mogu da stvaraju
+slučajne brojeve.</li>
+<li>Sa druge strane mogu da stvaraju pseudo slučajne brojeve, odn. niz
+nepredvidivih vrednosti koje su takve da ako znaš proizvoljno mnogo
+slučajnih brojeva i dalje ne možeš da predvidiš sledeću.</li>
+<li>Da bi ovo radilo potreban je odličan algoritam koji se mora na
+početku nahraniti sa malo istinske slučajnosti: izvorom entropije. Ovo
+je ograničen, dragocen resurs.</li>
+</ul>
+</section>
+<section id="linux" class="slide level2">
+<h2>Linux</h2>
+<ul>
+<li>/dev/random je kako Linux pokušava da nam ovde pomogne: to je izvor
+kvalitetne entropije koji se formira na osnovu šuma sa sistemske
+magistrale.</li>
+<li>Ovo je odličan izvor ali se lako isprazni, a ako se to desi pokušaj
+da se pozove ‘read’ na tome će blokirati dok ne dobijemo svežu entropiju
+što zahteva jako puno vremena.</li>
+<li>Ovo je napadačka površina za DDOS iscrpljivanjem entropije.</li>
+</ul>
+</section>
+<section id="linux-1" class="slide level2">
+<h2>Linux</h2>
+<ul>
+<li>/dev/urandom nikada ne blokira, ali su brojevi generisani
+algoritmom.</li>
+<li>Srećom, to je barem jako kvalitetan algoritam, barem od verzije
+4.8.</li>
+</ul>
+</section>
+<section id="hardverski-generatori-slučajnih-brojeva"
+class="slide level2">
+<h2>Hardverski generatori slučajnih brojeva</h2>
+<ul>
+<li>Za jako bitne primene postoje hardverski generatori bazirani na,
+npr, atmosferskom šumu ili, najčešće, kvantno-mehanički procesi kao što
+je raspad nuklearnih izotopa. Ovo je skupo i nezgodno, budući da niko ne
+želi radio-izotop na svojoj matičnoj ploči.</li>
+<li>Intel nudi rešenje: svaki Ivy Bridge i kasniji procesor ima na čipu
+RDRAND instrukciju koja proizvodi hardverski-generisane (rezistivan šum)
+slučajne brojeve.</li>
+</ul>
+</section>
+<section id="intel-nudi-problem" class="slide level2">
+<h2>Intel nudi problem</h2>
+<ul>
+<li>Prvi problem: Bezbednosno ključni mehanizam je sada (bukvalno) crna
+kutija iz koje izlaze bitovi, bez načina da se uverimo da se prave na
+pravi način.</li>
+<li>Gore, mnogo gore od toga, jeste da je RDRAND implementacija…
+podešena od strane NSA.</li>
+<li>NSA je permanentan protivnik kvalitetne kriptografije. Već se zna da
+su ključne NIST konstante manipulisane.</li>
+</ul>
+</section>
+<section id="šta-hoćemo-od-moderne-kriptografije" class="slide level2">
+<h2>Šta hoćemo od moderne kriptografije?</h2>
+<ul>
+<li>Poverljivost</li>
+<li>Integritet</li>
+<li>Identitet</li>
+</ul>
+</section>
+<section id="kripto-sistem" class="slide level2">
+<h2>Kripto-sistem</h2>
+<ul>
+<li>Kripto-sistem je mehanizam koji postiže jedan od prethodnih ciljeva,
+najčešće sva tri, i sastoji se od protokola slanja, primanja,
+verifikacije poruka između nekog broja učesnika u nekom redosledu.</li>
+<li>Kripto-sistemi se grade od kripto-primitiva, bazičnih matematičkih
+konstrukta koji nam omogućavaju da operišemo.</li>
+</ul>
+</section>
+<section id="kripto-primitivi" class="slide level2">
+<h2>Kripto-primitivi</h2>
+<ul>
+<li>Jednosmerne, heš, funkcije.</li>
+<li>Simetrična, tajni-ključ, enkripcija.</li>
+<li>Asimetrična, javni-ključ, enkripcija.</li>
+</ul>
+</section>
+<section id="heš-funkcije" class="slide level2">
+<h2>Heš funkcije</h2>
+<ul>
+<li>Kriptografske
+<ul>
+<li>HMAC</li>
+<li>Lozinka</li>
+<li>KDF</li>
+</ul></li>
+<li>Opšte
+<ul>
+<li>Verifikacija</li>
+<li>Adresiranje</li>
+</ul></li>
+</ul>
+</section>
+<section id="kriptografska-heš-funkcija" class="slide level2">
+<h2>Kriptografska heš funkcija</h2>
+<ul>
+<li>Neka funkcija <span class="math inline">\(H\)</span> je
+kriptografski heš ako je komputaciono izuzetno skupo da:</li>
+<li>Za neku vrednost h naći ulaz i takav da <span
+class="math inline">\(H(i) = h\)</span></li>
+<li>Za neki ulaz i naći drugi ulaz j takav da <span
+class="math inline">\(H(i) = H(j)\)</span></li>
+<li>Naći bilo koja dva ulaza i i j takva da <span
+class="math inline">\(H(i) = H(j)\)</span></li>
+</ul>
+</section>
+<section id="moderne-kriptografske-heš-funkcije" class="slide level2">
+<h2>Moderne kriptografske heš funkcije</h2>
+<ul>
+<li>SHA-2 i SHA-3 i koncept kripto-agilnosti.</li>
+<li>Šta je problem sa SHA-2, današnjom najčešće korišćenom heš
+funkcijom?
+<ul>
+<li>Kletva NSA</li>
+<li>Izuzetna efikasnost implementacije</li>
+<li>Delimični napadi</li>
+<li>Napad povećanjem dužine</li>
+</ul></li>
+</ul>
+</section>
+<section id="napad-sa-povećanjem-dužine" class="slide level2">
+<h2>Napad sa povećanjem dužine</h2>
+<p>Funkcije porodice SHA - 2, tj.svih koje koriste tkzv.Merkle-Damgard
+konstrukciju kao svoju osnovu imaju slabost gde ako znamo <span
+class="math inline">\(H(M_1)\)</span> i dužinu <span
+class="math inline">\(M_1\)</span> onda možemo da izračunamo <span
+class="math inline">\(H(M_1 || M_2)\)</span> za proizvoljni <span
+class="math inline">\(M_2\)</span> gde je <span
+class="math inline">\(||\)</span> operator konkatenacije.</p>
+</section>
+<section id="alternativne-heš-funkcije-i-heš-funkcije-posebne-namene"
+class="slide level2">
+<h2>Alternativne Heš Funkcije i Heš Funkcije Posebne Namene</h2>
+<ul>
+<li>Blake2b (Opšta kriptografska)</li>
+<li>SipHash (Štiti od DDOS potencijala malicioznih kolizija u okviru
+MurmurHash3)</li>
+<li>Argon2 (Šifre i KDF)</li>
+</ul>
+</section>
+<section id="simetrični-algoritmi" class="slide level2">
+<h2>Simetrični algoritmi</h2>
+<ul>
+<li>Imamo deljenu tajnu između dve strane koje tajno komuniciraju.</li>
+<li>Bezbednost zavisi 100% of toga da je ta tajna deljena a za druge
+tajna. Ta tajna se obično zove ‘tajni ključ’ ili samo ‘ključ’</li>
+<li>Simetrični algoritmi mogu raditi na blokovima ili na tokovima.</li>
+<li>Algoritmi na tokovima rade kao jednostruka zamena, samo što postoji
+algoritam koji generiše ‘blokče’ koje koristimo. Jako moćan sistem, ali
+jako osetljiv na periodičnost i početna podešavanja.</li>
+</ul>
+</section>
+<section id="chacha" class="slide level2">
+<h2>ChaCha</h2>
+<ul>
+<li>Tačnije, ChaCha20: algoritam toka</li>
+<li>Koristi je interno Google, OpenSSH polako prelazi na ChaCha,
+proizvodi CSPRNG za Linux od 4.8 (simetrični algoritmi enkripcije su
+takođe dobri generatori PRN-ova)</li>
+<li>Jedini ulaz su podaci i nonce.</li>
+</ul>
+</section>
+<section id="nonce" class="slide level2">
+<h2>Nonce?</h2>
+<ul>
+<li>Number used ONCE.</li>
+<li>Veliki broj algoritama za enkripciju zahteva neki početni broj koji
+se apsolutno ne sme ponovo koristiti.</li>
+<li>Veliki broj naizgled kompetentnih programera ponovo upotrebi Nonce
+ili IV i dobije se debakl kao što je DRM za PS3.</li>
+</ul>
+</section>
+<section id="blok-šifre" class="slide level2">
+<h2>Blok-šifre</h2>
+<ul>
+<li>Rade na blokovima fiksne dužine.</li>
+<li>Trik kod njih su lukavo složene operacije mešanja i zamene nad
+ulaznim podacima na način koji tajni ključ parametrizuje.</li>
+<li>Ideal je da se postigne efekat lavine—svaki bit izlaza zavisi od
+svakog bita ulaza.</li>
+</ul>
+</section>
+<section id="aes" class="slide level2">
+<h2>AES</h2>
+<ul>
+<li>Izuzetno dobar standard za simetričnu enkripciju, naročito
+AES-256.</li>
+<li>Postoje kvalitetne hardverske implementacije.</li>
+<li>Ali, AES takođe ima mračnu stranu: strašno je lako upucati se u nogu
+kada se koristi. Zašto? Zato što simetrične šifre enkriptuju jedan
+jedini blok i to je to.</li>
+<li>Ako hoćemo više (hoćemo) treba nam operativni mod AES-a, a tu
+problemi nastaju.</li>
+</ul>
+</section>
+<section id="operativni-modovi-i-iv" class="slide level2">
+<h2>Operativni Modovi i IV</h2>
+<ul>
+<li>IV je kao nonce ali sa sledećim osobinama:</li>
+<li>Može biti javan</li>
+<li>Ne sme da se ponavlja</li>
+<li>Ne sme da bude predvidiv</li>
+</ul>
+</section>
+<section id="zamka-ecb" class="slide level2">
+<h2>Zamka ECB</h2>
+<ul>
+<li>Trivijalan način da se AES primeni na više podataka jeste da se
+podaci podele na blokove i ista operacija izvrši na svakom bloku.</li>
+<li>Ovo se zove Electronic Code Book</li>
+<li>To vam je čak i ponuđeno u nekim implementacijama.</li>
+<li>Ovo je kataklizmično loša ideja.</li>
+</ul>
+</section>
+<section id="ecb-primenjen-na-slici---original" class="slide level2">
+<h2>ECB primenjen na slici - Original</h2>
+<p><img data-src="img/tux.jpg" /></p>
+</section>
+<section id="ecb-primenjen-na-slici---enkriptovana-slika"
+class="slide level2">
+<h2>ECB primenjen na slici - Enkriptovana slika</h2>
+<p><img data-src="img/secrettux.jpg" /></p>
+</section>
+<section id="brojački-režimi" class="slide level2">
+<h2>Brojački režimi</h2>
+<ul>
+<li>Bezbedan režim za upotrebu AES-a ovih dana jeste da se, efektivno,
+pretvori u sistem za enkripciju preko toka, tako što se tok generiše
+kroz AES nad nekakvim brojačem koji se dodaje (ne aritmetički) na
+IV.</li>
+<li>Današnji state-of-the-art je AES-GCM</li>
+</ul>
+</section>
+<section id="asimetrična-kriptografija" class="slide level2">
+<h2>Asimetrična kriptografija</h2>
+<ul>
+<li>Simterična kriptografija nije podesna za kriptovanje poruka, jer
+tada ključ kriptovanja mora znati svaki pošiljalac poruke, što ga dovodi
+u poziciju da može da dekriptuje poruke drugih pošiljalaca.</li>
+<li>To nije moguće u asimetričnoj kriptografiji (public-key
+cryptography), jer je njena osobina da se iz ključa kriptovanja ne može
+odrediti ključ dekriptovanja, pa poznavanje ključa kriptovanja ne
+omogućuje dekriptovanje.</li>
+<li>Ovakav ključ kriptovanja se zove javni ključ (public key), jer je on
+dostupan svima.</li>
+</ul>
+</section>
+<section id="asimetrična-kriptografija-1" class="slide level2">
+<h2>Asimetrična kriptografija</h2>
+<ul>
+<li>Njemu odgovarajući ključ dekriptovanja je privatan (tajan), jer je
+dostupan samo osobama ovlašćenim za dekriptovanje. Zato se on naziva
+privatni ključ (private key).</li>
+<li>Prema tome, svaki pošiljalac poruke raspolaže javnim ključem, da bi
+mogao da kriptuje poruke, dok privatni ključ poseduje samo primalac
+poruka, da bi jedini mogao da dekriptuje poruke.</li>
+<li>Asimetrična kriptografija se temelji na korišćenju jednostavnih
+algoritama kriptovanja kojima odgovaraju komplikovani algoritmi
+dekriptovanja.</li>
+</ul>
+</section>
+<section id="asimetrična-kriptografija-2" class="slide level2">
+<h2>Asimetrična kriptografija</h2>
+<ul>
+<li>Zato je asimterična kriptografija mnogo sporija od simetrične.</li>
+<li>Obično se asimetrična kriptografija koristi samo za razmenu ključeva
+potrebnih za simetričnu kriptografiju, pomoću koje se, zatim, kriptuju i
+dekriptuju poruke.</li>
+</ul>
+</section></section>
+<section>
+<section id="pitanja" class="title-slide slide level1">
+<h1>Pitanja</h1>
+
+</section>
+<section id="pitanja-1" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Čime se bavi sigurnost?</li>
+<li>Šta omogućuju sistemske opercije za rukovanje procesima?</li>
+<li>Šta obuhvata stvaranje procesa?</li>
+<li>Šta obuhvata uništenje procesa?</li>
+<li>Šta sadrži slika procesa?</li>
+<li>Za šta se koristi slobodna radna memorije procesa?</li>
+</ul>
+</section>
+<section id="pitanja-2" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Koji atributi procesa postoje?</li>
+<li>Koje sistemske operacije za rukovanje procesima postoje?</li>
+<li>Koji se atributi nasleđuju od procesa stvaraoca prilikom stvaranja
+procesa?</li>
+<li>Koji se atributi procesa nastanu prilikom njegovog stvaranja?</li>
+<li>Šta karakteriše kopiju slike procesa?</li>
+<li>Koje raspoređivanje je vezano za zamenu slika/stranica procesa?</li>
+</ul>
+</section>
+<section id="pitanja-3" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta karakteriše rukovanje nitima unutar operativnog sistema?</li>
+<li>Šta karakteriše rukovanje nitima van operativnog sistema?</li>
+<li>Šta karakteriše nulti proces?</li>
+<li>Šta je karakteristično za proces dugoročni raspoređivač?</li>
+<li>Šta radi proces identifikator?</li>
+<li>Ko stvara proces komunikator?</li>
+</ul>
+</section>
+<section id="pitanja-4" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta označava SUID (switch user identification)?</li>
+<li>Šta karakteriše heš (hash/jednosmernu) funkciju?</li>
+<li>Šta karakteriše simetričnu kriptografiju?</li>
+<li>Šta karakteriše asimetričnu kriptografiju?</li>
+<li>Na čemu se temelji tajnost kriptovanja?</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
