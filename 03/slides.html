@@ -4,19 +4,31 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Veljko Petrović">
-  <title>Operativni Sistemi - Konkurentno programiranje 2</title>
+  <title>Operativni Sistemi - Konkurentno programiranje</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
   <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -55,7 +67,7 @@
     code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
     code span.at { color: #7d9029; } /* Attribute */
     code span.bn { color: #40a070; } /* BaseN */
-    code span.bu { } /* BuiltIn */
+    code span.bu { color: #008000; } /* BuiltIn */
     code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
     code span.ch { color: #4070a0; } /* Char */
     code span.cn { color: #880000; } /* Constant */
@@ -68,7 +80,7 @@
     code span.ex { } /* Extension */
     code span.fl { color: #40a070; } /* Float */
     code span.fu { color: #06287e; } /* Function */
-    code span.im { } /* Import */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
     code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
     code span.kw { color: #007020; font-weight: bold; } /* Keyword */
     code span.op { color: #666666; } /* Operator */
@@ -89,693 +101,921 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Operativni Sistemi - Konkurentno programiranje 2</h1>
+  <h1 class="title">Operativni Sistemi - Konkurentno programiranje</h1>
   <p class="author">Veljko Petrović</p>
-  <p class="date">Mart, 2023</p>
+  <p class="date">Februar, 2024</p>
 </section>
 
 <section>
-<section id="problem-pet-filozofa" class="title-slide slide level1">
-<h1>Problem Pet Filozofa</h1>
+<section id="primeri-štetnog-preplitanja"
+class="title-slide slide level1">
+<h1>Primeri štetnog preplitanja</h1>
 
 </section>
-<section id="postavka" class="slide level2">
-<h2>Postavka</h2>
+<section id="svojstva-konkurentnih-programa" class="slide level2">
+<h2>Svojstva konkurentnih programa</h2>
 <ul>
-<li>Zauzimanje više primeraka resursa iste vrste, neophodnih za aktivnost svake niti iz neke grupe niti, predstavlja tipičan problem konkurentnog programiranja.</li>
-<li>On se, u literaturi, ilustruje primerom problema pet filozofa (dining philosophers).</li>
-<li>Svaki od njih provodi život razmišljajući u svojoj sobi i jedući u zajedničkoj trpezariji.</li>
-<li>U njoj se nalazi pet stolica oko okruglog stola sa pet tanjira i pet viljuški između njih.</li>
+<li>Mešanje izvršavanja raznih niti ili niti i obrađivača prekida naziva
+se <em>preplitanje</em> (eng. interleaving).</li>
+<li>Preplitanje niti i obrada prekida imaju slučajan karakter jer
+unapred nije poznato kada će se desiti prekid i preključivanje.</li>
+<li>Stohastično izvršavanje konkurentnih programa može da menja
+rezultate izvršavanja od slučaja do slučaja, što može dovesti do pojave
+štetnog preplitanja.</li>
 </ul>
 </section>
-<section id="postavka-1" class="slide level2">
-<h2>Postavka</h2>
-<p><img data-src="img/2023-03-06-18-22-39.png" /></p>
-</section>
-<section id="postavka-2" class="slide level2">
-<h2>Postavka</h2>
+<section id="primeri-štetnog-preplitanja-1" class="slide level2">
+<h2>Primeri štetnog preplitanja</h2>
 <ul>
-<li>Pošto se, po želji filozofa, u trpezariji služe uvek špagete, svakom filozofu su za jelo potrebne dve viljuške.</li>
-<li>Ako svi filozofi istovremeno ogladne, uđu u trpezariju, sednu na svoje mesto za stolom i uzmu viljušku levo od sebe, tada nastupa mrtva petlja (deadlock), s kobnim ishodom po život filozofa.</li>
+<li>Primeri štetnog preplitanja su mogući i u OS (sistemski pozivi su
+niti i mogu se preplitati sa obrađivačima prekida).</li>
+<li>Rukovanje pozicijom kursora je dobar primer štetnog
+preplitanja.</li>
 </ul>
 </section>
-<section id="normalno-ponašanje" class="slide level2">
-<h2>Normalno ponašanje</h2>
-<p><img data-src="img/normal.gif" /></p>
+<section id="rukovanje-pozicijom-kursora" class="slide level2">
+<h2>Rukovanje pozicijom kursora</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">class</span> Position <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>    Position<span class="op">();</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="dt">void</span> set<span class="op">(</span><span class="dt">int</span> new_x<span class="op">,</span><span class="dt">int</span> new_y<span class="op">);</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="dt">void</span> get<span class="op">(</span><span class="dt">int</span><span class="op">*</span> current_x<span class="op">,</span><span class="dt">int</span><span class="op">*</span> current_y<span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="op">};</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>Position<span class="op">::</span>Position<span class="op">(){</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>    x <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> </span>
+<span id="cb1-10"><a href="#cb1-10"></a>    y <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="op">}</span></span></code></pre></div>
 </section>
-<section id="mrtva-petlja" class="slide level2">
-<h2>Mrtva petlja</h2>
-<p><img data-src="img/deadlock.gif" /></p>
+<section id="rukovanje-pozicijom-kursora-1" class="slide level2">
+<h2>Rukovanje pozicijom kursora</h2>
+<div class="sourceCode" id="cb2" data-startFrom="12"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 11;"><span id="cb2-12"><a href="#cb2-12"></a><span class="dt">void</span> Position<span class="op">::</span>set<span class="op">(</span><span class="dt">int</span> new_x<span class="op">,</span> <span class="dt">int</span> new_y<span class="op">){</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>    x <span class="op">=</span> new_x<span class="op">;</span> </span>
+<span id="cb2-14"><a href="#cb2-14"></a>    y <span class="op">=</span> new_y<span class="op">;</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="op">}</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="dt">void</span> Position<span class="op">::</span>get<span class="op">(</span><span class="dt">int</span><span class="op">*</span> current_x<span class="op">,</span> <span class="dt">int</span><span class="op">*</span> current_y<span class="op">){</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="op">*</span>current_x <span class="op">=</span> x<span class="op">;</span> </span>
+<span id="cb2-18"><a href="#cb2-18"></a>    <span class="op">*</span>current_y <span class="op">=</span> y<span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="op">}</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>Position position<span class="op">;</span></span></code></pre></div>
 </section>
-<section id="simulator" class="slide level2">
-<h2>Simulator</h2>
+<section id="rukovanje-pozicijom-kursora-2" class="slide level2">
+<h2>Rukovanje pozicijom kursora</h2>
 <ul>
-<li>Ponašanje svakog filozofa opisuje funkcija <code>thread_philosopher()</code>.</li>
-<li>Razmišljanje filozofa se predstavlja kao odlaganje aktivnosti niti koja reprezentuje filozofa.</li>
-<li>Trajanje ovog odlaganja određuje konstanta <code>THINKING_PERIOD</code>.</li>
-<li>Na sličan način se predstavlja jedenje filozofa.</li>
-<li>Trajanje obroka filozofa određuje konstanta <code>EATING_PERIOD</code>.</li>
+<li>Neka operacija <code>position.set()</code> bude ono što koristi
+obrađivač prekida da podesi poziciju kursora na osnovu podataka koje je
+dobio i dekodirao od samog hardvera, npr. miša.</li>
+<li>Neka operacija <code>position.get()</code> bude na raspolaganju
+procesima iz korisničkog sloja i služi da se preuzme tekuća pozicija
+kursora.</li>
+<li>Tada je moguće da u toku izvršavanja operacije
+<code>position.get()</code> proces bude prekinut ili prestignut radi
+obrade prekida, koja poziva operaciju <code>position.set()</code>.</li>
+<li>Ako se to desi dok je izvršavanje get u liniji 17, a izvršavanje set
+stigne do linije 14, onda će, kada se get završi preuzeti pola stare, a
+pola nove koordinate: rezultat koji je sigurno netačan.</li>
 </ul>
 </section>
-<section id="simulator-1" class="slide level2">
-<h2>Simulator</h2>
+<section id="rukovanje-slobodnim-baferima" class="slide level2">
+<h2>Rukovanje slobodnim baferima</h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">struct</span> List_member <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>    List_member<span class="op">*</span> next<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="dt">char</span> buffer<span class="op">[</span><span class="dv">512</span><span class="op">];</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="op">};</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="kw">class</span> List <span class="op">{</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>    List_member<span class="op">*</span> first<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>    List<span class="op">()</span> <span class="op">:</span> first<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="dt">void</span> link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">);</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a>    List_member<span class="op">*</span> unlink<span class="op">();</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="op">};</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="dt">void</span> List<span class="op">::</span>link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">){</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>    member<span class="op">-&gt;</span>next<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>    first<span class="op">=</span>member<span class="op">;</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="rukovanje-slobodnim-baferima-1" class="slide level2">
+<h2>Rukovanje slobodnim baferima</h2>
+<div class="sourceCode" id="cb4" data-startFrom="18"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 17;"><span id="cb4-18"><a href="#cb4-18"></a>List_member<span class="op">*</span> List<span class="op">::</span>unlink<span class="op">(){</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a>    List_member<span class="op">*</span> unlinked<span class="op">;</span></span>
+<span id="cb4-20"><a href="#cb4-20"></a>    unlinked<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a>    <span class="cf">if</span><span class="op">(</span>first <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb4-22"><a href="#cb4-22"></a>        first<span class="op">=</span>first<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a>    <span class="cf">return</span> unlinked<span class="op">;</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a><span class="op">}</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a></span>
+<span id="cb4-26"><a href="#cb4-26"></a>List list<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="rukovanje-slobodnim-baferima-2" class="slide level2">
+<h2>Rukovanje slobodnim baferima</h2>
 <ul>
-<li>Uzimanje viljuške pre jela i njeno vraćanje posle jela, opisuju operacije <code>take_fork()</code> i <code>release_fork()</code> klase <code>Dining_table</code>.</li>
-<li>Svaki filozof uzima viljuške jednu po jednu samo ako su one slobodne.</li>
-<li>U suprotnom, filozof čeka da svaka viljuška postane raspoloživa.</li>
-<li>Prilikom vraćanja viljušaka filozof oslobađa viljuške jednu po jednu i omogući nastavak aktivnosti svojih suseda.</li>
+<li>Neka su operacije <code>list.link()</code> i
+<code>list.unlink()</code> na raspolaganju samo modulu za rukovanje
+datotekama i neka se pozivaju iz operacija ovog modula.</li>
+<li>Tada je moguće da izvršavanje operacije <code>list.unlink()</code>
+bude pokrenuto u toku aktivnosti niti nekog procesa u modulu za
+rukovanje datotekama.</li>
+<li>Kao rezultat izvršavanja ove operacije na steku pomenute niti
+nastane primerak njene lokalne promenljive <code>unlinked</code></li>
+<li>Izvršavanje iskaza <code>unlinked = first</code> smešta u ovaj
+primerak lokalne promenljive adresu prvog slobodnog bafera iz liste
+bafera, jasno, kada takav bafer postoji.</li>
 </ul>
 </section>
-<section id="simulator-2" class="slide level2">
-<h2>Simulator</h2>
+<section id="rukovanje-slobodnim-baferima-3" class="slide level2">
+<h2>Rukovanje slobodnim baferima</h2>
 <ul>
-<li>Operacije <code>take_fork()</code> i <code>release_fork()</code> klase <code>Dining_table</code>, dopuštaju pojavu mrtve petlje.</li>
-<li>Da bi se ona sigurno desila uvedena su odlaganja aktivnosti niti, koja reprezentuje filozofa, u trajanju koje određuje konstanta <code>MEANTIME</code>.</li>
+<li>Neka, nakon izvršavanja prethodnog iskaza, pod uticajem obrade
+prekida dođe do preključivanja procesora na nit drugog procesa. Tada, u
+toku aktivnosti niti ovog procesa, može doći do pokretanja još jednog
+izvršavanja operacije <code>list.unlink()</code>.</li>
+<li>Tako na steku i ove druge niti nastaje njen primerak lokalne
+promenljive <code>unlinked</code>.</li>
+<li>Posledica ovakvog sleda događaja je da posmatrana dva procesa
+koriste isti bafer. To neminovno dovodi do fatalnog ishoda.</li>
+<li>Prema tome, preplitanje dva izvršavanja operacije
+<code>list.unlink()</code>, je štetno. Isto važi i za preplitanje
+izvršavanja operacija <code>list.link()</code> i
+<code>list.unlink()</code> kao i <code>list.link()</code> i
+<code>list.link()</code></li>
 </ul>
 </section>
-<section id="simulator-3" class="slide level2">
-<h2>Simulator</h2>
+<section id="rukovanje-komunikacionim-baferom" class="slide level2">
+<h2>Rukovanje komunikacionim baferom</h2>
 <ul>
-<li>Polje <code>fork_available</code> deljene klase <code>Dining_table</code> omogućuje očekivanje ispunjenja uslova da je viljuška raspoloživa, kao i objavljivanje ispunjenosti ovog uslova.</li>
-<li>Klasa <code>Dining_table</code> sadrži i polja <code>philosopher_state</code> i <code>fork_state</code>.</li>
-<li>Prvo od njih izražava stanja filozofa (<code>THINKING</code>, <code>WAITING_LEFT_FORK</code>, <code>HOLDING_ONE_FORK</code>, <code>WAITING_RIGHT_FORK</code>, <code>EATING</code>), a drugo stanja viljuški (<code>FREE</code>, <code>BUSY</code>).</li>
+<li>Štetna međusobna preplitanja niti su moguća i za niti koje pripadaju
+istom procesu.</li>
+<li>Ovakva saradnja se može ostvariti tako što jedna od niti šalje
+podatke drugoj niti.</li>
+<li>Takva razmena podataka između niti se obično obavlja posredstvom
+komunikacionog bafera.</li>
+<li>Nit koja puni ovaj bafer podacima ima ulogu proizvođača (podataka),
+a nit koja prazni ovaj bafer ima ulogu potrošača (podataka).</li>
+<li>U pojednostavljenom slučaju, rukovanje komunikacionim baferom
+obuhvata punjenje: <code>put()</code> celog bafera, kao i pražnjenje:
+<code>get()</code> celog bafera.</li>
 </ul>
 </section>
-<section id="simulator-4" class="slide level2">
-<h2>Simulator</h2>
+<section id="rukovanje-komunikacionim-baferom-1" class="slide level2">
+<h2>Rukovanje komunikacionim baferom</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1"></a><span class="at">const</span> <span class="dt">unsigned</span> <span class="dt">int</span> BUFFER_SIZE <span class="op">=</span> <span class="dv">512</span><span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">class</span> Buffer <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="dt">char</span> content<span class="op">[</span>BUFFER_SIZE<span class="op">];</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>  Buffer<span class="op">()</span> <span class="op">{};</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="dt">void</span> put<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">);</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="dt">void</span> get<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">);</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="op">};</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a></span>
+<span id="cb5-11"><a href="#cb5-11"></a><span class="dt">void</span> Buffer<span class="op">::</span>put<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">){</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a>    <span class="cf">for</span><span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> BUFFER_SIZE<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>        content<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="op">*</span>c<span class="op">++;</span></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="rukovanje-komunikacionim-baferom-2" class="slide level2">
+<h2>Rukovanje komunikacionim baferom</h2>
+<div class="sourceCode" id="cb6" data-startFrom="16"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 15;"><span id="cb6-16"><a href="#cb6-16"></a><span class="dt">void</span> Buffer<span class="op">::</span>get<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">){</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>    <span class="cf">for</span><span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> BUFFER_SIZE<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a>        <span class="op">*</span>c<span class="op">++</span> <span class="op">=</span> content<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a><span class="op">}</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a>Buffer buffer<span class="op">;</span></span></code></pre></div>
+</section>
+<section id="c-haiku" class="slide level2">
+<h2>C haiku</h2>
+<p><img data-src="img/2023-02-27-22-25-58.png" /></p>
+</section>
+<section id="rukovanje-komunikacionim-baferom-3" class="slide level2">
+<h2>Rukovanje komunikacionim baferom</h2>
 <ul>
-<li>Operacija <code>show()</code> klase <code>Dining_table</code> omogućuje prikazivanje svake promene stanja filozofa.</li>
-<li>Za svakog filozofa se u zagradama navode njegova numerička oznaka i njegovo stanje.</li>
-<li>Funkcija <code>mod5()</code> podržava modulo aritmetiku.</li>
-<li>U funkciji <code>main()</code> se kreiraju niti filozofi, a zatim se sačeka kraj njihove aktivnosti.</li>
-<li>Svaka od ovih niti preuzme svoj identitet (<code>Dining_table::take_identity()</code>): 0, 1, 2, 3 i 4 koji omogućuje razlikovanje filozofa.</li>
-</ul>
-</section>
-<section id="simulator-kod" class="slide level2">
-<h2>Simulator kod</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;thread&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> chrono<span class="op">;</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> this_thread<span class="op">;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> mod5<span class="op">(</span><span class="dt">int</span> a<span class="op">)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">(</span>a <span class="op">&gt;</span> <span class="dv">4</span> <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> a<span class="op">);</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Philosopher_state <span class="op">{</span>THINKING <span class="op">=</span> <span class="ch">&#39;T&#39;</span><span class="op">,</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                    WAITING_LEFT_FORK <span class="op">=</span> <span class="ch">&#39;L&#39;</span><span class="op">,</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                    HOLDING_ONE_FORK <span class="op">=</span> <span class="ch">&#39;O&#39;</span><span class="op">,</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                    WAITING_RIGHT_FORK <span class="op">=</span> <span class="ch">&#39;R&#39;</span><span class="op">,</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>                    EATING <span class="op">=</span> <span class="ch">&#39;E&#39;</span><span class="op">};</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> Fork_state <span class="op">{</span>FREE<span class="op">,</span> BUSY<span class="op">};</span></span></code></pre></div>
-</section>
-<section id="simulator-kod-1" class="slide level2">
-<h2>Simulator kod</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Dining_table <span class="op">{</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    mutex mx<span class="op">;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> philosopher_identity<span class="op">;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    Philosopher_state philosopher_state<span class="op">[</span><span class="dv">5</span><span class="op">];</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    Fork_state fork_state<span class="op">[</span><span class="dv">5</span><span class="op">];</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    condition_variable fork_available<span class="op">[</span><span class="dv">5</span><span class="op">];</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> show<span class="op">();</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    Dining_table<span class="op">();</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> take_identity<span class="op">();</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> take_fork<span class="op">(</span><span class="dt">int</span> fork<span class="op">,</span> <span class="dt">int</span> philosopher<span class="op">,</span> Philosopher_state waiting_state<span class="op">,</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            Philosopher_state next_state<span class="op">);</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> release_fork<span class="op">(</span><span class="dt">int</span> fork<span class="op">,</span> <span class="dt">int</span> philosopher<span class="op">,</span> Philosopher_state next_state<span class="op">);</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
-</section>
-<section id="simulator-kod-2" class="slide level2">
-<h2>Simulator kod</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Dining_table<span class="op">::</span>Dining_table<span class="op">(){</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    philosopher_identity<span class="op">=</span><span class="dv">0</span><span class="op">;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        philosopher_state<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> THINKING<span class="op">;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        fork_state<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> FREE<span class="op">;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Dining_table<span class="op">::</span>show<span class="op">(){</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="ch">&#39;(&#39;</span> <span class="op">&lt;&lt;</span> <span class="op">(</span><span class="dt">char</span><span class="op">)(</span>i<span class="op">+</span><span class="ch">&#39;0&#39;</span><span class="op">)</span> <span class="op">&lt;&lt;</span> <span class="ch">&#39;:&#39;</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>             <span class="op">&lt;&lt;</span> <span class="op">(</span><span class="dt">char</span><span class="op">)</span>philosopher_state<span class="op">[</span>i<span class="op">]</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;) &quot;</span><span class="op">;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> Dining_table<span class="op">::</span>take_identity<span class="op">(){</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> philosopher_identity<span class="op">++;</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="simulator-kod-3" class="slide level2">
-<h2>Simulator kod</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Dining_table<span class="op">::</span>take_fork<span class="op">(</span><span class="dt">int</span> fork<span class="op">,</span> <span class="dt">int</span> philosopher<span class="op">,</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                           Philosopher_state waiting_state<span class="op">,</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                           Philosopher_state next_state<span class="op">){</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>fork_state<span class="op">[</span>fork<span class="op">]</span> <span class="op">==</span> BUSY<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        philosopher_state<span class="op">[</span>philosopher<span class="op">]</span> <span class="op">=</span> waiting_state<span class="op">;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">do</span> <span class="op">{</span>fork_available<span class="op">[</span>fork<span class="op">].</span>wait<span class="op">(</span>lock<span class="op">);}</span><span class="cf">while</span><span class="op">(</span>fork_state<span class="op">[</span>fork<span class="op">]</span> <span class="op">==</span> BUSY<span class="op">);</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    fork_state<span class="op">[</span>fork<span class="op">]</span> <span class="op">=</span> BUSY<span class="op">;</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    philosopher_state<span class="op">[</span>philosopher<span class="op">]</span> <span class="op">=</span> next_state<span class="op">;</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Dining_table<span class="op">::</span>release_fork<span class="op">(</span><span class="dt">int</span> fork<span class="op">,</span> <span class="dt">int</span> philosopher<span class="op">,</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                                Philosopher_state next_state<span class="op">){</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    fork_state<span class="op">[</span>fork<span class="op">]</span> <span class="op">=</span> FREE<span class="op">;</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    philosopher_state<span class="op">[</span>philosopher<span class="op">]</span> <span class="op">=</span> next_state<span class="op">;</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    fork_available<span class="op">[</span>fork<span class="op">].</span>notify_one<span class="op">();</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="simulator-kod-4" class="slide level2">
-<h2>Simulator kod</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Dining_table dining_table<span class="op">;</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds THINKING_PERIOD<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds MEANTIME<span class="op">(</span><span class="dv">5</span><span class="op">);</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds EATING_PERIOD<span class="op">(</span><span class="dv">10</span><span class="op">);</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_philosopher<span class="op">(){</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> philosopher <span class="op">=</span> dining_table<span class="op">.</span>take_identity<span class="op">();</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> fork <span class="op">=</span> philosopher<span class="op">;</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(;;)</span> <span class="op">{</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        sleep_for<span class="op">(</span>THINKING_PERIOD<span class="op">);</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        dining_table<span class="op">.</span>take_fork<span class="op">(</span>fork<span class="op">,</span> philosopher<span class="op">,</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                WAITING_LEFT_FORK<span class="op">,</span> HOLDING_ONE_FORK<span class="op">);</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        sleep_for<span class="op">(</span>MEANTIME<span class="op">);</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        dining_table<span class="op">.</span>take_fork<span class="op">(</span>mod5<span class="op">(</span>fork<span class="op">+</span><span class="dv">1</span><span class="op">),</span> philosopher<span class="op">,</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                WAITING_RIGHT_FORK<span class="op">,</span> EATING<span class="op">);</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        sleep_for<span class="op">(</span>EATING_PERIOD<span class="op">);</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        dining_table<span class="op">.</span>release_fork<span class="op">(</span>fork<span class="op">,</span> philosopher<span class="op">,</span> HOLDING_ONE_FORK<span class="op">);</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        sleep_for<span class="op">(</span>MEANTIME<span class="op">);</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        dining_table<span class="op">.</span>release_fork<span class="op">(</span>mod5<span class="op">(</span>fork<span class="op">+</span><span class="dv">1</span><span class="op">),</span> philosopher<span class="op">,</span> THINKING<span class="op">);</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="simulator-kod-5" class="slide level2">
-<h2>Simulator kod</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;DINING PHILOSOPHERS&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    thread philosopher0<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    thread philosopher1<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    thread philosopher2<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    thread philosopher3<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    thread philosopher4<span class="op">(</span>thread_philosopher<span class="op">);</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    philosopher0<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    philosopher1<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    philosopher2<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    philosopher3<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    philosopher4<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="rezultat-simulacije" class="slide level2">
-<h2>Rezultat simulacije</h2>
-<p><img data-src="img/2023-03-07-02-41-51.png" /></p>
-</section>
-<section id="rešenje" class="slide level2">
-<h2>Rešenje?</h2>
-<ul>
-<li>Postoje mnoga rešenja ovog problema</li>
-<li>Najlakši način jeste da se uvede <em>konobar</em> odnosno centralni sinhronizacioni entitet koji služi da se garantuje da se viljuške uzimaju odjednom, odn. ili obe, ili nijedna.</li>
-<li>Alternative jeste da se razbije cikličnost tako što se primeti da imamo simetriju: uvek uzimamo levu pa desnu. Šta ako makar jedan filozof uvek prvo uzme prvo desnu pa levu ili parni filozofi uzimeju uvek levu pa desnu?</li>
-</ul>
-</section>
-<section id="rešenje-1" class="slide level2">
-<h2>Rešenje</h2>
-<ul>
-<li>Još jedan problem koji rešava problem stohastički za relativno retke petlje jeste onaj koji se koristi u određenim verzijama Etherneta</li>
-<li>Umesto da čekamo zauvek (<code>.wait</code>) koristimo čekanje sa <code>wait_for</code> ili <code>wait_until</code> što omogućava da se čeka do ispunjenja uslova <em>ili</em> dok ne istakne neko vreme.</li>
-<li>Naravno ako čekamo svi isto vreme možemo da upadnemo u petlju gde se svi ‘sudarimo’ i onda čekamo neko (isto) vreme, pa se opet ‘sudarimo’ i tako u beskonačnost</li>
-<li>To se zove i ‘živa’ petlja odn. ‘livelock’</li>
-</ul>
-</section>
-<section id="rešenje-2" class="slide level2">
-<h2>Rešenje</h2>
-<ul>
-<li>Umesto da čekamo uvek isto vreme, mi oslobodimo ono što smo zauzeli, čekamo nasumično vreme, i probamo opet</li>
-<li>Ovo razbije simetriju i omogući da se sistem eventualno odglavi</li>
+<li>Operaciju <code>buffer.put()</code> poziva nit proizvođač.</li>
+<li>Operaciju <code>buffer.get()</code> poziva nit potrošač.</li>
+<li>U ovoj situaciji moguće je, da se desi prekid sata za vreme
+aktivnosti proizvođača u operaciji <code>buffer.put()</code>.</li>
+<li>Ako operacija <code>buffer.get()</code> bude pozvana u toku
+aktivnosti potrošača, tada postoji mogućnost da potrošač preuzme sadržaj
+delimično popunjenog bafera.</li>
 </ul>
 </section></section>
 <section>
-<section id="mrtva-petlja-1" class="title-slide slide level1">
-<h1>Mrtva petlja</h1>
+<section id="sprečavanje-štetnih-preplitanja"
+class="title-slide slide level1">
+<h1>Sprečavanje štetnih preplitanja</h1>
 
 </section>
-<section id="pet-filozofa-i-mrtve-petlje" class="slide level2">
-<h2>Pet filozofa i mrtve petlje</h2>
+<section id="međusobna-isključivost" class="slide level2">
+<h2>Međusobna isključivost</h2>
 <ul>
-<li>Pet filozofa je namerno upečatljiv primer mrtve petlje, ali ona može da nastane na raznim mestima</li>
-<li>Svaki višenitni program je ranjiv</li>
-<li>Takođe svaki operativni sistem koji zaključava fajlove za pristup</li>
-<li>Ako se steknu uslovi, onda gdegod da imamo zaključavanje i višestruko izvršavanje, mrtva petlja je moguća</li>
+<li>Promenljive kojima pristupaju više niti ili niti i obrađivači
+prekida istovremeno (position, list i buffer) se nazivaju
+<strong>deljene promenljive</strong>, a klase koje opisuju te
+promenljive <strong>deljene klase</strong>.</li>
+<li>Deljene klase su pravljene pod pretostavkom da se rukovanja deljenim
+promenljivim obavljaju sekvencijalno odnosno strogo jedna za
+drugom.</li>
+<li>Štetna preplitanja negiraju pomenutu pretpostavku jer dopuštaju da
+novo izvršavanje neke operacije deljene promenljive započne pre nego što
+se završilo već započeto izvršavanje neke od operacija te
+promenljive.</li>
+<li>Problem štetnih preplitanja ne postoji ako se obezbedi međusobna
+isključivost (mutual exclusion) izvršavanja operacija deljenih
+promenljvih.</li>
 </ul>
 </section>
-<section id="uslovi-za-pojavu-mrtve-petlje" class="slide level2">
-<h2>Uslovi za pojavu mrtve petlje</h2>
+<section id="kritične-sekcije-i-sinhronizacija" class="slide level2">
+<h2>Kritične sekcije i sinhronizacija</h2>
 <ul>
-<li>Mrtva petlja je problematična pojava trajnog zaustavljanja aktivnosti međusobno zavisnih procesa.</li>
-<li>Na primer, ona se javi kada dva procesa žele da u režimu međusobne isključivosti pristupaju dvema datotekama.</li>
-<li>Ako prvi od njih zaključa prvu datoteku, a zatim drugi od njih zaključa drugu datoteku, tada nema mogućnosti za nastavak aktivnosti tih procesa, bez obzira da li je sistemska operacija zaključavanja blokirajuća ili ne.</li>
+<li>Tela operacija deljenih klasa ili delovi ovih tela, čije izvršavanje
+je kritično za konzistentnost deljenih promenljvih, se nazivaju
+<strong>kritične sekcije</strong>.</li>
+<li>Međusobna isključivost kritičnih sekcija se ostvaruje
+sinhronizacijom pristupa.</li>
+<li>Pored obične sinhronizacije postoji i uslovna sinhronizacija.</li>
 </ul>
 </section>
-<section id="uslovi-za-pojavu-mrtve-petlje-1" class="slide level2">
-<h2>Uslovi za pojavu mrtve petlje</h2>
+<section id="fundamentalna-rešenja-problema-međusobne-isključivosti"
+class="slide level2">
+<h2>Fundamentalna Rešenja problema međusobne isključivosti</h2>
 <ul>
-<li>U slučaju blokirajućih sistemskih operacija zaključavanja, pokušaj prvog procesa da zaključa drugu datoteku dovodi do trajnog zaustavljanja njegove aktivnosti.</li>
-<li>Isto se dešava sa drugim procesom prilikom njegovog pokušaja da zaključa prvu datoteku.</li>
-<li>Zaustavljanje aktivnosti ova dva procesa je trajno, jer je svaki od njih zauzeo datoteku koja treba onom drugom procesu za nastavak njegove aktivnosti i nema nameru da tu datoteku oslobodi.</li>
-</ul>
-</section>
-<section id="uslovi-za-pojavu-mrtve-petlje-2" class="slide level2">
-<h2>Uslovi za pojavu mrtve petlje</h2>
-<p><img data-src="img/2023-03-07-02-55-31.png" /></p>
-</section>
-<section id="uslovi-za-pojavu-mrtve-petlje-3" class="slide level2">
-<h2>Uslovi za pojavu mrtve petlje</h2>
+<li>Postoje dva fundamentalna pristupa problemu međusobne isključivosti:
 <ul>
-<li>U slučaju neblokirajuće sistemske operacije zaključavanja, procesi upadaju u beskonačnu petlju (starvation), pokušavajući da zaključaju datoteku, koju je zaključao drugi proces.</li>
-<li>Ovakav oblik međusobne zavisnosti procesa se naziva i živa petlja (livelock).</li>
-<li>Ona se, po svom ishodu, suštinski ne razlikuje od mrtve petlje.</li>
-</ul>
-</section>
-<section id="uslovi-za-pojavu-mrtve-petlje-4" class="slide level2">
-<h2>Uslovi za pojavu mrtve petlje</h2>
-<ul>
-<li>Pojava mrtve petlje je vezana za zauzimanje resursa, kao što su, na primer, prethodno pomenute datoteke.</li>
-<li>Pri tome, za pojavu mrtve petlje je potrebno da budu ispunjena četiri uslova.</li>
-</ul>
-</section>
-<section id="uslovi-za-pojavu-mrtve-petlje-5" class="slide level2">
-<h2>Uslovi za pojavu mrtve petlje</h2>
-<ol type="1">
-<li>zauzimani resursi se koriste u režimu međusobne isključivosti</li>
-<li>resursi se zauzimaju jedan za drugim, tako da proces, nakon zauzimanja izvesnog broja resursa, mora da čeka da zauzme preostale resurse</li>
-<li>resurse oslobađaju samo procesi koji su ih zauzeli</li>
-<li>postoji cirkularna međuzavisnost procesa (prvi proces čeka oslobađanje resursa koga drži drugi proces, a on čeka oslobađanje resursa koga drži treći proces, i tako redom do poslednjeg procesa iz lanca procesa, koji čeka oslobađanje resursa koga drži prvi proces).</li>
-</ol>
-</section>
-<section id="tretiranje-mrtve-petlje" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Postoje četiri pristupa tretiranja problema mrtve petlje:</li>
-<li>sprečavanje (prevention) pojave mrtve petlje (onemogućavanjem važenja nekog od četiri neophodna uslova za njenu pojavu)</li>
-<li>izbegavanje (avoidance) pojave mrtve petlje</li>
-<li>otkrivanje (detection) pojave mrtve petlje i oporavak (recovery) od nje</li>
-<li>ignorisanje pojave mrtve petlje.</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-1" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Kod sprečavanja pojave mrtve petlje, važenje prvog uslova obično nije moguće sprečiti, jer se resursi najčešće koriste u režimu međusobne isključivosti.</li>
-<li>Važenje drugog uslova se može sprečiti, ako se unapred zna koliko treba resursa i ako se oni svi zauzmu pre korišćenja.</li>
-<li>Pri tome, neuspeh u zauzimanju bilo kog resursa dovodi do oslobađanja prethodno zauzetih resursa, što je moguće učiniti bez posledica, jer nije započelo njihovo korišćenje.</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-2" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Važenje trećeg uslova se obično ne može sprečiti, jer najčešće ne postoji način da se zauzeti resurs privremeno oduzme procesu.</li>
-<li>I konačno, važenje četvrtog uslova se može sprečiti, ako se resursi uvek zauzimaju u unapred određenom redosledu, koji isključuje mogućnost cirkularne međuzavisnosti procesa (primer pozitivnog rešenja 5 filozofa).</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-3" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Izbegavanje pojave mrtve petlje zahteva poznavanje podataka:
-<ul>
-<li>o maksimalno mogućim zahtevima za resursima</li>
-<li>ukupno postavljenim zahtevima za resursima</li>
-<li>stanju resursa</li>
-</ul></li>
-<li>Podrazumeva se da se udovoljava samo onim zahtevima za koje se proverom ustanovi da, nakon njihovog ispunjavanja, postoji redosled zauzimanja i oslobađanja resursa u kome se mogu zadovoljiti maksimalno mogući zahtevi svih procesa.</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-4" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Praktična vrednost ovoga pristupa nije velika, jer se obično unapred ne znaju maksimalno mogući zathevi procesa za resursima, a to je neophodno za proveru da li se može udovoljiti pojedinim zahtevima.</li>
-<li>Sem toga, ovakva provera je komplikovana, a to znači i neefikasna.</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-5" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Otkrivanje pojave mrtve petlje se zasniva na sličnom pristupu kao i izbegavanje pojave mrtve petlje.</li>
-<li>U ovom slučaju se proverava da li postoji proces, čijim zahtevima se ne može udovoljiti ni za jedan redosled zauzimanja i oslobađanja resursa.</li>
-<li>Pored komplikovanosti ovakve provere, problem je i šta učiniti, kada se i otkrije pojava mrtve petlje.</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-6" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Ako se resursi ne mogu privremeno oduzeti od procesa, preostaje jedino uništavanje procesa, radi oslobađanja resursa koje oni drže.</li>
-<li>Međutim, to nije uvek prihvatljiv zahvat.</li>
-<li>Zbog toga ni ovaj pristup nema veliki praktični značaj.</li>
-</ul>
-</section>
-<section id="tretiranje-mrtve-petlje-7" class="slide level2">
-<h2>Tretiranje mrtve petlje</h2>
-<ul>
-<li>Ignorisanje pojave mrtve petlje je pristup koji je najčešće primenjen u praksi, jer se ovaj problem ne javlja tako često da bi se isplatilo da ga rešava operativni sistem.</li>
-<li>Prema tome, kada se mrtva petlja javi, na korisniku je da se suoči sa ovim problemom i da ga reši na način, koji je primeren datim okolnostima.</li>
-</ul>
-</section></section>
-<section>
-<section id="problem-čitanja-i-pisanja" class="title-slide slide level1">
-<h1>Problem čitanja i pisanja</h1>
-
-</section>
-<section id="postavka-3" class="slide level2">
-<h2>Postavka</h2>
-<ul>
-<li>Problem čitanja i pisanja (readers-writers problem) se može objasniti na primeru kao što je rukovanje bankovnim računima.</li>
-<li>Bankovni računi pripadaju komitentima banke i sadrže ukupan iznos novčanih sredstava svakog od komitenata.</li>
-<li>U najjednostavnijem slučaju, rukovanje bankovnim računima se svodi: na prenos sredstava (s jednog računa na drugi) i na proveru (stanja svih) računa.</li>
-</ul>
-</section>
-<section id="postavka-4" class="slide level2">
-<h2>Postavka</h2>
-<ul>
-<li>Prenos sredstava obuhvata četiri koraka:
-<ul>
-<li>Čitanje stanja računa s koga se prenose sredstva</li>
-<li>Pisanje novog stanja na ovaj račun. Novo stanje se dobije umanjivanjem pročitanog stanja za prenošeni iznos</li>
-<li>Čitanje stanja računa na koji se prenose sredstva.</li>
-<li>Pisanje novog stanja na račun na koji se prenose sredstva. Novo stanje se dobije uvećavanjem pročitanog stanja za prenošeni iznos</li>
+<li>Pristup baziran na softveru</li>
+<li>Pristup baziran na hardveru</li>
 </ul></li>
 </ul>
 </section>
-<section id="postavka-5" class="slide level2">
-<h2>Postavka</h2>
+<section id="atomski-regioni" class="slide level2">
+<h2>Atomski regioni</h2>
 <ul>
-<li>Uz pretpostavku da su prenosi sredstava mogući samo između posmatranih bankovnih računa, ukupna suma njihovih stanja je nepromenljiva.</li>
-<li>Prema tome, provera računa se svodi na čitanja, jedno za drugim, stanja svih računa, radi njihovog sumiranja.</li>
-<li>Ispravnost prenosa sredstava zavisi od očuvanja konzistentnosti stanja svih računa, za šta je neophodna međusobna isključivost raznih prenosa sredstava. U suprotnom, moguće su razne greške.</li>
+<li>U primeru rukovanja pozicijom kursora, štetna preplitanja nastupaju
+kao posledica obrade prekida.</li>
+<li>Atomski regioni omogućavaju neprekidnost izvršavanja unutar
+kritičnih sekcija deljene promenljive.</li>
+<li>Onemogućenje prekida odlaže obradu novih prekida i usporava reakciju
+procesora, pa atomski regioni treba da budu što kraći.</li>
 </ul>
 </section>
-<section id="postavka-6" class="slide level2">
-<h2>Postavka</h2>
+<section id="propusnice-i-isključivi-regioni" class="slide level2">
+<h2>Propusnice i isključivi regioni</h2>
 <ul>
-<li>Iz prethodne analize sledi:
+<li>Propusnice su drugi način ostvarenja međusobne isključivosti
+kritičnih sekcija.</li>
+<li>Propusnica može biti slobodna ili zauzeta.</li>
+<li>Samo jedna nit od svih niti koje se takmiče za propusnicu dobija
+istu i ulazi u kritičnu sekciju, dok sve ostale niti zaustavljaju svoju
+aktivnost i prelaze u stanje “čeka”.</li>
+<li>Kada nit koja napušta kritičnu sekciju oslobodi propusnicu (vrati),
+neka sledeća nit dobija propusnicu i prelazi iz stanja “čeka” u stanje
+“spremna”.</li>
+<li>Nit, koja tada dobije propusnicu, odmah prelazi iz stanja “čeka” u
+stanje “spremna”, ali u kritičnu sekciju ulazi tek kada postane aktivna
+(odnosno, kada se procesor preključi na nju).</li>
+</ul>
+</section>
+<section id="propusnice-i-isključivi-regioni-1" class="slide level2">
+<h2>Propusnice i isključivi regioni</h2>
 <ul>
-<li>Da je za ispravnost prenosa bitno da prenosi budu međusobno isključivi.</li>
-<li>Da je za ispravnost provera bitno da provere i prenosi budu međusobno isključivi.</li>
+<li>Rukovanje propusnicom deljene promenljive je, takođe, ugroženo
+štetnim preplitanjima.</li>
+<li>Zbog toga se konzistentnost propusnica mora zaštititi.</li>
+<li>To se može učiniti kroz algoritam ili kroz hardversku podršku</li>
+</ul>
+</section>
+<section id="algoritmi-koji-štite-propusnicu" class="slide level2">
+<h2>Algoritmi koji štite propusnicu</h2>
+<ul>
+<li>Ovo je plodno polje istraživanja koje je <em>naročito</em> važno ako
+se bavite distribuiranim sistemima (nešto više o ovome kasnije)</li>
+<li>Ovde ćemo baciti pogled na Lamportovo rešenje poznato još i kao
+“Lamportova Pekara”</li>
+<li>Lamportova Pekara je mehanizam gde zamišljamo da imamo pekaru
+(radila bi i neka druga prodavnica) gde mušterije uzmu broj da bi ušle u
+prodavnicu.</li>
+<li>Na ulazu je znak koji prikazuje koji se broj uslužuje</li>
+</ul>
+</section>
+<section id="lamportova-pekara" class="slide level2">
+<h2>Lamportova Pekara</h2>
+<ul>
+<li>Algoritam je onda da uzmemo broj i čekamo (bukvalno čekanje:
+koristimo petlju za čekanje - tehnika koja je još poznata i kao spinlock
+ili busy-wait) dok naš broj nije ‘na redu’</li>
+<li>Pošto se svi možemo složiti oko toga koji je broj veći ili manji,
+dok god možemo da delimo memoriju, možemo da se sinhronizujemo</li>
+</ul>
+</section>
+<section id="lamportova-pekara-1" class="slide level2">
+<h2>Lamportova Pekara</h2>
+<ul>
+<li>Algoritam se mora adaptirati za upotrebu na računaru (a ne u pekari)
+ali centralna ideja je ista</li>
+<li>Uvešćemo prvo dva niza, <code>Choosing</code> i
+<code>Number</code></li>
+<li>Prvi je bool niz koji je 1 ako je neka nit u procesu biranja
+broja</li>
+<li>Drugi je niz brojeva koje niti uzimaju</li>
+</ul>
+</section>
+<section id="lamportova-pekara---pseudokod" class="slide level2">
+<h2>Lamportova Pekara - pseudokod</h2>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1"></a><span class="dt">bool</span> choosing<span class="op">[</span>NUM_THREADS<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="kw">false</span><span class="op">};</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="dt">int</span> number<span class="op">[</span>NUM_THREADS<span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">};</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="dt">void</span> lock<span class="op">(</span><span class="dt">int</span> i<span class="op">){</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  choosing<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  number<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> max<span class="op">(</span>number<span class="op">);</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>  choosing<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="kw">false</span><span class="op">;</span> </span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="cf">for</span><span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> NUM_THREADS<span class="op">;</span> j<span class="op">++){</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="cf">while</span><span class="op">(</span>choosing<span class="op">[</span>j<span class="op">]);</span><span class="co">//busy-wait</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="cf">while</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>    <span class="op">(</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>      <span class="op">(</span>number<span class="op">[</span>j<span class="op">]</span> <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> </span>
+<span id="cb7-12"><a href="#cb7-12"></a>      <span class="op">(</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>        <span class="op">(</span>number<span class="op">[</span>j<span class="op">]</span> <span class="op">&lt;</span> number<span class="op">[</span>i<span class="op">])</span> <span class="op">||</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>        <span class="op">(</span>number<span class="op">[</span>j<span class="op">]</span> <span class="op">==</span> number<span class="op">[</span>i<span class="op">]</span> <span class="op">&amp;&amp;</span> j <span class="op">&lt;</span> i<span class="op">)</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a>      <span class="op">)</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a>    <span class="op">);</span><span class="co">//busy-wait</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>  <span class="op">}</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="lamportova-pekara-2" class="slide level2">
+<h2>Lamportova Pekara</h2>
+<ul>
+<li>Primetite da je ograničenje Lamportove pekare da može da se desi da
+dve niti dobiju isti broj</li>
+<li>To nije problem: u tom slučaju broj <strong>niti</strong> postaje
+prioritet</li>
+<li>Jedino što je onda potrebno je imati brojeve niti koje se ne
+ponavaljaju</li>
+</ul>
+</section>
+<section id="lamportova-pekara---pseudokod-1" class="slide level2">
+<h2>Lamportova Pekara - pseudokod</h2>
+<div class="sourceCode" id="cb8" data-startFrom="19"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 18;"><span id="cb8-19"><a href="#cb8-19"></a><span class="dt">void</span> unlock<span class="op">(</span><span class="dt">int</span> i<span class="op">){</span></span>
+<span id="cb8-20"><a href="#cb8-20"></a>  number<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb8-21"><a href="#cb8-21"></a><span class="op">}</span></span>
+<span id="cb8-22"><a href="#cb8-22"></a></span>
+<span id="cb8-23"><a href="#cb8-23"></a><span class="dt">void</span> nit<span class="op">(</span><span class="dt">int</span> pid<span class="op">){</span></span>
+<span id="cb8-24"><a href="#cb8-24"></a>  <span class="cf">while</span><span class="op">(</span><span class="kw">true</span><span class="op">){</span></span>
+<span id="cb8-25"><a href="#cb8-25"></a>    lock<span class="op">(</span>pid<span class="op">);</span></span>
+<span id="cb8-26"><a href="#cb8-26"></a>    <span class="co">//Kritična sekcija</span></span>
+<span id="cb8-27"><a href="#cb8-27"></a>    unlock<span class="op">(</span>pid<span class="op">);</span></span>
+<span id="cb8-28"><a href="#cb8-28"></a>  <span class="op">}</span></span>
+<span id="cb8-29"><a href="#cb8-29"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="ograničenje-lamportove-pekare-i-sličnih-algoritama"
+class="slide level2">
+<h2>Ograničenje Lamportove pekare i sličnih algoritama</h2>
+<ul>
+<li>Glavni problem sa svim algoritmima ove vrste jeste što se zasnivaju
+na tome da se kod izvršava <em>tačno kako piše</em></li>
+<li>Ovo apsolutno nije nešto u šta možemo da se uzdamo na modernim
+sistemima gde je često izvršavanje koda van redosleda</li>
+<li>Ako imamo izvršavanje koda van redosleda, onda algoritmi ovog tipa
+<em>neće raditi.</em></li>
+</ul>
+</section>
+<section id="hardverska-podrška" class="slide level2">
+<h2>Hardverska podrška</h2>
+<ul>
+<li>Hardverska podrška je ono što se koristi na jedinstvenim računarima,
+tj. van distribuiranih sistema.</li>
+<li>Jednostavno je, brzo i efektno</li>
+<li>Na procesorima jednostrukog tipa se koriste <em>atomski regioni</em>
+koji su konstruisani tako što se zabrani obrada prekida. Bez prekida na
+takvim sistemima nema preplitanja.</li>
+<li>Procesori sa više sistemskih niti zahtevaju nešto malo
+komplikovanije.</li>
+</ul>
+</section>
+<section id="zabrana-prekida" class="slide level2">
+<h2>Zabrana prekida</h2>
+<ul>
+<li>Ako imamo jednostruk procesor jedini način na koji on može prestati
+da izvršava sekvencu instrukcija koju je uzeo da izvršava jeste da se
+desi prekid</li>
+<li>Taj prekid može da nešto promeni i da vrati izvršavanje (kao što je
+slučaj sa obrađivačem za kursor ili vreme), ali jednako lako može i da
+potpuno promeni šta se izvršava budući da obrađivač prekida može da
+promeni pointer instrukcija i sadržaj registara i steka i time potpuno i
+permanentno izmeni šta sistem radi.</li>
+</ul>
+</section>
+<section id="zabrana-prekida-1" class="slide level2">
+<h2>Zabrana prekida</h2>
+<ul>
+<li>Ako <em>zabranimo</em> prekid što se relativno lako može uraditi
+kroz instrukciju procesora koja tome služi (<code>sti</code> i
+<code>cli</code> na x86_64 arhitekturi), onda garantujemo da nas niko
+drugi neće prekinuti</li>
+<li>Ako nema potrebe da se bavimo nečim drugim, mi predpostavljamo da
+koristimo baš ovaj pristup, mada se on u praksi ne koristi.</li>
+</ul>
+</section>
+<section id="šta-na-procesorima-sa-više-sistemskih-niti"
+class="slide level2">
+<h2>Šta na procesorima sa više sistemskih niti?</h2>
+<ul>
+<li>Jedan od metoda jeste da se zabrane prekidi <em>i</em> zaključa
+memorijska magistrala</li>
+<li>Ovim se garantuje da niti može da se desi prekid nit druga nit može
+da dirne memoriju</li>
+<li>U praksi ovo je previše sporo</li>
+<li>Umesto toga, kada je samo potrebna međusobna isključivost između dve
+korisničke niti onda se koriste posebne instrukcije koje implementiraju
+sve što je potrebno da bi se implementirala propusnica.</li>
+</ul>
+</section>
+<section id="poredi-i-zameni" class="slide level2">
+<h2>Poredi i zameni</h2>
+<ul>
+<li>Poredi i zameni (eng. Compare and Swap) je instrukcija koja postoji
+na nekim arhitekturama i koristi se kao gradivni element da implementira
+različite primitive sinhronizacije.</li>
+<li>Na Intel arhitekturi ovo se zove <code>CMPXCHNG</code> i (uz prefiks
+<code>LOCK</code>) omogućava da se vrlo jednostavno napravi struktura
+koja bezbedno upravlja memorijom propusnice</li>
+<li>Ako pogledamo uputstvo možemo da vidimo kako je to Intel
+implementirao.</li>
+</ul>
+</section>
+<section id="citat-iz-intel-uputstva-za-x86-64-arhitekturu-7.3.1.2"
+class="slide level2">
+<h2>Citat iz Intel uputstva za x86-64 arhitekturu 7.3.1.2</h2>
+<p>“The CMPXCHG (compare and exchange) and CMPXCHG8B (compare and
+exchange 8 bytes) instructions are used to synchronize operations in
+systems that use multiple processors. The CMPXCHG instruction requires
+three operands: a source operand in a register, another source operand
+in the EAX register, and a destination operand.”</p>
+</section>
+<section id="citat-iz-intel-uputstva-za-x86-64-arhitekturu-7.3.1.2-1"
+class="slide level2">
+<h2>Citat iz Intel uputstva za x86-64 arhitekturu 7.3.1.2</h2>
+<p>“If the values contained in the destination operand and the EAX
+register are equal, the destination operand is replaced with the value
+of the other source operand (the value not in the EAX register).
+Otherwise, the original value of the destination operand is loaded in
+the EAX register.”</p>
+</section>
+<section id="citat-iz-intel-uputstva-za-x86-64-arhitekturu-7.3.1.2-2"
+class="slide level2">
+<h2>Citat iz Intel uputstva za x86-64 arhitekturu 7.3.1.2</h2>
+<p>“The status flags in the EFLAGS register reflect the result that
+would have been obtained by subtracting the destination operand from the
+value in the EAX register. The CMPXCHG instruction is commonly used for
+testing and modifying semaphores. It checks to see if a semaphore is
+free. If the semaphore is free, it is marked allocated; otherwise it
+gets the ID of the current owner.”</p>
+</section>
+<section id="citat-iz-intel-uputstva-za-x86-64-arhitekturu-7.3.1.2-3"
+class="slide level2">
+<h2>Citat iz Intel uputstva za x86-64 arhitekturu 7.3.1.2</h2>
+<p>“This is all done in one uninterruptible operation. In a
+single-processor system, the CMPXCHG instruction eliminates the need to
+switch to protection level 0 (to disable interrupts) before executing
+multiple instructions to test and modify a semaphore. For SMP systems,
+CMPXCHG can be combined with the LOCK prefix to perform the compare and
+exchange operation atomically.”</p>
+</section>
+<section id="kako-dalje" class="slide level2">
+<h2>Kako dalje</h2>
+<ul>
+<li>Nije bitno (mnogo) koja tehnika se koristi da se implementira
+propusnica</li>
+<li>Bitno je da radi</li>
+<li>Za naše potrebe, ako nas baš ne zanima neka varijacija na temu, plan
+će da se pratvaramo da imamo jednostruk procesor gde koristimo zabranu
+prekida zato što je to najprostije za razumevanje.</li>
+</ul>
+</section>
+<section id="propusnice-i-isključivi-regioni-2" class="slide level2">
+<h2>Propusnice i isključivi regioni</h2>
+<ul>
+<li>Interesantno je uočiti da preključivanja u isključivim regionima
+omogućuju pojavu štetnih preplitanja, ali i omogućuju njihovo
+sprečavanje.</li>
+<li>Tako, ako nit, čiju aktivnost je omogućilo preključivanje, pokuša da
+uđe u isključivi region deljene promenljive sa zauzetom propusnicom,
+tada opet preključivanje dovodi do zaustavljanja aktivnosti ove
+niti.</li>
+<li>Prema tome, prvo preključivanje je stvorilo uslove za pojavu štetnog
+preplitanja, a drugo preključivanje je sprečilo tu pojavu.</li>
+</ul>
+</section>
+<section id="poželjne-osobine-konkurentnih-programa"
+class="slide level2">
+<h2>Poželjne osobine konkurentnih programa</h2>
+<ul>
+<li>Poželjne osobine konkurentnih programa uvode:
+<ul>
+<li>Tvrdnju isključivanja nepoželjnog (safety property).</li>
+<li>Tvrdnju uključivanja poželjnog (liveness property).</li>
 </ul></li>
-<li>Pošto prenosi sadrže pisanja, a provere samo čitanja, sledi da operacije sa pisanjem moraju biti međusobno isključive, kao što moraju biti međusobno isključive operacije sa pisanjem i operacije sa čitanjem.</li>
-<li>Za operacije koje sadrže samo čitanja međusobna isključivost nije potrebna.</li>
+<li>Primer tvrdnje isključivanja nepoželjnog je tvrdnja da se u
+izvršavanjima konkurentnog programa ne javlja nekonzistentnost date
+deljene promenljive.</li>
+<li>Primer tvrdnje uključivanja poželjnog je tvrdnja da se u toku
+izvršavanja konkurentnog programa dese svi zatraženi ulasci u dati
+isključivi region.</li>
 </ul>
 </section>
-<section id="kod" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;thread&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include</span><span class="im">&lt;iostream&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> std<span class="op">;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> chrono<span class="op">;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">using</span> <span class="kw">namespace</span> this_thread<span class="op">;</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">unsigned</span> ACCOUNTS_NUMBER <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> <span class="dt">int</span> INITIAL_AMOUNT <span class="op">=</span> <span class="dv">100</span><span class="op">;</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Bank <span class="op">{</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    mutex mx<span class="op">;</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> accounts<span class="op">[</span>ACCOUNTS_NUMBER<span class="op">];</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> readers_number<span class="op">;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> writers_number<span class="op">;</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> readers_delayed_number<span class="op">;</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> writers_delayed_number<span class="op">;</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    condition_variable readers_q<span class="op">;</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    condition_variable writers_q<span class="op">;</span></span></code></pre></div>
-</section>
-<section id="kod-1" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> show<span class="op">();</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> reader_begin<span class="op">();</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> reader_end<span class="op">();</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> writer_begin<span class="op">();</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> writer_end<span class="op">();</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    Bank<span class="op">();</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> audit<span class="op">();</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> transaction<span class="op">(</span><span class="dt">unsigned</span> source<span class="op">,</span> <span class="dt">unsigned</span> destination<span class="op">);</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>Bank<span class="op">::</span>Bank<span class="op">(){</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> ACCOUNTS_NUMBER<span class="op">;</span> i<span class="op">++)</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        accounts<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> INITIAL_AMOUNT<span class="op">;</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    readers_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    writers_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    readers_delayed_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    writers_delayed_number <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-2" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>show<span class="op">(){</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;RN: &quot;</span> <span class="op">&lt;&lt;</span> readers_number <span class="op">&lt;&lt;</span> <span class="st">&quot; RDN: &quot;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;&lt;</span> readers_delayed_number <span class="op">&lt;&lt;</span> <span class="st">&quot; WN: &quot;</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;&lt;</span> writers_number <span class="op">&lt;&lt;</span> <span class="st">&quot; WDN: &quot;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;&lt;</span> writers_delayed_number <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>reader_begin<span class="op">(){</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">((</span>writers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">){</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        readers_delayed_number<span class="op">++;</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">do</span> <span class="op">{</span> readers_q<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span> <span class="op">}</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span><span class="op">((</span>writers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">||</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>              <span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">));</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-3" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    readers_number<span class="op">++;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>readers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">){</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        readers_delayed_number<span class="op">--;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        readers_q<span class="op">.</span>notify_one<span class="op">();</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>reader_end<span class="op">(){</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    readers_number<span class="op">--;</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">((</span>readers_number <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)){</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        writers_delayed_number<span class="op">--;</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        writers_q<span class="op">.</span>notify_one<span class="op">();</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-4" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>writer_begin<span class="op">(){</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">((</span>readers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span>writers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)){</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>        writers_delayed_number<span class="op">++;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">do</span> <span class="op">{</span> writers_q<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span> <span class="op">}</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">while</span><span class="op">((</span>readers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span>writers_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">));</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    writers_number<span class="op">++;</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-5" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>writer_end<span class="op">(){</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    writers_number<span class="op">--;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    show<span class="op">();</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>writers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">){</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        writers_delayed_number<span class="op">--;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        writers_q<span class="op">.</span>notify_one<span class="op">();</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span><span class="op">(</span>readers_delayed_number <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        readers_delayed_number<span class="op">--;</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        show<span class="op">();</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        readers_q<span class="op">.</span>notify_one<span class="op">();</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-6" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds WRITING_PERIOD<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>transaction<span class="op">(</span><span class="dt">unsigned</span> source<span class="op">,</span><span class="dt">unsigned</span> destination<span class="op">){</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> amount<span class="op">;</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    writer_begin<span class="op">();</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    sleep_for<span class="op">(</span>WRITING_PERIOD<span class="op">);</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    amount <span class="op">=</span> accounts<span class="op">[</span>source<span class="op">];</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    accounts<span class="op">[</span>source<span class="op">]</span> <span class="op">-=</span> amount<span class="op">;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    accounts<span class="op">[</span>destination<span class="op">]</span> <span class="op">+=</span> amount<span class="op">;</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    writer_end<span class="op">();</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>Bank bank<span class="op">;</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_reader<span class="op">(){</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>audit<span class="op">();</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-7" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds READING_PERIOD<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>audit<span class="op">(){</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> sum <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    reader_begin<span class="op">();</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    sleep_for<span class="op">(</span>READING_PERIOD<span class="op">);</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(</span><span class="dt">unsigned</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> ACCOUNTS_NUMBER<span class="op">;</span> i<span class="op">++)</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        sum <span class="op">+=</span> accounts<span class="op">[</span>i<span class="op">];</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    reader_end<span class="op">();</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span><span class="op">(</span>sum <span class="op">!=</span> ACCOUNTS_NUMBER<span class="op">*</span>INITIAL_AMOUNT<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        cout <span class="op">&lt;&lt;</span> <span class="st">&quot; audit error &quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-8" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> milliseconds WRITING_PERIOD<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Bank<span class="op">::</span>transaction<span class="op">(</span><span class="dt">unsigned</span> source<span class="op">,</span><span class="dt">unsigned</span> destination<span class="op">){</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> amount<span class="op">;</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    writer_begin<span class="op">();</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    sleep_for<span class="op">(</span>WRITING_PERIOD<span class="op">);</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    amount <span class="op">=</span> accounts<span class="op">[</span>source<span class="op">];</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    accounts<span class="op">[</span>source<span class="op">]</span> <span class="op">-=</span> amount<span class="op">;</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    accounts<span class="op">[</span>destination<span class="op">]</span> <span class="op">+=</span> amount<span class="op">;</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    writer_end<span class="op">();</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>Bank bank<span class="op">;</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_reader<span class="op">(){</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>audit<span class="op">();</span></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="kod-9" class="slide level2">
-<h2>Kod</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_writer0to1<span class="op">(){</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>transaction<span class="op">(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> thread_writer1to0<span class="op">(){</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    bank<span class="op">.</span>transaction<span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;READERS AND WRITERS&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    thread reader0<span class="op">(</span>thread_reader<span class="op">);</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    thread reader1<span class="op">(</span>thread_reader<span class="op">);</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    thread writer0<span class="op">(</span>thread_writer0to1<span class="op">);</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    thread reader2<span class="op">(</span>thread_reader<span class="op">);</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    thread writer1<span class="op">(</span>thread_writer1to0<span class="op">);</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    reader0<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    reader1<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    writer0<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    reader2<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    writer1<span class="op">.</span>join<span class="op">();</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="komentar-o-rešenju" class="slide level2">
-<h2>Komentar o rešenju</h2>
+<section id="poželjne-osobine-konkurentnih-programa-1"
+class="slide level2">
+<h2>Poželjne osobine konkurentnih programa</h2>
 <ul>
-<li>Ovo rešenje, eksplicitno, je napravljeno tako da pisanje ima prednost u odnosu na čitanje</li>
-<li>Ako je plan da bude obrnuto onda su potrebne promene</li>
-</ul>
-</section></section>
-<section>
-<section id="rizici-konkurentnog-programiranja" class="title-slide slide level1">
-<h1>Rizici konkurentnog programiranja</h1>
-
-</section>
-<section id="rizici" class="slide level2">
-<h2>Rizici</h2>
-<ul>
-<li>Opisivanje obrada podataka je jedini cilj sekvencijalnog, a osnovni cilj konkurentnog programiranja.</li>
-<li>Bolje iskorišćenje računara i njegovo čvršće sprezanje sa okolinom su dodatni ciljevi konkurentnog programiranja, po kojima se ono i razlikuje od sekvencijalnog programiranja.</li>
-<li>Od suštinske važnosti je da ostvarenje dodatnih ciljeva ne ugrozi ostvarenje osnovnog cilja, jer je on neprikosnoven, pošto je konkurentni program upotrebljiv jedino ako iza svakog od njegovih izvršavanja ostaju samo ispravno obrađeni podaci.</li>
+<li>Za konkurentni program se može reći da ima neku od poželjnih osobina
+samo ako se dokaže (na neformalan ili formalan način) da važi tvrdnja
+kojoj pomenuta osobina odgovara.</li>
+<li>Ovakvo rezonovanje o ispravnosti konkurentnog programa je neophodno,
+jer slučajna priroda preplitanja može da bude uzrok nedeterminističkog
+(nepredvidivog) izvršavanja konkurentnog programa.</li>
 </ul>
 </section>
-<section id="rizici-1" class="slide level2">
-<h2>Rizici</h2>
+<section id="poželjne-osobine-konkurentnih-programa-2"
+class="slide level2">
+<h2>Poželjne osobine konkurentnih programa</h2>
 <ul>
-<li>Tipične poželjne osobine sekvencijalnog, a to znači i konkurentnog programa obuhvataju tvrdnje uključivanja poželjnog, kao što je tvrdnja da nakon izvršavanja programa ostaju ispravno obrađeni podaci, i tvrdnje isključivanja nepoželjnog, kao što je tvrdnja da program ne sadrži beskonačne petlje.</li>
-<li>Tipične dodatne poželjne osobine konkurentnog programa obuhvataju tvrdnje uključivanja poželjnog, kao što je tvrdnja da su, u toku izvršavanja programa, deljene promenljive stalno konzistentne, i tvrdnje isključivanja nepoželjnog, kao što je tvrdnja da u toku izvršavanja programa ne dolazi do trajnog zaustavljanja aktivnosti niti.</li>
+<li>U takvoj situaciji, ponovljena izvršavanja konkurentnog programa, u
+toku kojih se obrađuju isti podaci, ne moraju da imaju isti ishod.</li>
+<li>Zbog toga, provera ispravnosti konkurentnog programa ne može da se
+zasniva samo na pokazivanju da pojedina izvršavanja konkurentnog
+programa imaju ispravan rezultat, jer tačan rezultat, dobijen u jednom
+ili više izvršavanja, ne isključuje mogućnost postojanja izvršavanja
+koja za iste ulazne podatke daju netačan rezultat.</li>
 </ul>
 </section>
-<section id="rizici-2" class="slide level2">
-<h2>Rizici</h2>
+<section id="programski-jezici-za-konkurentno-programiranje"
+class="slide level2">
+<h2>Programski jezici za konkurentno programiranje</h2>
 <ul>
-<li>Ispravnu obradu podataka ugrožava narušavanje konzistentnosti deljenih promenljivih u toku izvršavanja konkurentnog programa.</li>
-<li>Do narušavanja konzistentnosti deljenih promenljivih dolazi, ako na kraju isključivog regiona deljena promenljiva nije u konzistentnom stanju ili ako se operacija wait() pozove pre nego je deljena promenljiva dovedena u konzistentno stanje</li>
+<li>Konkurentno programiranje se razlikuje od sekvencijalnog po
+rukovanju nitima i deljenim promenljivama.</li>
+<li>Konkurentni programski jezik može nastati kao rezultat pravljenja
+potpuno novog programskog jezika ili kao rezultat proširenja postojećeg
+sekvencijalnog programskog jezika konkurentnim iskazima.</li>
+<li>Konkurentna biblioteka omogućuje da se za konkurentno programiranje
+koristi već postojeći, poznat programski jezik.</li>
 </ul>
 </section>
-<section id="pozivanje-wait-pre-dovođenja-u-konzistentno-stanje" class="slide level2">
-<h2>Pozivanje <code>wait</code> pre dovođenja u konzistentno stanje</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">//&lt; exclusive region 1 &gt;</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    some_condition<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">//&lt; exclusive region 2 &gt;</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-</section>
-<section id="mrtva-petlja-među-nitima" class="slide level2">
-<h2>Mrtva petlja među nitima</h2>
+<section id="uvod-u-konkurentnu-biblioteku-c" class="slide level2">
+<h2>Uvod u konkurentnu biblioteku C++</h2>
 <ul>
-<li>Upotrebljivost konkurentnih programa ugrožava i pojava međuzavisnosti niti, poznata pod nazivom mrtva petlja.</li>
-<li>Ona dovodi do trajnog zaustavljanja aktivnosti niti, a to ima za posledicu da izvršavanje konkurentnog programa nema kraja.</li>
-<li>Konkurentni program, u toku čijeg izvršavanja je moguća pojava mrtve petlje, nije upotrebljiv, jer pojedina od njegovih izvršavanja, koja nemaju kraja, ne dovode do uspešne obrade podataka.</li>
-<li>Do mrtve petlje može da dođe, na primer, ako se iz jedne deljene klase pozivaju operacije druge deljene klase, pod uslovom da je bar jedna od pozivanih operacija blokirajuća.</li>
+<li>Međunarodni standard C++11 predviđa rukovanje nitima i deljenim
+promenljivama.</li>
+<li>Implementacije C++11 standarda i kasnijih revizija su dužne da pruže
+nekakvu implementaciju ovih standardnih osobina jezika</li>
+<li>Na Linux platformi GCC počevši od verzije ~5 podržava sve što je
+potrebno</li>
+<li>Potrebna je pomoć operativnog sistema da se niti implementiraju kako
+valja</li>
+<li>Ta pomoć se pruža preko POSIX Threads (pthreads) mehanizma.</li>
 </ul>
 </section>
-<section id="minimalni-primer-mrtve-petlje" class="slide level2">
-<h2>Minimalni primer mrtve petlje</h2>
-<div class="sourceCode" id="cb18"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Activity <span class="op">{</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    mutex mx_activity<span class="op">;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    condition_variable activity_permission<span class="op">;</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> stop<span class="op">();</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> start<span class="op">();</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Activity<span class="op">::</span>stop<span class="op">(){</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx_activity<span class="op">);</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    activity_permission<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Activity<span class="op">::</span>start<span class="op">(){</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx_activity<span class="op">);</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    activity_permission<span class="op">.</span>notify_one<span class="op">();</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<section id="klasa-thread" class="slide level2">
+<h2>Klasa <code>thread</code></h2>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb9-1"><a href="#cb9-1"></a><span class="dt">void</span> thread_example<span class="op">(){</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>    <span class="dt">double</span> x<span class="op">;</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;ZADAJ VREDNOST BROJA X&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>    cin <span class="op">&gt;&gt;</span> x<span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;x = &quot;</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="op">}</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a>    thread example<span class="op">(</span>thread_example<span class="op">);</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>    example<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a>   <span class="co">//example.detach();</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="op">}</span></span></code></pre></div>
 </section>
-<section id="minimalni-primer-mrtve-petlje-1" class="slide level2">
-<h2>Minimalni primer mrtve petlje</h2>
-<div class="sourceCode" id="cb19"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Manager <span class="op">{</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    mutex mx_manager<span class="op">;</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    Activity activity<span class="op">;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span><span class="op">:</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> disable_activity<span class="op">();</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">void</span> enable_activity<span class="op">();</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Manager<span class="op">::</span>disable_activity<span class="op">(){</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx_manager<span class="op">);</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    activity<span class="op">.</span>stop<span class="op">();</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> Manager<span class="op">::</span>enable_activity<span class="op">(){</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx_manager<span class="op">);</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    activity<span class="op">.</span>start<span class="op">();</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>Manager manager<span class="op">;</span></span></code></pre></div>
-</section>
-<section id="minimalna-mrtva-petlja" class="slide level2">
-<h2>Minimalna mrtva petlja</h2>
+<section id="klasa-thread-1" class="slide level2">
+<h2>Klasa <code>thread</code></h2>
 <ul>
-<li>Mrtve petlje, koje ilustruje prethodni primer, se mogu sprečiti, ako se blokirajuća operacija ne poziva iz isključivog regiona.</li>
-<li>Nenamerno izazivanje konačnog, ali nepredvidivo dugog zaustavljanja aktivnosti niti u toku isključivog regiona može da ima negativne posledice na izvršavanje programa.</li>
-<li>To se, na primer, desi, kada se iz isključivog regiona pozivaju potencijalno blokirajuće operacije, poput funkcije <code>sleep_for()</code>.</li>
-<li>Globalne const promenljive, koje služe za smeštanje podataka, raspoloživih svim nitima, ne spadaju u deljene promenljive.</li>
+<li>Sve što nam je potrebno jeste da napravimo instancu klase
+<code>thread</code> kojoj prosledimo funkciju koja će biti telo
+niti</li>
+<li>U tom trenutku nit počinje da radi</li>
+<li>Ono što nam je ostalo i što moramo da uradimo jeste da definišemo
+odnos između niti koja je pokrenula tu nit (sve niti pokreće neka druga
+nit osim niti koja izvršava ‘main’ koju dobijamo za džabe od operativnog
+sistema)</li>
+<li>Imamo dva izbora: <code>join</code> i <code>detach</code></li>
+</ul>
+</section>
+<section id="join-i-detach" class="slide level2">
+<h2><code>join</code> i <code>detach</code></h2>
+<ul>
+<li>Prva opcija kaže da će nit koja je pokrenula drugu nit (nit-roditelj
+i nit-dete su tipični termini) da pauzira izvršavanje dok nit-dete ne
+terminira.</li>
+<li>Većinu vremena ovo je tačno ono što želimo zato što ne želimo da se
+nit <code>main</code> terminira (zajedno sa programom) dok nam se sve
+niti nisu završile.</li>
+<li>Druga opcija služi kada nam ne treba da čekamo da se nit-dete završi
+(možda se izvršava u beskonačnoj petlji) i jednostavno terminiramo
+program kada stignemo do kraja <code>main</code> niti.</li>
+</ul>
+</section>
+<section id="primer-štetnog-preplitanja" class="slide level2">
+<h2>Primer štetnog preplitanja</h2>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(){</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    thread example1<span class="op">(</span>thread_example<span class="op">);</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    thread example2<span class="op">(</span>thread_example<span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    example1<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    example2<span class="op">.</span>join<span class="op">();</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="primer-štetnog-preplitanja-1" class="slide level2">
+<h2>Primer štetnog preplitanja</h2>
+<ul>
+<li>Šta je ovde deljeni resurs?</li>
+<li>Šta izaziva štetno preplitanje?</li>
+<li>Kako bi se manifestovalo?</li>
+</ul>
+</section>
+<section id="sprečavanje-štetnog-preplitanja-1" class="slide level2">
+<h2>Sprečavanje štetnog preplitanja 1</h2>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb11-1"><a href="#cb11-1"></a>mutex terminal<span class="op">;</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="dt">void</span> thread_example<span class="op">(){</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>    <span class="dt">double</span> x<span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>    terminal<span class="op">.</span>lock<span class="op">();</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;ZADAJ VREDNOST BROJA X&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>    cin <span class="op">&gt;&gt;</span> x<span class="op">;</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;X = &quot;</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a>    terminal<span class="op">.</span>unlock<span class="op">();</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="sprečavanje-štetnog-preplitanja-2" class="slide level2">
+<h2>Sprečavanje štetnog preplitanja 2</h2>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb12-1"><a href="#cb12-1"></a>mutex terminal<span class="op">;</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="dt">void</span> thread_example<span class="op">(){</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>    <span class="dt">double</span> x<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>terminal<span class="op">);</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a>    cout <span class="op">&lt;&lt;</span> <span class="st">&quot;ZADAJ VREDNOST BROJA X&quot;</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a>    cin <span class="op">&gt;&gt;</span> x<span class="op">;</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>    cout <span class="op">&lt;&lt;</span> endl <span class="op">&lt;&lt;</span> <span class="st">&quot;X = &quot;</span> <span class="op">&lt;&lt;</span> x <span class="op">&lt;&lt;</span> endl<span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="uslovna-sinhronizacija" class="slide level2">
+<h2>Uslovna sinhronizacija</h2>
+<ul>
+<li>Sinhronizacija kroz <code>mutex</code> je mehanizam koji omogućava
+da kontrolišemo koliko niti mogu biti u nekoj ključnoj sekciji koda</li>
+<li>Ponekad nam ne treba samo to, nego nam je neophodno da neku nit
+pauziramo dok neki proizvoljan uslov nije zadovoljen.</li>
+<li>Nije bitno koji je to uslov, samo da se nit mora pauzirati dok uslov
+nije ispunjen.</li>
+</ul>
+</section>
+<section id="uslovna-sinhronizacija-1" class="slide level2">
+<h2>Uslovna sinhronizacija</h2>
+<ul>
+<li>Klasa koja se koristi da ovo implementira je
+<code>condition_variable</code></li>
+<li>Ako hoćemo da čekamo mi proverimo uslov (i to u while petlji) i u
+telu petlje pozivemo <code>.wait</code> nad
+<code>condition_variable</code> instancom.</li>
+<li><code>.wait</code> prima lock pod kojim smo trenutno i oslobađa ga
+dok čekamo da ne bi blokirali ceo program tako što čekamo pod
+bravom</li>
+<li>Ostaćemo u čekanju dok neka druga nit, negde drugde, ne pozove
+komandu da nas otkoči, to može biti <code>.notify</code> ili
+<code>.notify_all</code> gde prva otkoči nit koja najduže čeka na uslov,
+a druga otkoči sve.</li>
+</ul>
+</section>
+<section id="slobodni-baferi---neblokirajuća-verzija"
+class="slide level2">
+<h2>Slobodni baferi - neblokirajuća verzija</h2>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">struct</span> List_member <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>    List_member<span class="op">*</span> next<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>    <span class="dt">char</span> buffer<span class="op">[</span><span class="dv">512</span><span class="op">];</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="op">};</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="kw">class</span> List <span class="op">{</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a>    mutex mx<span class="op">;</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a>    List_member<span class="op">*</span> first<span class="op">;</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a>    List<span class="op">()</span> <span class="op">:</span> first<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a>    <span class="dt">void</span> link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">);</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a>    List_member<span class="op">*</span> unlink<span class="op">();</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="op">};</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="dt">void</span> List<span class="op">::</span>link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">){</span></span>
+<span id="cb13-14"><a href="#cb13-14"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb13-15"><a href="#cb13-15"></a>    member<span class="op">-&gt;</span>next<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb13-16"><a href="#cb13-16"></a>    first<span class="op">=</span>member<span class="op">;</span></span>
+<span id="cb13-17"><a href="#cb13-17"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="slobodni-baferi---neblokirajuća-verzija-1"
+class="slide level2">
+<h2>Slobodni baferi - neblokirajuća verzija</h2>
+<div class="sourceCode" id="cb14" data-startFrom="18"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 17;"><span id="cb14-18"><a href="#cb14-18"></a>List_member<span class="op">*</span> List<span class="op">::</span>unlink<span class="op">(){</span></span>
+<span id="cb14-19"><a href="#cb14-19"></a>    List_member<span class="op">*</span> unlinked<span class="op">;</span></span>
+<span id="cb14-20"><a href="#cb14-20"></a>    <span class="op">{</span></span>
+<span id="cb14-21"><a href="#cb14-21"></a>        unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb14-22"><a href="#cb14-22"></a>        unlinked<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb14-23"><a href="#cb14-23"></a>        <span class="cf">if</span><span class="op">(</span>first <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb14-24"><a href="#cb14-24"></a>            first<span class="op">=</span>first<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb14-25"><a href="#cb14-25"></a>    <span class="op">}</span></span>
+<span id="cb14-26"><a href="#cb14-26"></a>    <span class="cf">return</span> unlinked<span class="op">;</span></span>
+<span id="cb14-27"><a href="#cb14-27"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="slobodni-baferi---blokirajuća-verzija"
+class="slide level2">
+<h2>Slobodni baferi - blokirajuća verzija</h2>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">struct</span> List_member <span class="op">{</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>    List_member<span class="op">*</span> next<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a>    <span class="dt">char</span> buffer<span class="op">[</span><span class="dv">512</span><span class="op">];</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="op">};</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="kw">class</span> List <span class="op">{</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a>    mutex mx<span class="op">;</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>    List_member<span class="op">*</span> first<span class="op">;</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>    condition_variable nonempty<span class="op">;</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb15-10"><a href="#cb15-10"></a>    List<span class="op">()</span> <span class="op">:</span> first<span class="op">(</span><span class="dv">0</span><span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>    <span class="dt">void</span> link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">);</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a>    List_member<span class="op">*</span> unlink<span class="op">();</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="op">};</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a></span>
+<span id="cb15-15"><a href="#cb15-15"></a><span class="dt">void</span> List<span class="op">::</span>link<span class="op">(</span>List_member<span class="op">*</span> member<span class="op">){</span></span>
+<span id="cb15-16"><a href="#cb15-16"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a>    member<span class="op">-&gt;</span>next<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a>    first<span class="op">=</span>member<span class="op">;</span></span>
+<span id="cb15-19"><a href="#cb15-19"></a>    nonempty<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="slobodni-baferi---blokirajuća-verzija-1"
+class="slide level2">
+<h2>Slobodni baferi - blokirajuća verzija</h2>
+<div class="sourceCode" id="cb16" data-startFrom="21"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 20;"><span id="cb16-21"><a href="#cb16-21"></a>List_member<span class="op">*</span> List<span class="op">::</span>unlink<span class="op">(){</span></span>
+<span id="cb16-22"><a href="#cb16-22"></a>    List_member<span class="op">*</span> unlinked<span class="op">;</span></span>
+<span id="cb16-23"><a href="#cb16-23"></a>    <span class="op">{</span></span>
+<span id="cb16-24"><a href="#cb16-24"></a>        unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb16-25"><a href="#cb16-25"></a>        <span class="cf">while</span> <span class="op">(</span>first <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb16-26"><a href="#cb16-26"></a>            nonempty<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb16-27"><a href="#cb16-27"></a>        unlinked<span class="op">=</span>first<span class="op">;</span></span>
+<span id="cb16-28"><a href="#cb16-28"></a>        first<span class="op">=</span>first<span class="op">-&gt;</span>next<span class="op">;</span></span>
+<span id="cb16-29"><a href="#cb16-29"></a>    <span class="op">}</span></span>
+<span id="cb16-30"><a href="#cb16-30"></a>    <span class="cf">return</span> unlinked<span class="op">;</span></span>
+<span id="cb16-31"><a href="#cb16-31"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="komunikacioni-bafer" class="slide level2">
+<h2>Komunikacioni bafer</h2>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb17-1"><a href="#cb17-1"></a><span class="at">const</span> <span class="dt">unsigned</span> <span class="dt">int</span> BUFFER_SIZE <span class="op">=</span> <span class="dv">512</span><span class="op">;</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="kw">enum</span> Buffer_states <span class="op">{</span>EMPTY<span class="op">,</span> FULL<span class="op">};</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="kw">class</span> Buffer <span class="op">{</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>    mutex mx</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    <span class="dt">char</span> content<span class="op">[</span>BUFFER_SIZE<span class="op">];</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>    Buffer_states state<span class="op">;</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>    condition_variable full<span class="op">;</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a>    condition_variable empty<span class="op">;</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>    Buffer<span class="op">()</span> <span class="op">{</span>state <span class="op">=</span> EMPTY<span class="op">;};</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>    <span class="dt">void</span> put<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">);</span></span>
+<span id="cb17-12"><a href="#cb17-12"></a>    <span class="dt">void</span> get<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">);</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="komunikacioni-bafer-1" class="slide level2">
+<h2>Komunikacioni bafer</h2>
+<div class="sourceCode" id="cb18" data-startFrom="14"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 13;"><span id="cb18-14"><a href="#cb18-14"></a><span class="dt">void</span> Buffer<span class="op">::</span>put<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">){</span></span>
+<span id="cb18-15"><a href="#cb18-15"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb18-16"><a href="#cb18-16"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb18-17"><a href="#cb18-17"></a>    <span class="cf">while</span> <span class="op">(</span>state <span class="op">==</span> FULL<span class="op">)</span></span>
+<span id="cb18-18"><a href="#cb18-18"></a>        empty<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span>   </span>
+<span id="cb18-19"><a href="#cb18-19"></a>    <span class="cf">for</span><span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> BUFFER_SIZE<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb18-20"><a href="#cb18-20"></a>        content<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="op">*</span>c<span class="op">++;</span></span>
+<span id="cb18-21"><a href="#cb18-21"></a>    state <span class="op">=</span> FULL<span class="op">;</span></span>
+<span id="cb18-22"><a href="#cb18-22"></a>    full<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb18-23"><a href="#cb18-23"></a><span class="op">}</span></span>
+<span id="cb18-24"><a href="#cb18-24"></a></span>
+<span id="cb18-25"><a href="#cb18-25"></a><span class="dt">void</span> Buffer<span class="op">::</span>get<span class="op">(</span><span class="dt">char</span><span class="op">*</span> c<span class="op">){</span></span>
+<span id="cb18-26"><a href="#cb18-26"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb18-27"><a href="#cb18-27"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb18-28"><a href="#cb18-28"></a>    <span class="cf">while</span> <span class="op">(</span>state <span class="op">==</span> EMPTY<span class="op">)</span></span>
+<span id="cb18-29"><a href="#cb18-29"></a>        full<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb18-30"><a href="#cb18-30"></a>    <span class="cf">for</span><span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> BUFFER_SIZE<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb18-31"><a href="#cb18-31"></a>        <span class="op">*</span>c<span class="op">++</span> <span class="op">=</span> content<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb18-32"><a href="#cb18-32"></a>    state <span class="op">=</span> EMPTY<span class="op">;</span></span>
+<span id="cb18-33"><a href="#cb18-33"></a>    empty<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb18-34"><a href="#cb18-34"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="komunikacioni-kanal-kapaciteta-jedne-poruke"
+class="slide level2">
+<h2>Komunikacioni kanal kapaciteta jedne poruke</h2>
+<ul>
+<li>Saradnja niti proizvođača i niti potrošača, u toku koje prva od njih
+prosleđuje rezultate svoje aktivnosti drugoj niti, može da se prikaže
+kao razmena poruka.</li>
+<li>U toku ove razmene proizvođač odlaže poruku u poseban pregradak iz
+koga tu poruku preuzima potrošač.</li>
+<li>Takvu razmenu poruka podržava templejt klasa
+<code>Message_box</code></li>
+</ul>
+</section>
+<section id="komunikacioni-kanal-kapaciteta-jedne-poruke-1"
+class="slide level2">
+<h2>Komunikacioni kanal kapaciteta jedne poruke</h2>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> MESSAGE<span class="op">&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">class</span> Message_box <span class="op">{</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a>    mutex mx<span class="op">;</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a>    <span class="kw">enum</span> Message_box_states <span class="op">{</span> EMPTY<span class="op">,</span> FULL <span class="op">};</span></span>
+<span id="cb19-5"><a href="#cb19-5"></a>    MESSAGE content<span class="op">;</span></span>
+<span id="cb19-6"><a href="#cb19-6"></a>    Message_box_states state<span class="op">;</span></span>
+<span id="cb19-7"><a href="#cb19-7"></a>    condition_variable full<span class="op">;</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a>    condition_variable empty<span class="op">;</span></span>
+<span id="cb19-9"><a href="#cb19-9"></a><span class="kw">public</span><span class="op">:</span></span>
+<span id="cb19-10"><a href="#cb19-10"></a>    Message_box<span class="op">()</span> <span class="op">:</span> state<span class="op">(</span>EMPTY<span class="op">)</span> <span class="op">{};</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a>    <span class="dt">void</span> send<span class="op">(</span><span class="at">const</span> MESSAGE<span class="op">*</span> message<span class="op">);</span></span>
+<span id="cb19-12"><a href="#cb19-12"></a>    MESSAGE receive<span class="op">();</span></span>
+<span id="cb19-13"><a href="#cb19-13"></a><span class="op">};</span></span></code></pre></div>
+</section>
+<section id="komunikacioni-kanal-kapaciteta-jedne-poruke-2"
+class="slide level2">
+<h2>Komunikacioni kanal kapaciteta jedne poruke</h2>
+<div class="sourceCode" id="cb20" data-startFrom="14"><pre
+class="sourceCode numberSource cpp numberLines"><code class="sourceCode cpp" style="counter-reset: source-line 13;"><span id="cb20-14"><a href="#cb20-14"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> MESSAGE<span class="op">&gt;</span> <span class="dt">void</span> Message_box<span class="op">&lt;</span>MESSAGE<span class="op">&gt;::</span>send<span class="op">(</span><span class="at">const</span> MESSAGE<span class="op">*</span> message<span class="op">){</span></span>
+<span id="cb20-15"><a href="#cb20-15"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb20-16"><a href="#cb20-16"></a>    <span class="cf">while</span><span class="op">(</span>state <span class="op">==</span> FULL<span class="op">)</span></span>
+<span id="cb20-17"><a href="#cb20-17"></a>        empty<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb20-18"><a href="#cb20-18"></a>    content <span class="op">=</span> <span class="op">*</span>message<span class="op">;</span></span>
+<span id="cb20-19"><a href="#cb20-19"></a>    state <span class="op">=</span> FULL<span class="op">;</span></span>
+<span id="cb20-20"><a href="#cb20-20"></a>    full<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb20-21"><a href="#cb20-21"></a><span class="op">}</span></span>
+<span id="cb20-22"><a href="#cb20-22"></a></span>
+<span id="cb20-23"><a href="#cb20-23"></a><span class="kw">template</span><span class="op">&lt;</span><span class="kw">class</span> MESSAGE<span class="op">&gt;</span> MESSAGE Message_box<span class="op">&lt;</span>MESSAGE<span class="op">&gt;::</span>receive<span class="op">(){</span></span>
+<span id="cb20-24"><a href="#cb20-24"></a>    unique_lock<span class="op">&lt;</span>mutex<span class="op">&gt;</span> lock<span class="op">(</span>mx<span class="op">);</span></span>
+<span id="cb20-25"><a href="#cb20-25"></a>    <span class="cf">while</span><span class="op">(</span>state <span class="op">==</span> EMPTY<span class="op">)</span></span>
+<span id="cb20-26"><a href="#cb20-26"></a>        full<span class="op">.</span>wait<span class="op">(</span>lock<span class="op">);</span></span>
+<span id="cb20-27"><a href="#cb20-27"></a>    state <span class="op">=</span> EMPTY<span class="op">;</span></span>
+<span id="cb20-28"><a href="#cb20-28"></a>    empty<span class="op">.</span>notify_one<span class="op">();</span></span>
+<span id="cb20-29"><a href="#cb20-29"></a>    <span class="cf">return</span> content<span class="op">;</span></span>
+<span id="cb20-30"><a href="#cb20-30"></a><span class="op">}</span></span></code></pre></div>
+</section>
+<section id="komunikacioni-kanal-kapaciteta-jedne-poruke-3"
+class="slide level2">
+<h2>Komunikacioni kanal kapaciteta jedne poruke</h2>
+<ul>
+<li>Templejt klasa Message_box omogućuje uspostavljanje komunikacionog
+kanala između niti pošiljaoca i niti primaoca.</li>
+<li>Njene operacije <code>send()</code> i <code>receive()</code>
+omogućuju asinhronu razmenu poruka jer se pošiljalac i primalac ne sreću
+prilikom razmene poruka (aktivnost pošiljaoca se zaustavlja pri slanju
+poruka samo kada je komunikacioni kanal pun, dok se aktivnost primaoca
+zaustavlja pri prijemu poruka samo kada je ovaj kanal prazan).</li>
+<li>Ako se kapacitet komunikacionog kanala poveća na dve ili više
+poruka, tada svakom prijemu mogu da prethode dva ili više slanja.</li>
+</ul>
+</section>
+<section id="komunikacioni-kanal-kapaciteta-jedne-poruke-4"
+class="slide level2">
+<h2>Komunikacioni kanal kapaciteta jedne poruke</h2>
+<ul>
+<li>S druge strane, uz zadržavanje kapaciteta komunikacionog kanala na
+jednoj poruci, razmena poruka postaje sinhrona, ako se uvek zaustavlja
+aktivnost niti koja prva započne razmenu poruka.</li>
+<li>Aktivnost ove niti ostaje zaustavljena dok i druga nit ne započne
+razmenu poruka (dok se pošiljalac i primalac ne sretnu).</li>
+<li>Pri tome se podrazumeva da pošiljalac nastavlja svoju aktivnost tek
+kada primalac preuzme poruku.</li>
+<li>Prethodno dozvoljava da se u komunikacionom kanalu ne čuva poruka,
+nego njena adresa.</li>
+<li>To doprinosi brzini sinhrone razmene poruka, jer primalac može
+direktno preuzeti poruku od pošiljaoca.</li>
+</ul>
+</section>
+<section id="komunikacioni-kanal-kapaciteta-jedne-poruke-5"
+class="slide level2">
+<h2>Komunikacioni kanal kapaciteta jedne poruke</h2>
+<ul>
+<li>Time se izbegava potreba da se poruka prepisuje u komunikacioni
+kanal, što je neizbežno kod asinhrone razmene poruke.</li>
+<li>Iako na ovaj način primalac pristupa lokalnoj promenljivoj
+pošiljaoca, u kojoj se nalazi poruka, to ne predstavlja problem dok god
+mehanizam sinhrone razmene poruka osigurava međusobnu isključivost
+pristupanja pomenutoj lokalnoj promenljivoj.</li>
+<li>Pošto sinhrona razmena poruka zahteva da se pošiljalac i primalac
+poruke sretnu, ona se naziva i randevu (rendezvous).</li>
 </ul>
 </section></section>
 <section>
@@ -786,21 +1026,58 @@
 <section id="pitanja-1" class="slide level2">
 <h2>Pitanja</h2>
 <ul>
-<li>Opisati problem pet filozofa.</li>
-<li>Kako bi izgledala verzija problema pet filozofa koja bi se realistično mogla sresti tokom razvoja softvera?</li>
-<li>Šta je mrtva petlja?</li>
-<li>Po čemu se živa petlja razlikuje od mrtve petlje?207. Koji uslovi su potrebni za pojavu mrtve petlje?</li>
-<li>Kako se u praksi tretira problem mrtve petlje?</li>
-<li>Na čemu se temelji sprečavanje mrtve petlje?</li>
+<li>Šta je preplitanje?</li>
+<li>Da li preplitanje ima slučajan karakter?</li>
+<li>Šta izaziva pojavu preplitanja?</li>
+<li>Da li preplitanje može uticati na rezultat izvršavanja
+programa?</li>
+<li>Šta su deljene promenljive?</li>
+<li>Šta je preduslov očuvanja konzistentnosti deljenih
+promenljivih?</li>
 </ul>
 </section>
 <section id="pitanja-2" class="slide level2">
 <h2>Pitanja</h2>
 <ul>
-<li>Šta karakteriše izbegavanje mrtve petlje?</li>
-<li>Šta karakteriše otkrivanje i oporavak od mrtve petlje?</li>
-<li>Šta karakteriše ignorisanje mrtve petlje?</li>
-<li>Opisati problem čitanja i pisanja.</li>
+<li>Šta su kritične sekcije?</li>
+<li>Šta je sinhronizacija?</li>
+<li>Koje vrste sinhronizacije postoje?</li>
+<li>Šta je atomski region?</li>
+<li>Šta sužava primenu atomskih regiona?</li>
+<li>Čemu služi propusnica?</li>
+</ul>
+</section>
+<section id="pitanja-3" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Šta se dešava sa niti koja zatraži, a ne dobije propusnicu?</li>
+<li>Šta se dešava kada nit vrati propusnicu?</li>
+<li>Kako se štiti konzistentnost propusnica?</li>
+<li>Šta je isključivi region?</li>
+<li>Šta uvode poželjne osobine konkurentnih programa?</li>
+<li>Po čemu se konkurentno programiranje razlikuje od
+sekvencijalnog?</li>
+</ul>
+</section>
+<section id="pitanja-4" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Koje prednosti ima konkurentna biblioteka u odnosu na konkurentni
+programski jezik?</li>
+<li>Kako se opisuju niti?</li>
+<li>Kako se kreiraju niti?</li>
+<li>Kada se zauzima propusnica deljene promenljive?</li>
+<li>Kada se oslobađa propusnica deljene promenljive?</li>
+<li>Kakvu ulogu ima klasa mutex?</li>
+</ul>
+</section>
+<section id="pitanja-5" class="slide level2">
+<h2>Pitanja</h2>
+<ul>
+<li>Kakvu ulogu ima klasa unique_lock?</li>
+<li>Kakvu ulogu ima klasa condition_variable?</li>
+<li>Koje vrste razmene poruka postoje?</li>
+<li>U čemu se razlikuju sinhrona i asinhrona razmena poruka?</li>
 </ul>
 </section></section>
     </div>
@@ -844,7 +1121,7 @@
 
         // Add the current slide number to the URL hash so that reloading the
         // page/copying the URL will return you to the same slide
-        hash: false,
+        hash: true,
 
         // Start with 1 for the hash rather than 0
         hashOneBasedIndex: false,
