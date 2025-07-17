@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4/dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4/dist/reveal.css">
   <style>
     .reveal .sourceCode {  /* see #7635 */
       overflow: visible;
@@ -19,14 +19,17 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/night.css" id="theme">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4/dist/theme/night.css" id="theme">
   <link rel="stylesheet" href="slides.css"/>
 </head>
 <body>
@@ -36,7 +39,7 @@
 <section id="title-slide">
   <h1 class="title">Datoteke</h1>
   <p class="author">Veljko Petrović</p>
-  <p class="date">2023-04</p>
+  <p class="date">Jul, 2025</p>
 </section>
 
 <section>
@@ -133,7 +136,7 @@ imeniku /.</li>
 <ul>
 <li>Hijerarhijska organizacija datoteka dozvoljava da postoje datoteke
 (imenici) sa istim imenima, pod uslovom da pripadaju raznim imenicima.
-<img data-src="./img//4ce0426e-ff6a-4d62-b9e9-ddb81aa89cf6.png" /></li>
+<img data-src="./img/4ce0426e-ff6a-4d62-b9e9-ddb81aa89cf6.png" /></li>
 </ul>
 </section>
 <section id="organizacija-datoteka-5" class="slide level2">
@@ -250,18 +253,18 @@ redova koliko ima datoteka.</li>
 <li>U preseku svakog reda i svake kolone matrice zaštite navode se prava
 pristupa datoteci iz posmatranog reda za korisnike koji pripadaju
 kategoriji iz posmatrane kolone. <img
-data-src="./img//6275e27b-a667-44b3-a0c5-79ec3e10859e.png" /></li>
+data-src="./img/6275e27b-a667-44b3-a0c5-79ec3e10859e.png" /></li>
 </ul>
 </section>
 <section id="matrica-zaštite-1" class="slide level2">
 <h2>Matrica zaštite</h2>
 <p><img
-data-src="./img//c074b7d1-b300-4e43-aadf-d7cd1b0ce0bc.png" /></p>
+data-src="./img/c074b7d1-b300-4e43-aadf-d7cd1b0ce0bc.png" /></p>
 </section>
 <section id="matrica-zaštite-2" class="slide level2">
 <h2>Matrica zaštite</h2>
 <p><img
-data-src="./img//9b132add-dd8b-4016-b3ce-17a917ef2add.png" /></p>
+data-src="./img/9b132add-dd8b-4016-b3ce-17a917ef2add.png" /></p>
 </section>
 <section id="matrica-zaštite-3" class="slide level2">
 <h2>Matrica zaštite</h2>
@@ -677,7 +680,7 @@ jer preostaju sve kraći nizovi slobodnih susednih blokova.</li>
 <section id="kontinualne-datoteke-8" class="slide level2">
 <h2>Kontinualne datoteke</h2>
 <p><img
-data-src="./img//52441add-2da0-451f-87d0-d275bd9c9116.png" /></p>
+data-src="./img/52441add-2da0-451f-87d0-d275bd9c9116.png" /></p>
 </section>
 <section id="kontinualne-datoteke-9" class="slide level2">
 <h2>Kontinualne datoteke</h2>
@@ -692,7 +695,7 @@ susednih blokova.</li>
 <section id="kontinualne-datoteke-10" class="slide level2">
 <h2>Kontinualne datoteke</h2>
 <p><img
-data-src="./img//feec2531-1682-48f6-a388-5886497339b8.png" /></p>
+data-src="./img/feec2531-1682-48f6-a388-5886497339b8.png" /></p>
 </section>
 <section id="kontinualne-datoteke-11" class="slide level2">
 <h2>Kontinualne datoteke</h2>
@@ -717,7 +720,7 @@ da se kontinualna datoteka sastoji od više kontinualnih delova.</li>
 <section id="kontinualne-datoteke-13" class="slide level2">
 <h2>Kontinualne datoteke</h2>
 <p><img
-data-src="./img//a4204215-99c3-4291-b956-fa1071ef109b.png" /></p>
+data-src="./img/a4204215-99c3-4291-b956-fa1071ef109b.png" /></p>
 </section>
 <section id="kontinualne-datoteke-14" class="slide level2">
 <h2>Kontinualne datoteke</h2>
@@ -808,7 +811,7 @@ elemenata tabele pristupa.</li>
 <section id="rasute-datoteke-6" class="slide level2">
 <h2>Rasute datoteke</h2>
 <p><img
-data-src="./img//8dcbe284-13c6-40fa-8917-b17289acc81e.png" /></p>
+data-src="./img/8dcbe284-13c6-40fa-8917-b17289acc81e.png" /></p>
 </section>
 <section id="rasute-datoteke-7" class="slide level2">
 <h2>Rasute datoteke</h2>
@@ -1189,7 +1192,7 @@ deskriptora</li>
 <section id="imenici-3" class="slide level2">
 <h2>Imenici</h2>
 <p><img
-data-src="./img//535d5c38-f822-4dba-a8bc-119edc7c8a69.png" /></p>
+data-src="./img/535d5c38-f822-4dba-a8bc-119edc7c8a69.png" /></p>
 </section>
 <section id="imenici-4" class="slide level2">
 <h2>Imenici</h2>
@@ -1268,7 +1271,7 @@ godina.txt.</li>
 <section id="imenici-10" class="slide level2">
 <h2>Imenici</h2>
 <p><img
-data-src="./img//fee04387-6704-4f15-b51d-0ae6dcc18a3a.png" /></p>
+data-src="./img/fee04387-6704-4f15-b51d-0ae6dcc18a3a.png" /></p>
 </section>
 <section id="imenici-11" class="slide level2">
 <h2>Imenici</h2>
@@ -1299,7 +1302,7 @@ isprekidanom linijom).</li>
 <section id="imenici-13" class="slide level2">
 <h2>Imenici</h2>
 <p><img
-data-src="./img//6f722f62-b64b-47fb-aaa7-8e85c8d9e53a.png" /></p>
+data-src="./img/6f722f62-b64b-47fb-aaa7-8e85c8d9e53a.png" /></p>
 </section>
 <section id="imenici-14" class="slide level2">
 <h2>Imenici</h2>
@@ -1700,7 +1703,7 @@ diska:</li>
 <section id="specijalne-datoteke-3" class="slide level2">
 <h2>Specijalne datoteke</h2>
 <p><img
-data-src="./img//8426e3ac-2173-4092-b35f-8e14a3e1c159.png" /></p>
+data-src="./img/8426e3ac-2173-4092-b35f-8e14a3e1c159.png" /></p>
 </section>
 <section id="specijalne-datoteke-4" class="slide level2">
 <h2>Specijalne datoteke</h2>
@@ -1971,13 +1974,13 @@ stanju?</li>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4/dist/reveal.js"></script>
 
   <!-- reveal.js plugins -->
-  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4/plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4/plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4/plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4/plugin/math/math.js"></script>
 
   <script>
 
