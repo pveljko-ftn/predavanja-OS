@@ -96,7 +96,7 @@
     code span.vs { color: #abe338; } /* VerbatimString */
     code span.wa { color: #dcc6e0; } /* Warning */
   </style>
-  <link rel="stylesheet" href="01_Uvod_files/libs/revealjs/dist/theme/quarto-327cab17de08e4a17faa7d61f48ae591.css">
+  <link rel="stylesheet" href="01_Uvod_files/libs/revealjs/dist/theme/quarto-d4badbed7b0dc9c5f4c88c7127aa9e96.css">
   <link href="01_Uvod_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="01_Uvod_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="01_Uvod_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -924,7 +924,7 @@ e) ZAUZET   f)-1     g) 3</code></pre>
 <span id="cb3-7" class="hljs-ln-code"><a href=""></a><span class="dt">int</span> main<span class="op">(){</span></span>
 <span id="cb3-8" class="hljs-ln-code"><a href=""></a>  <span class="dt">unsigned</span> <span class="dt">char</span> buff<span class="op">[</span><span class="dv">32</span><span class="op">];</span></span>
 <span id="cb3-9" class="hljs-ln-code"><a href=""></a>  <span class="dt">ssize_t</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb3-10" class="hljs-ln-code"><a href=""></a>  <span class="dt">int</span> fd <span class="op">=</span> open<span class="op">(</span><span class="ch">'o</span><span class="er">pen.c</span><span class="ch">'</span><span class="op">,</span> O_RDONLY<span class="op">);</span></span>
+<span id="cb3-10" class="hljs-ln-code"><a href=""></a>  <span class="dt">int</span> fd <span class="op">=</span> open<span class="op">(</span><span class="st">"open.c"</span><span class="op">,</span> O_RDONLY<span class="op">);</span></span>
 <span id="cb3-11" class="hljs-ln-code"><a href=""></a>  close<span class="op">(</span>fd<span class="op">);</span></span>
 <span id="cb3-12" class="hljs-ln-code"><a href=""></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
@@ -939,7 +939,7 @@ e) ZAUZET   f)-1     g) 3</code></pre>
 <span id="cb4-7" class="hljs-ln-code"><a href=""></a><span class="dt">int</span> main<span class="op">(){</span></span>
 <span id="cb4-8" class="hljs-ln-code"><a href=""></a>  <span class="dt">unsigned</span> <span class="dt">char</span> buff<span class="op">[</span><span class="dv">32</span><span class="op">];</span></span>
 <span id="cb4-9" class="hljs-ln-code"><a href=""></a>  <span class="dt">ssize_t</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb4-10" class="hljs-ln-code"><a href=""></a>  <span class="dt">int</span> fd <span class="op">=</span> open<span class="op">(</span><span class="ch">'o</span><span class="er">pen.c</span><span class="ch">'</span><span class="op">,</span> O_RDONLY<span class="op">);</span></span>
+<span id="cb4-10" class="hljs-ln-code"><a href=""></a>  <span class="dt">int</span> fd <span class="op">=</span> open<span class="op">(</span><span class="st">"open.c"</span><span class="op">,</span> O_RDONLY<span class="op">);</span></span>
 <span id="cb4-11" class="hljs-ln-code"><a href=""></a>  <span class="cf">while</span><span class="op">(</span>count <span class="op">=</span> read<span class="op">(</span>fd<span class="op">,</span> buff<span class="op">,</span> <span class="dv">31</span><span class="op">)){</span></span>
 <span id="cb4-12" class="hljs-ln-code"><a href=""></a>    buff<span class="op">[</span>count<span class="op">]</span> <span class="op">=</span> <span class="ch">'</span><span class="sc">\0</span><span class="ch">'</span><span class="op">;</span></span>
 <span id="cb4-13" class="hljs-ln-code"><a href=""></a>    printf<span class="op">(</span><span class="st">"</span><span class="sc">%s</span><span class="st">"</span><span class="op">,</span> buff<span class="op">);</span></span>
@@ -960,20 +960,15 @@ e) ZAUZET   f)-1     g) 3</code></pre>
 <h1>Pitanja</h1>
 <p>Šta smo naučili?</p>
 </section>
-<section id="pitanja-1" class="slide level2">
+<section id="pitanja-1" class="slide level2 scrollable">
 <h2>Pitanja</h2>
-<ul>
+<ol type="1">
 <li>Koje poslove obavlja operativni sistem?</li>
 <li>Šta obuhvata pojam datoteke?</li>
 <li>Šta se nalazi u deskriptoru datoteke?</li>
 <li>Šta omogućuju datoteke?</li>
 <li>Šta obavezno prethodi čitanju i pisanju datoteke?</li>
 <li>Šta sledi iza čitanja i pisanja datoteke?</li>
-</ul>
-</section>
-<section id="pitanja-2" class="slide level2">
-<h2>Pitanja</h2>
-<ul>
 <li>Šta obuhvata pojam procesa?</li>
 <li>Šta se nalazi u deskriptoru procesa?</li>
 <li>Koja stanja procesa postoje?</li>
@@ -982,11 +977,6 @@ e) ZAUZET   f)-1     g) 3</code></pre>
 <li>Šta je sistemska nit?</li>
 <li>Šta se dešava nakon isticanja kvantuma?</li>
 <li>Po kom kriteriju se uvek bira aktivan proces?</li>
-</ul>
-</section>
-<section id="pitanja-3" class="slide level2">
-<h2>Pitanja</h2>
-<ul>
 <li>Koji prelazi su mogući između stanja procesa?</li>
 <li>Koji prelazi nisu mogući između stanja procesa?</li>
 <li>Šta omogućuju procesi?</li>
@@ -994,38 +984,23 @@ e) ZAUZET   f)-1     g) 3</code></pre>
 <li>Šta karakteriše konkurentni proces?</li>
 <li>Šta ima svaka nit konkurentnog procesa?</li>
 <li>Koje su razlike između procesa i niti?</li>
-</ul>
-</section>
-<section id="pitanja-4" class="slide level2">
-<h2>Pitanja</h2>
-<ul>
 <li>Koju operaciju uvodi modul za rukovanje procesorom?</li>
 <li>Po čemu se razlikuju preključivanja između niti istog procesa i preključivanja između niti raznih procesa?</li>
 <li>Koje operacije uvodi modul za rukovanje kontrolerima?</li>
 <li>Šta je cilj drajvera?</li>
 <li>Koje operacije uvodi modul za rukovanje radnom memorijom?</li>
 <li>Koje operacije poziva modul za rukovanje radnom memorijom kada podržava virtuelnu memoriju?</li>
-</ul>
-</section>
-<section id="pitanja-5" class="slide level2">
-<h2>Pitanja</h2>
-<ul>
 <li>Koje operacije uvodi modul za rukovanje datotekama?</li>
 <li>Koje operacije poziva modul za rukovanje datotekama?</li>
 <li>Šta omogućuju multiprocesing i multithreading?</li>
 <li>Koje operacije uvodi modul za rukovanje procesima?</li>
 <li>Koje operacije poziva modul za rukovanje procesima?</li>
 <li>Koje module sadrži slojeviti operativni sistem?</li>
-</ul>
-</section>
-<section id="pitanja-6" class="slide level2">
-<h2>Pitanja</h2>
-<ul>
 <li>Šta omogućuju sistemski pozivi?</li>
 <li>Koje adresne prostore podržava operativni sistem?</li>
 <li>Šta karakteriše interpreter komandnog jezika?</li>
 <li>Koji nivoi korišćenja operativnog sistema postoje?</li>
-</ul>
+</ol>
 
 </section></section>
     </div>
@@ -1190,7 +1165,7 @@ e) ZAUZET   f)-1     g) 3</code></pre>
         previewLinks: false,
 
         // Transition style (none/fade/slide/convex/concave/zoom)
-        transition: 'none',
+        transition: 'slide',
 
         // Transition speed (default/fast/slow)
         transitionSpeed: 'default',
