@@ -409,7 +409,7 @@ okruženje za debagovanje koje postoji. Performantna impementacija STL.</li>
 </section>
 <section id="i-šta-dobijamo" class="slide level2">
 <h2>I šta dobijamo?</h2>
-<div id="f5b0029e" class="cell" data-execution_count="1">
+<div id="0464e334" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure>
@@ -1128,20 +1128,23 @@ dovela do toga da je elektronski snop mogao da se aktivira bez postavljene mete 
 <span id="cb26-83"><a href=""></a>  <span class="cf">while</span> <span class="op">(</span><span class="kw">true</span><span class="op">)</span> <span class="op">{</span></span>
 <span id="cb26-84"><a href=""></a>    l<span class="op">.</span>println<span class="op">(</span><span class="bu">std::</span>format<span class="op">(</span><span class="st">"Filozof </span><span class="sc">{}</span><span class="st"> misli o Formi Dobrog."</span><span class="op">,</span> id<span class="op">));</span></span>
 <span id="cb26-85"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>THINK<span class="op">);</span></span>
-<span id="cb26-86"><a href=""></a>    forks<span class="op">[</span>id<span class="op">].</span>lock<span class="op">();</span></span>
-<span id="cb26-87"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>STEP<span class="op">);</span></span>
-<span id="cb26-88"><a href=""></a>    <span class="cf">while</span> <span class="op">(!</span>forks<span class="op">[(</span>id <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">%</span> <span class="dv">5</span><span class="op">].</span>try_lock<span class="op">())</span> <span class="op">{</span></span>
-<span id="cb26-89"><a href=""></a>      forks<span class="op">[</span>id<span class="op">].</span>unlock<span class="op">();</span></span>
-<span id="cb26-90"><a href=""></a>      <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>rand<span class="op">());</span></span>
-<span id="cb26-91"><a href=""></a>    <span class="op">}</span></span>
-<span id="cb26-92"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>EAT<span class="op">);</span></span>
-<span id="cb26-93"><a href=""></a>    forks<span class="op">[</span>id<span class="op">].</span>unlock<span class="op">();</span></span>
-<span id="cb26-94"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>STEP<span class="op">);</span></span>
-<span id="cb26-95"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>STEP<span class="op">);</span></span>
-<span id="cb26-96"><a href=""></a>    forks<span class="op">[(</span>id <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">%</span> <span class="dv">5</span><span class="op">].</span>unlock<span class="op">();</span></span>
-<span id="cb26-97"><a href=""></a>  <span class="op">}</span></span>
-<span id="cb26-98"><a href=""></a><span class="op">}</span></span>
-<span id="cb26-99"><a href=""></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb26-86"><a href=""></a>    <span class="cf">while</span> <span class="op">(</span><span class="kw">true</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb26-87"><a href=""></a>      forks<span class="op">[</span>id<span class="op">].</span>lock<span class="op">();</span></span>
+<span id="cb26-88"><a href=""></a>      <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>STEP<span class="op">);</span></span>
+<span id="cb26-89"><a href=""></a>      <span class="cf">if</span> <span class="op">(</span>forks<span class="op">[(</span>id <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">%</span> <span class="dv">5</span><span class="op">].</span>try_lock<span class="op">())</span> <span class="op">{</span></span>
+<span id="cb26-90"><a href=""></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb26-91"><a href=""></a>      <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb26-92"><a href=""></a>        forks<span class="op">[</span>id<span class="op">].</span>unlock<span class="op">();</span></span>
+<span id="cb26-93"><a href=""></a>        <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>rand<span class="op">());</span></span>
+<span id="cb26-94"><a href=""></a>      <span class="op">}</span></span>
+<span id="cb26-95"><a href=""></a>    <span class="op">}</span></span>
+<span id="cb26-96"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>EAT<span class="op">);</span></span>
+<span id="cb26-97"><a href=""></a>    forks<span class="op">[</span>id<span class="op">].</span>unlock<span class="op">();</span></span>
+<span id="cb26-98"><a href=""></a>    <span class="bu">std::</span>this_thread::sleep_for<span class="op">(</span>STEP<span class="op">);</span></span>
+<span id="cb26-99"><a href=""></a>    forks<span class="op">[(</span>id <span class="op">+</span> <span class="dv">1</span><span class="op">)</span> <span class="op">%</span> <span class="dv">5</span><span class="op">].</span>unlock<span class="op">();</span></span>
+<span id="cb26-100"><a href=""></a>  <span class="op">}</span></span>
+<span id="cb26-101"><a href=""></a><span class="op">}</span></span>
+<span id="cb26-102"><a href=""></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="razbijanje-simetrije-vreme-1" class="slide level2">
 <h2>Razbijanje simetrije — vreme</h2>
