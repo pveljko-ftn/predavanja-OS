@@ -6,8 +6,8 @@
 <script src="03_Simulator_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="03_Simulator_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="03_Simulator_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="03_Simulator_files/libs/quarto-html/quarto-syntax-highlighting-dark-4d9afe2b8d18ee9fa5d0d57b5ed4214d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.27">
+<link href="03_Simulator_files/libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
 
   <meta name="author" content="Veljko Petrović">
   <meta name="dcterms.date" content="2026-03-01">
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="03_Simulator_files/libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="03_Simulator_files/libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -96,7 +99,7 @@
     code span.vs { color: #abe338; } /* VerbatimString */
     code span.wa { color: #dcc6e0; } /* Warning */
   </style>
-  <link rel="stylesheet" href="03_Simulator_files/libs/revealjs/dist/theme/quarto-d4badbed7b0dc9c5f4c88c7127aa9e96.css">
+  <link rel="stylesheet" href="03_Simulator_files/libs/revealjs/dist/theme/quarto-ecd3db1e95926a551865f3f683c919db.css">
   <link href="03_Simulator_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="03_Simulator_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="03_Simulator_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -1286,6 +1289,14 @@ Veljko Petrović
 <li>Optimizacija se svodi na opsluživanje zahteva u redosledu staza na koje se oni odnose, a ne u hronološkom redosledu pojave zahteva.</li>
 <li>Na taj način se izbegava da glava diska osciluje između vanjskih i unutrašnjih staza diska.</li>
 </ul>
+</section>
+<section id="naivni-algoritam" class="slide level2">
+<h2>Naivni algoritam</h2>
+<p><video data-src="./img/Naive.webm" controls=""><a href="./img/Naive.webm">Video</a></video></p>
+</section>
+<section id="optimizovani-algoritam" class="slide level2">
+<h2>Optimizovani algoritam</h2>
+<p><video data-src="./img/Elevator.webm" controls=""><a href="./img/Elevator.webm">Video</a></video></p>
 </section>
 <section id="blokovski-ulaz-izlaz-2" class="slide level2">
 <h2>Blokovski ulaz-izlaz</h2>
@@ -2885,7 +2896,7 @@ podatke za pisanje, mesto za smeštanje pročitanih podataka, region u koji disk
 <h2>Swap</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb168" data-startfrom="22"><pre class="sourceCode numberSource gnuassembler number-lines code-with-copy"><code class="sourceCode gnuassembler" style="counter-reset: source-line 21;"><span id="cb168-22"><a href=""></a>    frstorl <span class="op">(%</span><span class="kw">esp</span><span class="op">)</span>  <span class="op">//</span>sa novog steka se preuzmu novi sadrzaji</span>
 <span id="cb168-23"><a href=""></a>                <span class="op">//</span>registara numerickog koprocesora</span>
-<span id="cb168-24"><a href=""></a>    add i387_SAVE_REGION_SIZE<span class="op">,%</span><span class="kw">esp</span></span>
+<span id="cb168-24"><a href=""></a>    <span class="kw">add</span> i387_SAVE_REGION_SIZE<span class="op">,%</span><span class="kw">esp</span></span>
 <span id="cb168-25"><a href=""></a>    <span class="kw">popa</span>        <span class="op">//</span>sa novog steka se preuzima sadrzaj</span>
 <span id="cb168-26"><a href=""></a>            <span class="op">//</span>registara opste namene</span>
 <span id="cb168-27"><a href=""></a>    <span class="kw">popf</span>        <span class="op">//</span>sa novog steka se preuzima sadrzaj</span>
@@ -2898,45 +2909,45 @@ podatke za pisanje, mesto za smeštanje pročitanih podataka, region u koji disk
 <span id="cb169-31"><a href=""></a>                    <span class="op">//</span>sadrzaj bita prekida i frejm</span>
 <span id="cb169-32"><a href=""></a>                    <span class="op">//</span>pointera</span>
 <span id="cb169-33"><a href=""></a>    <span class="kw">popl</span> <span class="op">%</span><span class="kw">ebp</span></span>
-<span id="cb169-34"><a href=""></a>    <span class="kw">ret</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb169-34"><a href=""></a>    <span class="cf">ret</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="prebacivanje-između-procesa-u-xv6" class="slide level2">
 <h2>Prebacivanje između procesa u xv6</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb170"><pre class="sourceCode numberSource gnuassembler number-lines code-with-copy"><code class="sourceCode gnuassembler"><span id="cb170-1"><a href=""></a><span class="kw">.globl</span> swtch</span>
 <span id="cb170-2"><a href=""></a><span class="fu">swtch:</span></span>
-<span id="cb170-3"><a href=""></a>        sd ra<span class="op">,</span> <span class="dv">0</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-4"><a href=""></a>        sd <span class="kw">sp</span><span class="op">,</span> <span class="dv">8</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-5"><a href=""></a>        sd s0<span class="op">,</span> <span class="dv">16</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-6"><a href=""></a>        sd s1<span class="op">,</span> <span class="dv">24</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-7"><a href=""></a>        sd s2<span class="op">,</span> <span class="dv">32</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-8"><a href=""></a>        sd s3<span class="op">,</span> <span class="dv">40</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-9"><a href=""></a>        sd s4<span class="op">,</span> <span class="dv">48</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-10"><a href=""></a>        sd s5<span class="op">,</span> <span class="dv">56</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-11"><a href=""></a>        sd s6<span class="op">,</span> <span class="dv">64</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-12"><a href=""></a>        sd s7<span class="op">,</span> <span class="dv">72</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-13"><a href=""></a>        sd s8<span class="op">,</span> <span class="dv">80</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-14"><a href=""></a>        sd s9<span class="op">,</span> <span class="dv">88</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-15"><a href=""></a>        sd s10<span class="op">,</span> <span class="dv">96</span><span class="op">(</span>a0<span class="op">)</span></span>
-<span id="cb170-16"><a href=""></a>        sd s11<span class="op">,</span> <span class="dv">104</span><span class="op">(</span>a0<span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb170-3"><a href=""></a>        <span class="kw">sd</span> <span class="kw">ra</span><span class="op">,</span> <span class="dv">0</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-4"><a href=""></a>        <span class="kw">sd</span> <span class="kw">sp</span><span class="op">,</span> <span class="dv">8</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-5"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s0</span><span class="op">,</span> <span class="dv">16</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-6"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s1</span><span class="op">,</span> <span class="dv">24</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-7"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s2</span><span class="op">,</span> <span class="dv">32</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-8"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s3</span><span class="op">,</span> <span class="dv">40</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-9"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s4</span><span class="op">,</span> <span class="dv">48</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-10"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s5</span><span class="op">,</span> <span class="dv">56</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-11"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s6</span><span class="op">,</span> <span class="dv">64</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-12"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s7</span><span class="op">,</span> <span class="dv">72</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-13"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s8</span><span class="op">,</span> <span class="dv">80</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-14"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s9</span><span class="op">,</span> <span class="dv">88</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-15"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s10</span><span class="op">,</span> <span class="dv">96</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span>
+<span id="cb170-16"><a href=""></a>        <span class="kw">sd</span> <span class="kw">s11</span><span class="op">,</span> <span class="dv">104</span><span class="op">(</span><span class="kw">a0</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="prebacivanje-između-procesa-u-xv6-1" class="slide level2">
 <h2>Prebacivanje između procesa u xv6</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb171"><pre class="sourceCode numberSource gnuassembler number-lines code-with-copy"><code class="sourceCode gnuassembler"><span id="cb171-1"><a href=""></a>        ld ra<span class="op">,</span> <span class="dv">0</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-2"><a href=""></a>        ld <span class="kw">sp</span><span class="op">,</span> <span class="dv">8</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-3"><a href=""></a>        ld s0<span class="op">,</span> <span class="dv">16</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-4"><a href=""></a>        ld s1<span class="op">,</span> <span class="dv">24</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-5"><a href=""></a>        ld s2<span class="op">,</span> <span class="dv">32</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-6"><a href=""></a>        ld s3<span class="op">,</span> <span class="dv">40</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-7"><a href=""></a>        ld s4<span class="op">,</span> <span class="dv">48</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-8"><a href=""></a>        ld s5<span class="op">,</span> <span class="dv">56</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-9"><a href=""></a>        ld s6<span class="op">,</span> <span class="dv">64</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-10"><a href=""></a>        ld s7<span class="op">,</span> <span class="dv">72</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-11"><a href=""></a>        ld s8<span class="op">,</span> <span class="dv">80</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-12"><a href=""></a>        ld s9<span class="op">,</span> <span class="dv">88</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-13"><a href=""></a>        ld s10<span class="op">,</span> <span class="dv">96</span><span class="op">(</span>a1<span class="op">)</span></span>
-<span id="cb171-14"><a href=""></a>        ld s11<span class="op">,</span> <span class="dv">104</span><span class="op">(</span>a1<span class="op">)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb171"><pre class="sourceCode numberSource gnuassembler number-lines code-with-copy"><code class="sourceCode gnuassembler"><span id="cb171-1"><a href=""></a>        <span class="kw">ld</span> <span class="kw">ra</span><span class="op">,</span> <span class="dv">0</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-2"><a href=""></a>        <span class="kw">ld</span> <span class="kw">sp</span><span class="op">,</span> <span class="dv">8</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-3"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s0</span><span class="op">,</span> <span class="dv">16</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-4"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s1</span><span class="op">,</span> <span class="dv">24</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-5"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s2</span><span class="op">,</span> <span class="dv">32</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-6"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s3</span><span class="op">,</span> <span class="dv">40</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-7"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s4</span><span class="op">,</span> <span class="dv">48</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-8"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s5</span><span class="op">,</span> <span class="dv">56</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-9"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s6</span><span class="op">,</span> <span class="dv">64</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-10"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s7</span><span class="op">,</span> <span class="dv">72</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-11"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s8</span><span class="op">,</span> <span class="dv">80</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-12"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s9</span><span class="op">,</span> <span class="dv">88</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-13"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s10</span><span class="op">,</span> <span class="dv">96</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
+<span id="cb171-14"><a href=""></a>        <span class="kw">ld</span> <span class="kw">s11</span><span class="op">,</span> <span class="dv">104</span><span class="op">(</span><span class="kw">a1</span><span class="op">)</span></span>
 <span id="cb171-15"><a href=""></a>        </span>
-<span id="cb171-16"><a href=""></a>        <span class="kw">ret</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb171-16"><a href=""></a>        <span class="cf">ret</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="izvršilac-simulatora" class="title-slide slide level1 center">
@@ -4360,11 +4371,11 @@ podatke za pisanje, mesto za smeštanje pročitanih podataka, region u koji disk
 </section></section>
 <section id="pitanja" class="title-slide slide level1 center">
 <h1>Pitanja</h1>
-<ul>
+<ol start="95" type="1">
 <li>Do čega dovodi pokušaj niti da preuzme znak kada je cirkularni bafer drajvera tastature prazan?</li>
 <li>Šta se desi kada se napuni cirkularni bafer drajvera tastature?</li>
 <li>Šta se desi u obradi prekida diska?</li>
-</ul>
+</ol>
 
 </section>
     </div>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="80.216805mm"
+   height="119.82442mm"
+   viewBox="0 0 303.18163 452.87969"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   sodipodi:docname="memory_diagram.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="2.0649972"
+     inkscape:cx="438.25725"
+     inkscape:cy="223.48699"
+     inkscape:window-width="5120"
+     inkscape:window-height="1368"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="ArrowTriangleStylized"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Stylized triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="m 6,0 c -3,1 -7,3 -9,5 0,0 0,-4 2,-5 -2,-1 -2,-5 -2,-5 2,2 6,4 9,5 z"
+         id="path11" />
+    </marker>
+    <inkscape:path-effect
+       effect="powerstroke"
+       message=""
+       id="path-effect9"
+       is_visible="true"
+       lpeversion="1.3"
+       scale_width="1"
+       interpolator_type="CubicBezierJohan"
+       interpolator_beta="0.2"
+       start_linecap_type="zerowidth"
+       end_linecap_type="zerowidth"
+       offset_points="1,18.867925"
+       linejoin_type="extrp_arc"
+       miter_limit="4"
+       not_jump="false"
+       sort_points="true" />
+    <marker
+       style="overflow:visible"
+       id="ArrowTriangleStylized-2"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Stylized triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="m 6,0 c -3,1 -7,3 -9,5 0,0 0,-4 2,-5 -2,-1 -2,-5 -2,-5 2,2 6,4 9,5 z"
+         id="path11-0" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-198.62866,-54.596438)">
+    <rect
+       style="fill:none;stroke:#000000;stroke-opacity:1"
+       id="rect1"
+       width="202.03078"
+       height="440.35861"
+       x="299.27951"
+       y="62.321362"
+       rx="1.1393093e-17"
+       ry="1.8534022e-17" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;stroke:#000000;stroke-opacity:1"
+       x="511.86511"
+       y="64.891129"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="511.86511"
+         y="64.891129" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       x="210.16977"
+       y="63.438343"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         x="210.16977"
+         y="63.438343"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1">Visoke adrese</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1"
+       x="198.11122"
+       y="506.86127"
+       id="text2-2"><tspan
+         sodipodi:role="line"
+         id="tspan2-7"
+         x="198.11122"
+         y="506.86127"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1">Niske adrese</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:12.0189, 1.00157;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 299.51616,121.5498 H 501.21135"
+       id="path2" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 299.27402,437.53087 H 500.72708"
+       id="path3" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 299.27402,391.28384 H 500.96921"
+       id="path4" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 299.03189,348.66876 H 500.96921"
+       id="path5" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-dasharray:12.0188, 1.00157;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 299.03189,309.2014 H 500.96921"
+       id="path6" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="383.90271"
+       y="98.037987"
+       id="text2-4"><tspan
+         sodipodi:role="line"
+         id="tspan2-8"
+         x="383.90271"
+         y="98.037987"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1">Stek</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="381.73196"
+       y="334.47321"
+       id="text2-4-2"><tspan
+         sodipodi:role="line"
+         id="tspan2-8-7"
+         x="381.73196"
+         y="334.47321"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1">Heap</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="313.57016"
+       y="368.73083"
+       id="text2-4-2-9"><tspan
+         sodipodi:role="line"
+         id="tspan2-8-7-4"
+         x="313.57016"
+         y="368.73083"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1">Neinicijalizovane vrednosti</tspan><tspan
+         sodipodi:role="line"
+         x="313.57016"
+         y="382.43622"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         id="tspan6">          (BSS)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="318.16022"
+       y="410.89642"
+       id="text7"><tspan
+         sodipodi:role="line"
+         x="318.16022"
+         y="410.89642"
+         id="tspan8">Inicijalizovane vrednosti</tspan><tspan
+         sodipodi:role="line"
+         x="318.16022"
+         y="424.2298"
+         id="tspan9">    (.data i .rodata)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10.6667px;font-family:'Noto Sans';-inkscape-font-specification:'Noto Sans, Normal';writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="381.24356"
+       y="477.64856"
+       id="text2-4-2-4"><tspan
+         sodipodi:role="line"
+         id="tspan2-8-7-1"
+         x="381.24356"
+         y="477.64856"
+         style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.623622;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1">Tekst</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.31376;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#ArrowTriangleStylized)"
+       d="m 397.82138,116.22291 v 43.26094"
+       id="path10" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.31376;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#ArrowTriangleStylized-2)"
+       d="M 397.9028,314.8518 V 271.59086"
+       id="path10-9" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.377953;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="405.0853"
+       y="141.16241"
+       id="text11"><tspan
+         sodipodi:role="line"
+         id="tspan11"
+         x="405.0853"
+         y="141.16241" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.377953;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="401.93759"
+       y="141.88881"
+       id="text12"><tspan
+         sodipodi:role="line"
+         id="tspan12"
+         x="401.93759"
+         y="141.88881">Smer rasta</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:10.6667px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;direction:ltr;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.377953;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="406.20963"
+       y="294.88882"
+       id="text12-6"><tspan
+         sodipodi:role="line"
+         id="tspan12-1"
+         x="406.20963"
+         y="294.88882">Smer rasta</tspan></text>
+  </g>
+</svg>
